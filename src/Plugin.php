@@ -28,9 +28,6 @@ class Plugin {
 		$curation = new Curation();
 		$push     = new Push( $settings, $renderer );
 
-		// Translations.
-		add_action( 'init', array( $this, 'load_textdomain' ) );
-
 		// Public render endpoint.
 		add_action( 'init', array( $renderer, 'register_endpoint' ) );
 		add_filter( 'query_vars', array( $renderer, 'register_query_var' ) );
@@ -46,15 +43,6 @@ class Plugin {
 		// REST routes.
 		add_action( 'rest_api_init', array( $curation, 'register_routes' ) );
 		add_action( 'rest_api_init', array( $push, 'register_routes' ) );
-	}
-
-	/**
-	 * Load the plugin's translations.
-	 *
-	 * @return void
-	 */
-	public function load_textdomain(): void {
-		load_plugin_textdomain( 'posts-to-newsletter', false, dirname( plugin_basename( FILE ) ) . '/languages' );
 	}
 
 	/**

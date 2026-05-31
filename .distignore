@@ -1,0 +1,7 @@
+# Files excluded from the distributed (WordPress.org / release) build.
+/.git
+/.gitignore
+/.distignore
+/.github
+/README.md
+/node_modules

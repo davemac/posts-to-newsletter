@@ -157,31 +157,38 @@ class Renderer {
 		$site_name = (string) $this->settings->get( 'site_name' );
 		$grey      = 'color:#888888;';
 
+		/* translators: %s: site/publication name. */
+		$received    = sprintf( esc_html__( 'You are receiving this email because you subscribed to %s.', 'posts-to-newsletter' ), esc_html( $site_name ) );
+		$unsubscribe = esc_html__( 'Unsubscribe', 'posts-to-newsletter' );
+		$preferences = esc_html__( 'Update your preferences', 'posts-to-newsletter' );
+		$web_version = esc_html__( 'View in browser', 'posts-to-newsletter' );
+		$preheader   = esc_html__( 'View this email in your browser.', 'posts-to-newsletter' );
+
 		if ( 'mailchimp' === $platform ) {
-			$footer  = 'You are receiving this email because you subscribed to ' . esc_html( $site_name ) . '.<br />';
-			$footer .= '<a href="*|UNSUB|*" style="' . $grey . '">Unsubscribe</a> &nbsp;|&nbsp; ';
-			$footer .= '<a href="*|UPDATE_PROFILE|*" style="' . $grey . '">Update your preferences</a> &nbsp;|&nbsp; ';
-			$footer .= '<a href="*|ARCHIVE|*" style="' . $grey . '">View in browser</a><br /><br />';
+			$footer  = $received . '<br />';
+			$footer .= '<a href="*|UNSUB|*" style="' . $grey . '">' . $unsubscribe . '</a> &nbsp;|&nbsp; ';
+			$footer .= '<a href="*|UPDATE_PROFILE|*" style="' . $grey . '">' . $preferences . '</a> &nbsp;|&nbsp; ';
+			$footer .= '<a href="*|ARCHIVE|*" style="' . $grey . '">' . $web_version . '</a><br /><br />';
 			$footer .= '*|HTML:LIST_ADDRESS_HTML|*';
 
 			return array(
 				'firstname' => '*|FNAME|*',
 				'footer'    => $footer,
-				'preheader' => '<a href="*|ARCHIVE|*">View this email in your browser.</a>',
+				'preheader' => '<a href="*|ARCHIVE|*">' . $preheader . '</a>',
 			);
 		}
 
 		// Campaign Monitor (default).
-		$footer  = 'You are receiving this email because you subscribed to ' . esc_html( $site_name ) . '.<br />';
-		$footer .= '<unsubscribe style="' . $grey . '">Unsubscribe</unsubscribe> &nbsp;|&nbsp; ';
-		$footer .= '<preferences style="' . $grey . '">Update your preferences</preferences> &nbsp;|&nbsp; ';
-		$footer .= '<webversion style="' . $grey . '">View in browser</webversion><br /><br />';
+		$footer  = $received . '<br />';
+		$footer .= '<unsubscribe style="' . $grey . '">' . $unsubscribe . '</unsubscribe> &nbsp;|&nbsp; ';
+		$footer .= '<preferences style="' . $grey . '">' . $preferences . '</preferences> &nbsp;|&nbsp; ';
+		$footer .= '<webversion style="' . $grey . '">' . $web_version . '</webversion><br /><br />';
 		$footer .= esc_html( $site_name );
 
 		return array(
 			'firstname' => '[firstname,fallback=there]',
 			'footer'    => $footer,
-			'preheader' => '<webversion>View this email in your browser.</webversion>',
+			'preheader' => '<webversion>' . $preheader . '</webversion>',
 		);
 	}
 

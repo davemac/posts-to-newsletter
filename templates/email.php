@@ -77,11 +77,17 @@ defined( 'ABSPATH' ) || exit;
 
 					<tr>
 						<td align="center" style="padding:24px 32px 6px 32px;">
-							<table role="presentation" cellpadding="0" cellspacing="0"><tr><td align="center" bgcolor="<?php echo esc_attr( $brand ); ?>" style="border-radius:4px;"><a href="<?php echo esc_url( $subscribe ); ?>" style="display:inline-block; font-family:Arial,Helvetica,sans-serif; font-size:15px; font-weight:bold; color:#ffffff; text-decoration:none; padding:13px 32px;">Subscribe to <?php echo esc_html( $site_name ); ?></a></td></tr></table>
+							<table role="presentation" cellpadding="0" cellspacing="0"><tr><td align="center" bgcolor="<?php echo esc_attr( $brand ); ?>" style="border-radius:4px;"><a href="<?php echo esc_url( $subscribe ); ?>" style="display:inline-block; font-family:Arial,Helvetica,sans-serif; font-size:15px; font-weight:bold; color:#ffffff; text-decoration:none; padding:13px 32px;"><?php
+								/* translators: %s: site/publication name. */
+								printf( esc_html__( 'Subscribe to %s', 'posts-to-newsletter' ), esc_html( $site_name ) );
+							?></a></td></tr></table>
 						</td>
 					</tr>
 					<tr>
-						<td align="center" style="padding:0 32px 8px 32px; font-family:Arial,Helvetica,sans-serif; font-size:13px;"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" style="color:<?php echo esc_attr( $brand ); ?>; text-decoration:none;">Read more at <?php echo esc_html( wp_parse_url( home_url(), PHP_URL_HOST ) ); ?> &rarr;</a></td>
+						<td align="center" style="padding:0 32px 8px 32px; font-family:Arial,Helvetica,sans-serif; font-size:13px;"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" style="color:<?php echo esc_attr( $brand ); ?>; text-decoration:none;"><?php
+							/* translators: %s: site domain. */
+							printf( esc_html__( 'Read more at %s', 'posts-to-newsletter' ), esc_html( wp_parse_url( home_url(), PHP_URL_HOST ) ) );
+						?> &rarr;</a></td>
 					</tr>
 
 					<tr>
