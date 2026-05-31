@@ -7,9 +7,6 @@
 
 namespace PostsToNewsletter;
 
-use PostsToNewsletter\Integrations\MailchimpClient;
-use PostsToNewsletter\Integrations\CampaignMonitorClient;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -26,7 +23,6 @@ class Plugin {
 		$settings = new Settings();
 		$renderer = new Renderer( $settings );
 		$curation = new Curation();
-		$push     = new Push( $settings, $renderer );
 
 		// Public render endpoint.
 		add_action( 'init', array( $renderer, 'register_endpoint' ) );
@@ -42,7 +38,6 @@ class Plugin {
 
 		// REST routes.
 		add_action( 'rest_api_init', array( $curation, 'register_routes' ) );
-		add_action( 'rest_api_init', array( $push, 'register_routes' ) );
 	}
 
 	/**

@@ -23,9 +23,15 @@ defined( 'ABSPATH' ) || exit;
 	</p>
 
 	<div class="ptn-actions">
-		<button type="button" class="button button-primary ptn-push" data-platform="mailchimp"><?php esc_html_e( 'Push to Mailchimp', 'posts-to-newsletter' ); ?></button>
-		<button type="button" class="button button-primary ptn-push" data-platform="cm"><?php esc_html_e( 'Push to Campaign Monitor', 'posts-to-newsletter' ); ?></button>
-		<span class="ptn-push-result" aria-live="polite"></span>
+		<?php
+		/**
+		 * Fires at the start of the curation action bar.
+		 *
+		 * Add-ons render extra action buttons here (for example the premium
+		 * push-to-platform buttons).
+		 */
+		do_action( 'posts_to_newsletter_curation_actions' );
+		?>
 		<a class="ptn-settings-link" href="<?php echo esc_url( $settings_url ); ?>"><?php esc_html_e( 'Settings', 'posts-to-newsletter' ); ?></a>
 	</div>
 
