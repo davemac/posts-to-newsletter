@@ -11,3 +11,6 @@ Thumbs.db
 # Logs / temp
 *.log
 *.tmp
+
+# Local-only dev context (sensitive: client/prod/creds) - never publish
+/CLAUDE.md
