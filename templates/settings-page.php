@@ -5,69 +5,14 @@
  * @package PostsToNewsletter
  *
  * @var array<string,mixed> $s    Current settings (merged with defaults).
- * @var \PostsToNewsletter\Settings        $this Settings (for logo_url(), keys, etc.).
+ * @var \PostsToNewsletter\Settings        $this Settings (for logo_url(), hero_url()).
  */
 
 defined( 'ABSPATH' ) || exit;
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- View partial: required within Settings::render_settings_page(), so these variables are method-scoped, not global.
 
-$mc_key      = $this->mailchimp_key();
-$cm_key      = $this->cm_key();
-$mc_constant = defined( 'PTN_MAILCHIMP_API_KEY' ) && '' !== (string) PTN_MAILCHIMP_API_KEY;
-$cm_constant = defined( 'PTN_CM_API_KEY' ) && '' !== (string) PTN_CM_API_KEY;
-
-// Server-side dropdown data (best-effort; errors shown inline).
-$mc_audiences = array();
-$mc_error     = '';
-if ( '' !== $mc_key ) {
-	$res = ( new \PostsToNewsletter\Integrations\MailchimpClient( $mc_key ) )->get_audiences();
-	if ( is_wp_error( $res ) ) {
-		$mc_error = $res->get_error_message();
-	} else {
-		$mc_audiences = $res;
-	}
-}
-
-$cm_clients = array();
-$cm_lists   = array();
-$cm_error   = '';
-if ( '' !== $cm_key ) {
-	$client = new \PostsToNewsletter\Integrations\CampaignMonitorClient( $cm_key );
-	$res    = $client->get_clients();
-	if ( is_wp_error( $res ) ) {
-		$cm_error = $res->get_error_message();
-	} else {
-		$cm_clients = $res;
-		if ( '' !== (string) $s['cm_client_id'] ) {
-			$lists = $client->get_lists( (string) $s['cm_client_id'] );
-			if ( ! is_wp_error( $lists ) ) {
-				$cm_lists = $lists;
-			}
-		}
-	}
-}
-
-$sizes        = array_values( array_unique( array_merge( array( 'medium', 'medium_large', 'large', 'full' ), get_intermediate_image_sizes() ) ) );
-$mc_connected = '' !== $mc_key && '' === $mc_error;
-$cm_connected = '' !== $cm_key && '' === $cm_error;
-
-/**
- * Render a connection badge.
- *
- * @param bool $connected Whether configured/connected.
- * @param bool $has_key   Whether a key is present.
- * @return string
- */
-$badge = static function ( bool $connected, bool $has_key ): string {
-	if ( $connected ) {
-		return '<span class="ptn-badge ptn-badge--ok">' . esc_html__( 'Connected', 'posts-to-newsletter' ) . '</span>';
-	}
-	if ( $has_key ) {
-		return '<span class="ptn-badge ptn-badge--err">' . esc_html__( 'Error', 'posts-to-newsletter' ) . '</span>';
-	}
-	return '<span class="ptn-badge">' . esc_html__( 'Not set up', 'posts-to-newsletter' ) . '</span>';
-};
+$sizes = array_values( array_unique( array_merge( array( 'medium', 'medium_large', 'large', 'full' ), get_intermediate_image_sizes() ) ) );
 ?>
 <div class="wrap ptn-settings-page">
 	<h1><?php esc_html_e( 'Newsletter Settings', 'posts-to-newsletter' ); ?></h1>
@@ -156,60 +101,30 @@ $badge = static function ( bool $connected, bool $has_key ): string {
 				</div>
 			</section>
 
-			<section class="ptn-card">
-				<h2><?php esc_html_e( 'Mailchimp', 'posts-to-newsletter' ); ?> <?php echo $badge( $mc_connected, '' !== $mc_key ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></h2>
-				<p class="ptn-field">
-					<label for="ptn-mc-key"><?php esc_html_e( 'API key', 'posts-to-newsletter' ); ?></label>
-					<?php if ( $mc_constant ) : ?>
-						<em><?php esc_html_e( 'Set via the PTN_MAILCHIMP_API_KEY constant.', 'posts-to-newsletter' ); ?></em>
-					<?php else : ?>
-						<input name="mailchimp_api_key" id="ptn-mc-key" type="password" value="" autocomplete="off" placeholder="<?php echo '' !== $mc_key ? esc_attr__( '•••••• saved — leave blank to keep', 'posts-to-newsletter' ) : ''; ?>" />
-					<?php endif; ?>
-					<?php if ( '' !== $mc_error ) : ?><span class="ptn-error"><?php echo esc_html( $mc_error ); ?></span><?php endif; ?>
-				</p>
-				<p class="ptn-field">
-					<label for="ptn-mc-aud"><?php esc_html_e( 'Audience', 'posts-to-newsletter' ); ?></label>
-					<select name="mailchimp_audience_id" id="ptn-mc-aud" <?php disabled( empty( $mc_audiences ) ); ?>>
-						<option value=""><?php esc_html_e( '— Select —', 'posts-to-newsletter' ); ?></option>
-						<?php foreach ( $mc_audiences as $id => $name ) : ?>
-							<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $s['mailchimp_audience_id'], $id ); ?>><?php echo esc_html( $name ); ?></option>
-						<?php endforeach; ?>
-					</select>
-					<?php if ( empty( $mc_audiences ) ) : ?><span class="ptn-hint"><?php esc_html_e( 'Save a valid API key to load audiences.', 'posts-to-newsletter' ); ?></span><?php endif; ?>
-				</p>
-			</section>
+			<?php
+			/**
+			 * Fires inside the settings grid, after the built-in cards.
+			 *
+			 * Add-ons render extra setting cards here (for example the premium
+			 * platform-integration cards). Submitted fields are caught by the
+			 * ptn_settings_save filter.
+			 *
+			 * @param array<string, mixed> $s Current settings (merged with defaults).
+			 */
+			do_action( 'posts_to_newsletter_settings_cards', $s );
 
-			<section class="ptn-card">
-				<h2><?php esc_html_e( 'Campaign Monitor', 'posts-to-newsletter' ); ?> <?php echo $badge( $cm_connected, '' !== $cm_key ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></h2>
-				<p class="ptn-field">
-					<label for="ptn-cm-key"><?php esc_html_e( 'API key', 'posts-to-newsletter' ); ?></label>
-					<?php if ( $cm_constant ) : ?>
-						<em><?php esc_html_e( 'Set via the PTN_CM_API_KEY constant.', 'posts-to-newsletter' ); ?></em>
-					<?php else : ?>
-						<input name="cm_api_key" id="ptn-cm-key" type="password" value="" autocomplete="off" placeholder="<?php echo '' !== $cm_key ? esc_attr__( '•••••• saved — leave blank to keep', 'posts-to-newsletter' ) : ''; ?>" />
-					<?php endif; ?>
-					<?php if ( '' !== $cm_error ) : ?><span class="ptn-error"><?php echo esc_html( $cm_error ); ?></span><?php endif; ?>
-				</p>
-				<p class="ptn-field">
-					<label for="ptn-cm-client"><?php esc_html_e( 'Client', 'posts-to-newsletter' ); ?></label>
-					<select name="cm_client_id" id="ptn-cm-client" <?php disabled( empty( $cm_clients ) ); ?>>
-						<option value=""><?php esc_html_e( '— Select —', 'posts-to-newsletter' ); ?></option>
-						<?php foreach ( $cm_clients as $id => $name ) : ?>
-							<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $s['cm_client_id'], $id ); ?>><?php echo esc_html( $name ); ?></option>
-						<?php endforeach; ?>
-					</select>
-					<span class="ptn-hint"><?php esc_html_e( 'Save after changing client to load its lists.', 'posts-to-newsletter' ); ?></span>
-				</p>
-				<p class="ptn-field">
-					<label for="ptn-cm-list"><?php esc_html_e( 'List', 'posts-to-newsletter' ); ?></label>
-					<select name="cm_list_id" id="ptn-cm-list" <?php disabled( empty( $cm_lists ) ); ?>>
-						<option value=""><?php esc_html_e( '— Select —', 'posts-to-newsletter' ); ?></option>
-						<?php foreach ( $cm_lists as $id => $name ) : ?>
-							<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $s['cm_list_id'], $id ); ?>><?php echo esc_html( $name ); ?></option>
-						<?php endforeach; ?>
-					</select>
-				</p>
-			</section>
+			// When no add-on provides the platform cards, invite an upgrade in their place.
+			if ( ! has_action( 'posts_to_newsletter_settings_cards' ) ) :
+				?>
+				<section class="ptn-card ptn-card--upsell">
+					<h2><?php esc_html_e( 'One-click push', 'posts-to-newsletter' ); ?></h2>
+					<p><?php esc_html_e( 'Send your curated newsletter straight to Mailchimp or Campaign Monitor as a ready-to-review draft - no copy and paste.', 'posts-to-newsletter' ); ?></p>
+					<p><a class="button button-primary" href="https://thecode.com.au/" target="_blank" rel="noopener"><?php esc_html_e( 'Upgrade to Pro', 'posts-to-newsletter' ); ?></a></p>
+					<p class="ptn-hint"><?php esc_html_e( 'For now, use the preview / import URLs on the Newsletter screen to import into your platform manually.', 'posts-to-newsletter' ); ?></p>
+				</section>
+				<?php
+			endif;
+			?>
 
 		</div>
 

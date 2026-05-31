@@ -67,8 +67,6 @@ class Curation {
 			array(
 				'saveUrl'   => esc_url_raw( rest_url( self::REST_NS . '/selection' ) ),
 				'searchUrl' => esc_url_raw( rest_url( self::REST_NS . '/search' ) ),
-				'mailchimp' => esc_url_raw( rest_url( self::REST_NS . '/push/mailchimp' ) ),
-				'cm'        => esc_url_raw( rest_url( self::REST_NS . '/push/campaignmonitor' ) ),
 				'nonce'     => wp_create_nonce( 'wp_rest' ),
 			)
 		);
