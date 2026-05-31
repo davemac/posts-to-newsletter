@@ -46,7 +46,7 @@ class Renderer {
 	}
 
 	/**
-	 * Whitelist the public query vars.
+	 * Allowlist the public query vars.
 	 *
 	 * @param array<int, string> $vars Query vars.
 	 * @return array<int, string>
@@ -65,6 +65,21 @@ class Renderer {
 	public function maybe_render(): void {
 		if ( empty( get_query_var( self::QUERY_VAR ) ) ) {
 			return;
+		}
+
+		/**
+		 * Filter whether the public newsletter render endpoint may be served.
+		 *
+		 * The endpoint is public by design (Campaign Monitor fetches it server-side),
+		 * which exposes the selected posts' titles and excerpts before the newsletter
+		 * is sent. Return false to restrict access (for example by IP, a shared secret
+		 * query arg, or is_user_logged_in()).
+		 *
+		 * @param bool $allowed Whether to render. Default true.
+		 */
+		if ( ! apply_filters( 'posts_to_newsletter_render_allowed', true ) ) {
+			status_header( 403 );
+			exit;
 		}
 
 		$platform = $this->resolve_platform( (string) get_query_var( self::PLATFORM_VAR ) );
@@ -124,7 +139,7 @@ class Renderer {
 		$permalink  = get_permalink( $card_id );
 		$byline     = Selection::byline( $card_id );
 		$date       = get_the_date( 'F j, Y', $card_id );
-		$excerpt    = wp_trim_words( get_the_excerpt( $card_id ), 22, '&hellip;' );
+		$excerpt    = wp_trim_words( get_the_excerpt( $card_id ), 22, '…' );
 		$image      = has_post_thumbnail( $card_id ) ? wp_get_attachment_image_src( get_post_thumbnail_id( $card_id ), $image_size ) : false;
 		$categories = get_the_category( $card_id );
 		$category   = ! empty( $categories ) ? $categories[0]->name : '';
@@ -171,25 +186,36 @@ class Renderer {
 			$footer .= '<a href="*|ARCHIVE|*" style="' . $grey . '">' . $web_version . '</a><br /><br />';
 			$footer .= '*|HTML:LIST_ADDRESS_HTML|*';
 
-			return array(
+			$tokens = array(
 				'firstname' => '*|FNAME|*',
 				'footer'    => $footer,
 				'preheader' => '<a href="*|ARCHIVE|*">' . $preheader . '</a>',
 			);
+		} else {
+			// Campaign Monitor (default).
+			$footer  = $received . '<br />';
+			$footer .= '<unsubscribe style="' . $grey . '">' . $unsubscribe . '</unsubscribe> &nbsp;|&nbsp; ';
+			$footer .= '<preferences style="' . $grey . '">' . $preferences . '</preferences> &nbsp;|&nbsp; ';
+			$footer .= '<webversion style="' . $grey . '">' . $web_version . '</webversion><br /><br />';
+			$footer .= esc_html( $site_name );
+
+			$tokens = array(
+				'firstname' => '[firstname,fallback=there]',
+				'footer'    => $footer,
+				'preheader' => '<webversion>' . $preheader . '</webversion>',
+			);
 		}
 
-		// Campaign Monitor (default).
-		$footer  = $received . '<br />';
-		$footer .= '<unsubscribe style="' . $grey . '">' . $unsubscribe . '</unsubscribe> &nbsp;|&nbsp; ';
-		$footer .= '<preferences style="' . $grey . '">' . $preferences . '</preferences> &nbsp;|&nbsp; ';
-		$footer .= '<webversion style="' . $grey . '">' . $web_version . '</webversion><br /><br />';
-		$footer .= esc_html( $site_name );
-
-		return array(
-			'firstname' => '[firstname,fallback=there]',
-			'footer'    => $footer,
-			'preheader' => '<webversion>' . $preheader . '</webversion>',
-		);
+		/**
+		 * Filter the platform merge-tag tokens (firstname/footer/preheader).
+		 *
+		 * Lets add-ons add or override tokens for a platform without forking this
+		 * method.
+		 *
+		 * @param array{firstname:string, footer:string, preheader:string} $tokens   Tokens.
+		 * @param string                                                    $platform Target platform.
+		 */
+		return apply_filters( 'posts_to_newsletter_platform_tokens', $tokens, $platform );
 	}
 
 	/**

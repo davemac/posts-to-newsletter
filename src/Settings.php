@@ -75,13 +75,45 @@ class Settings {
 	}
 
 	/**
+	 * The image sizes offered for article thumbnails (used by the settings UI and
+	 * by save-time validation, so the two never drift apart).
+	 *
+	 * @return array<int, string>
+	 */
+	public function allowed_image_sizes(): array {
+		return array_values(
+			array_unique(
+				array_merge(
+					array( 'medium', 'medium_large', 'large', 'full' ),
+					get_intermediate_image_sizes()
+				)
+			)
+		);
+	}
+
+	/**
+	 * Sanitise a hex colour, falling back when the value is empty or malformed.
+	 *
+	 * sanitize_hex_color() returns null for a malformed value and '' for empty;
+	 * either would persist a broken colour, so substitute the fallback.
+	 *
+	 * @param mixed  $value    Submitted colour.
+	 * @param string $fallback Colour to use when the submitted value is unusable.
+	 * @return string
+	 */
+	private function clean_hex( $value, string $fallback ): string {
+		$hex = sanitize_hex_color( (string) $value );
+		return ( null === $hex || '' === $hex ) ? $fallback : $hex;
+	}
+
+	/**
 	 * Resolve the logo URL: chosen attachment, else the theme custom logo, else site icon.
 	 *
 	 * @return string
 	 */
 	public function logo_url(): string {
 		$logo_id = (int) $this->get( 'logo_id' );
-		if ( $logo_id > 0 ) {
+		if ( 0 < $logo_id ) {
 			$url = wp_get_attachment_image_url( $logo_id, 'full' );
 			if ( ! empty( $url ) ) {
 				return $url;
@@ -89,7 +121,7 @@ class Settings {
 		}
 
 		$custom = (int) get_theme_mod( 'custom_logo' );
-		if ( $custom > 0 ) {
+		if ( 0 < $custom ) {
 			$url = wp_get_attachment_image_url( $custom, 'full' );
 			if ( ! empty( $url ) ) {
 				return $url;
@@ -106,7 +138,7 @@ class Settings {
 	 */
 	public function hero_url(): string {
 		$hero_id = (int) $this->get( 'hero_id' );
-		if ( $hero_id > 0 ) {
+		if ( 0 < $hero_id ) {
 			$url = wp_get_attachment_image_url( $hero_id, 'full' );
 			if ( ! empty( $url ) ) {
 				return $url;
@@ -151,6 +183,16 @@ class Settings {
 			Plugin::asset_version( 'assets/js/settings.js' ),
 			true
 		);
+		wp_localize_script(
+			'ptn-settings',
+			'ptnSettings',
+			array(
+				'i18n' => array(
+					'chooseImage' => __( 'Choose image', 'posts-to-newsletter' ),
+					'useImage'    => __( 'Use this image', 'posts-to-newsletter' ),
+				),
+			)
+		);
 		wp_enqueue_style(
 			'ptn-admin',
 			URL . 'assets/css/admin.css',
@@ -178,11 +220,11 @@ class Settings {
 			'site_name'             => sanitize_text_field( $in['site_name'] ?? '' ),
 			'logo_id'               => absint( $in['logo_id'] ?? 0 ),
 			'hero_id'               => absint( $in['hero_id'] ?? 0 ),
-			'brand_color'           => sanitize_hex_color( $in['brand_color'] ?? '' ),
-			'accent_color'          => sanitize_hex_color( $in['accent_color'] ?? '' ),
+			'brand_color'           => $this->clean_hex( $in['brand_color'] ?? '', $existing['brand_color'] ),
+			'accent_color'          => $this->clean_hex( $in['accent_color'] ?? '', $existing['accent_color'] ),
 			'subscribe_url'         => esc_url_raw( $in['subscribe_url'] ?? '' ),
 			'intro'                 => sanitize_text_field( $in['intro'] ?? '' ),
-			'image_size'            => sanitize_text_field( $in['image_size'] ?? 'large' ),
+			'image_size'            => in_array( $in['image_size'] ?? '', $this->allowed_image_sizes(), true ) ? $in['image_size'] : 'large',
 			'from_name'             => sanitize_text_field( $in['from_name'] ?? '' ),
 			'from_email'            => sanitize_email( $in['from_email'] ?? '' ),
 			'reply_to'              => sanitize_email( $in['reply_to'] ?? '' ),

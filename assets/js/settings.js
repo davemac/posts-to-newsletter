@@ -1,8 +1,10 @@
 /**
- * Curated Newsletter — settings page: logo/hero media pickers.
+ * Posts to Newsletter — settings page: logo/hero media pickers.
  */
 ( function ( $ ) {
 	'use strict';
+
+	var i18n = ( window.ptnSettings || {} ).i18n || {};
 
 	// Colour pickers.
 	if ( $.fn.wpColorPicker ) {
@@ -22,8 +24,8 @@
 			return;
 		}
 		frames[ target ] = wp.media( {
-			title: 'Choose image',
-			button: { text: 'Use this image' },
+			title: i18n.chooseImage,
+			button: { text: i18n.useImage },
 			library: { type: 'image' },
 			multiple: false
 		} );

@@ -26,6 +26,14 @@ class Selection {
 	public const OPTION = 'ptn_newsletter_post_ids';
 
 	/**
+	 * Upper bound on how many posts a newsletter can contain. Caps the stored
+	 * selection and the size of the ordered-posts query.
+	 *
+	 * @var int
+	 */
+	public const MAX_SELECTION = 30;
+
+	/**
 	 * Clean a raw value into a list of positive integer IDs.
 	 *
 	 * @param mixed $raw Raw IDs (array-ish).
@@ -51,7 +59,7 @@ class Selection {
 	 * @return array<int, int>
 	 */
 	public static function posts( array $ids ): array {
-		$ids = self::sanitize( $ids );
+		$ids = array_slice( self::sanitize( $ids ), 0, self::MAX_SELECTION );
 		if ( empty( $ids ) ) {
 			return array();
 		}

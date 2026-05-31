@@ -1,11 +1,11 @@
 /**
- * Curated Newsletter — curation admin: drag-and-drop ordering, search, auto-save,
- * and push-to-platform buttons.
+ * Posts to Newsletter — curation admin: drag-and-drop ordering, search, auto-save.
  */
 ( function ( $ ) {
 	'use strict';
 
 	var cfg = window.ptnNewsletter || {};
+	var i18n = cfg.i18n || {};
 	var $available = $( '#ptn-available' );
 	var $selected = $( '#ptn-selected' );
 	var $status = $( '.ptn-status' );
@@ -21,7 +21,7 @@
 
 	function save() {
 		var ids = collectIds();
-		$status.text( 'Saving…' );
+		$status.text( i18n.saving );
 		$.ajax( {
 			url: cfg.saveUrl,
 			method: 'POST',
@@ -30,9 +30,9 @@
 			beforeSend: function ( xhr ) { xhr.setRequestHeader( 'X-WP-Nonce', cfg.nonce ); }
 		} ).done( function ( res ) {
 			var count = res && typeof res.count !== 'undefined' ? res.count : ids.length;
-			$status.text( 'Saved — ' + count + ' article' + ( 1 === count ? '' : 's' ) + ' selected' );
+			$status.text( ( 1 === count ? i18n.savedOne : i18n.savedMany ).replace( '%d', count ) );
 		} ).fail( function () {
-			$status.text( 'Save failed — please try again' );
+			$status.text( i18n.saveFailed );
 		} );
 	}
 
@@ -42,11 +42,11 @@
 	}
 
 	function addButton() {
-		return $( '<button type="button" class="button ptn-add"></button>' ).text( 'Add' );
+		return $( '<button type="button" class="button ptn-add"></button>' ).text( i18n.add );
 	}
 
 	function removeButton() {
-		return $( '<button type="button" class="button-link ptn-remove"></button>' ).attr( 'aria-label', 'Remove' ).html( '×' );
+		return $( '<button type="button" class="button-link ptn-remove"></button>' ).attr( 'aria-label', i18n.remove ).html( '×' );
 	}
 
 	$available.on( 'click', '.ptn-add', function () {
@@ -86,7 +86,7 @@
 			var chosen = selectedMap();
 			$available.empty();
 			if ( ! items.length ) {
-				$available.append( '<li class="ptn-empty">No matching articles.</li>' );
+				$available.append( $( '<li class="ptn-empty"></li>' ).text( i18n.noMatches ) );
 				return;
 			}
 			items.forEach( function ( item ) {
