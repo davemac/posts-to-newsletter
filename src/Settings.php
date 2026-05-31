@@ -2,10 +2,10 @@
 /**
  * Plugin settings: storage, defaults, resolved getters, and the settings page.
  *
- * @package Cnl
+ * @package PostsToNewsletter
  */
 
-namespace Cnl;
+namespace PostsToNewsletter;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,11 +15,11 @@ defined( 'ABSPATH' ) || exit;
  */
 class Settings {
 
-	public const OPTION       = 'cnl_settings';
+	public const OPTION       = 'ptn_settings';
 	public const PAGE         = 'posts-to-newsletter-settings';
 	public const PARENT       = 'posts-to-newsletter';
 	public const CAPABILITY   = 'manage_options';
-	public const SAVE_ACTION  = 'cnl_save_settings';
+	public const SAVE_ACTION  = 'ptn_save_settings';
 
 	/**
 	 * Default settings. Branding defaults derive from the WordPress site.
@@ -74,8 +74,8 @@ class Settings {
 	 * @return string
 	 */
 	public function mailchimp_key(): string {
-		if ( defined( 'CNL_MAILCHIMP_API_KEY' ) && '' !== (string) CNL_MAILCHIMP_API_KEY ) {
-			return (string) CNL_MAILCHIMP_API_KEY;
+		if ( defined( 'PTN_MAILCHIMP_API_KEY' ) && '' !== (string) PTN_MAILCHIMP_API_KEY ) {
+			return (string) PTN_MAILCHIMP_API_KEY;
 		}
 		return (string) $this->get( 'mailchimp_api_key' );
 	}
@@ -86,8 +86,8 @@ class Settings {
 	 * @return string
 	 */
 	public function cm_key(): string {
-		if ( defined( 'CNL_CM_API_KEY' ) && '' !== (string) CNL_CM_API_KEY ) {
-			return (string) CNL_CM_API_KEY;
+		if ( defined( 'PTN_CM_API_KEY' ) && '' !== (string) PTN_CM_API_KEY ) {
+			return (string) PTN_CM_API_KEY;
 		}
 		return (string) $this->get( 'cm_api_key' );
 	}
@@ -163,14 +163,14 @@ class Settings {
 		wp_enqueue_media();
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script(
-			'cnl-settings',
+			'ptn-settings',
 			URL . 'assets/js/settings.js',
 			array( 'jquery', 'wp-color-picker' ),
 			Plugin::asset_version( 'assets/js/settings.js' ),
 			true
 		);
 		wp_enqueue_style(
-			'cnl-admin',
+			'ptn-admin',
 			URL . 'assets/css/admin.css',
 			array(),
 			Plugin::asset_version( 'assets/css/admin.css' )

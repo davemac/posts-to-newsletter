@@ -2,13 +2,13 @@
 /**
  * REST endpoints that create a DRAFT campaign on Mailchimp or Campaign Monitor.
  *
- * @package Cnl
+ * @package PostsToNewsletter
  */
 
-namespace Cnl;
+namespace PostsToNewsletter;
 
-use Cnl\Integrations\MailchimpClient;
-use Cnl\Integrations\CampaignMonitorClient;
+use PostsToNewsletter\Integrations\MailchimpClient;
+use PostsToNewsletter\Integrations\CampaignMonitorClient;
 use WP_REST_Response;
 
 defined( 'ABSPATH' ) || exit;
@@ -122,7 +122,7 @@ class Push {
 			return $this->error( __( 'Add a Campaign Monitor API key, client and list in Settings first.', 'posts-to-newsletter' ) );
 		}
 
-		$html_url = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/cnl-newsletter/' ) );
+		$html_url = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/ptn-newsletter/' ) );
 
 		$client = new CampaignMonitorClient( $key );
 		$result = $client->create_draft(

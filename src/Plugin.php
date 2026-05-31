@@ -2,13 +2,13 @@
 /**
  * Plugin bootstrap: wires hooks and handles activation/migration.
  *
- * @package Cnl
+ * @package PostsToNewsletter
  */
 
-namespace Cnl;
+namespace PostsToNewsletter;
 
-use Cnl\Integrations\MailchimpClient;
-use Cnl\Integrations\CampaignMonitorClient;
+use PostsToNewsletter\Integrations\MailchimpClient;
+use PostsToNewsletter\Integrations\CampaignMonitorClient;
 
 defined( 'ABSPATH' ) || exit;
 

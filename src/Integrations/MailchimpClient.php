@@ -2,10 +2,10 @@
 /**
  * Minimal Mailchimp Marketing API client (raw HTTP, no SDK).
  *
- * @package Cnl
+ * @package PostsToNewsletter
  */
 
-namespace Cnl\Integrations;
+namespace PostsToNewsletter\Integrations;
 
 use WP_Error;
 
@@ -98,7 +98,7 @@ class MailchimpClient {
 		$id     = (string) ( $created['id'] ?? '' );
 		$web_id = (int) ( $created['web_id'] ?? 0 );
 		if ( '' === $id ) {
-			return new WP_Error( 'cnl_mc', __( 'Mailchimp did not return a campaign ID.', 'posts-to-newsletter' ) );
+			return new WP_Error( 'ptn_mc', __( 'Mailchimp did not return a campaign ID.', 'posts-to-newsletter' ) );
 		}
 
 		$content = $this->request( 'PUT', 'campaigns/' . rawurlencode( $id ) . '/content', array( 'html' => $html ) );
@@ -122,7 +122,7 @@ class MailchimpClient {
 	 */
 	private function request( string $method, string $path, ?array $body = null ) {
 		if ( ! $this->is_configured() ) {
-			return new WP_Error( 'cnl_mc', __( 'Mailchimp API key is missing or malformed (expected a key ending in -usXX).', 'posts-to-newsletter' ) );
+			return new WP_Error( 'ptn_mc', __( 'Mailchimp API key is missing or malformed (expected a key ending in -usXX).', 'posts-to-newsletter' ) );
 		}
 
 		$args = array(
@@ -148,7 +148,7 @@ class MailchimpClient {
 		if ( $code < 200 || $code >= 300 ) {
 			$detail = is_array( $data ) ? ( $data['detail'] ?? $data['title'] ?? '' ) : '';
 			/* translators: 1: HTTP status code, 2: error detail. */
-			return new WP_Error( 'cnl_mc', sprintf( __( 'Mailchimp error (HTTP %1$d): %2$s', 'posts-to-newsletter' ), $code, $detail ) );
+			return new WP_Error( 'ptn_mc', sprintf( __( 'Mailchimp error (HTTP %1$d): %2$s', 'posts-to-newsletter' ), $code, $detail ) );
 		}
 
 		return is_array( $data ) ? $data : array();

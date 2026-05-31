@@ -1,10 +1,10 @@
 <?php
 /**
- * Curated newsletter email template (static, platform-aware HTML).
+ * Newsletter email template (static, platform-aware HTML).
  *
- * @package Cnl
+ * @package PostsToNewsletter
  *
- * @var \Cnl\Settings       $settings   Settings provider.
+ * @var \PostsToNewsletter\Settings       $settings   Settings provider.
  * @var array<int,int>      $posts      Ordered, published post IDs.
  * @var array{firstname:string,footer:string,preheader:string} $tokens Platform tokens.
  * @var string              $logo_url   Logo URL.
@@ -15,10 +15,12 @@
  * @var string              $site_name  Publication name.
  * @var string              $subscribe  Subscribe URL.
  * @var string              $intro      Intro line (personalisation already applied).
- * @var \Cnl\Renderer       $this       Renderer (for render_card()).
+ * @var \PostsToNewsletter\Renderer       $this       Renderer (for render_card()).
  */
 
 defined( 'ABSPATH' ) || exit;
+
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- View partial: required within Renderer::render(), so the loop variable is method-scoped, not global.
 
 ?><!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -29,8 +31,8 @@ defined( 'ABSPATH' ) || exit;
 	<title><?php echo esc_html( $site_name ); ?></title>
 	<style type="text/css">
 		@media only screen and (max-width: 620px) {
-			.cn-col { display: block !important; width: 100% !important; padding: 0 0 24px 0 !important; }
-			.cn-gutter { display: none !important; }
+			.ptn-col { display: block !important; width: 100% !important; padding: 0 0 24px 0 !important; }
+			.ptn-gutter { display: none !important; }
 		}
 	</style>
 </head>
@@ -66,9 +68,9 @@ defined( 'ABSPATH' ) || exit;
 						<td style="padding:16px 32px;">
 							<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
 								<tr>
-									<td class="cn-col" width="270" valign="top"><?php $this->render_card( (int) $pair[0], $image_size, $accent ); ?></td>
-									<td class="cn-gutter" width="20" style="font-size:0; line-height:0;">&nbsp;</td>
-									<td class="cn-col" width="270" valign="top"><?php $this->render_card( isset( $pair[1] ) ? (int) $pair[1] : 0, $image_size, $accent ); ?></td>
+									<td class="ptn-col" width="270" valign="top"><?php $this->render_card( (int) $pair[0], $image_size, $accent ); ?></td>
+									<td class="ptn-gutter" width="20" style="font-size:0; line-height:0;">&nbsp;</td>
+									<td class="ptn-col" width="270" valign="top"><?php $this->render_card( isset( $pair[1] ) ? (int) $pair[1] : 0, $image_size, $accent ); ?></td>
 								</tr>
 							</table>
 						</td>

@@ -1,5 +1,5 @@
 === Posts to Newsletter ===
-Contributors: YOUR_WPORG_USERNAME
+Contributors: davemac
 Tags: newsletter, email newsletter, post digest, email campaign, mailchimp
 Requires at least: 6.0
 Tested up to: 7.0
@@ -43,8 +43,8 @@ The plugin only talks to the email platform you configure, using the API key you
 
 Instead of storing keys in the database, define them as constants:
 
-`define( 'CNL_MAILCHIMP_API_KEY', 'your-key-here-us13' );`
-`define( 'CNL_CM_API_KEY', 'your-key-here' );`
+`define( 'PTN_MAILCHIMP_API_KEY', 'your-key-here-us13' );`
+`define( 'PTN_CM_API_KEY', 'your-key-here' );`
 
 When a constant is set, the matching settings field is hidden and the constant takes precedence.
 

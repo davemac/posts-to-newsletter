@@ -10,29 +10,29 @@
  * License:           GPL-2.0-or-later
  * Text Domain:       posts-to-newsletter
  *
- * @package Cnl
+ * @package PostsToNewsletter
  */
 
-namespace Cnl;
+namespace PostsToNewsletter;
 
 defined( 'ABSPATH' ) || exit;
 
 const VERSION = '1.0.0';
 
-define( 'Cnl\\FILE', __FILE__ );
-define( 'Cnl\\DIR', plugin_dir_path( __FILE__ ) );
-define( 'Cnl\\URL', plugin_dir_url( __FILE__ ) );
+define( 'PostsToNewsletter\\FILE', __FILE__ );
+define( 'PostsToNewsletter\\DIR', plugin_dir_path( __FILE__ ) );
+define( 'PostsToNewsletter\\URL', plugin_dir_url( __FILE__ ) );
 
 /**
- * Minimal PSR-4 autoloader for the Cnl\ namespace (maps to src/).
+ * Minimal PSR-4 autoloader for the PostsToNewsletter\ namespace (maps to src/).
  */
 spl_autoload_register(
 	static function ( $class ) {
-		if ( 0 !== strpos( $class, 'Cnl\\' ) ) {
+		if ( 0 !== strpos( $class, 'PostsToNewsletter\\' ) ) {
 			return;
 		}
 
-		$relative = str_replace( '\\', '/', substr( $class, strlen( 'Cnl\\' ) ) );
+		$relative = str_replace( '\\', '/', substr( $class, strlen( 'PostsToNewsletter\\' ) ) );
 		$path     = DIR . 'src/' . $relative . '.php';
 
 		if ( is_readable( $path ) ) {

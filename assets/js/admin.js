@@ -5,17 +5,17 @@
 ( function ( $ ) {
 	'use strict';
 
-	var cfg = window.cnlNewsletter || {};
-	var $available = $( '#cn-available' );
-	var $selected = $( '#cn-selected' );
-	var $status = $( '.cn-status' );
-	var $search = $( '#cn-search' );
-	var $pushResult = $( '.cn-push-result' );
+	var cfg = window.ptnNewsletter || {};
+	var $available = $( '#ptn-available' );
+	var $selected = $( '#ptn-selected' );
+	var $status = $( '.ptn-status' );
+	var $search = $( '#ptn-search' );
+	var $pushResult = $( '.ptn-push-result' );
 	var saveTimer = null;
 	var searchTimer = null;
 
 	function collectIds() {
-		return $selected.find( '.cn-item' ).map( function () {
+		return $selected.find( '.ptn-item' ).map( function () {
 			return parseInt( $( this ).attr( 'data-id' ), 10 );
 		} ).get();
 	}
@@ -43,30 +43,30 @@
 	}
 
 	function addButton() {
-		return $( '<button type="button" class="button cn-add"></button>' ).text( 'Add' );
+		return $( '<button type="button" class="button ptn-add"></button>' ).text( 'Add' );
 	}
 
 	function removeButton() {
-		return $( '<button type="button" class="button-link cn-remove"></button>' ).attr( 'aria-label', 'Remove' ).html( '×' );
+		return $( '<button type="button" class="button-link ptn-remove"></button>' ).attr( 'aria-label', 'Remove' ).html( '×' );
 	}
 
-	$available.on( 'click', '.cn-add', function () {
-		var $item = $( this ).closest( '.cn-item' );
+	$available.on( 'click', '.ptn-add', function () {
+		var $item = $( this ).closest( '.ptn-item' );
 		$( this ).replaceWith( removeButton() );
 		$selected.append( $item );
 		debounceSave();
 	} );
 
-	$selected.on( 'click', '.cn-remove', function () {
-		var $item = $( this ).closest( '.cn-item' );
+	$selected.on( 'click', '.ptn-remove', function () {
+		var $item = $( this ).closest( '.ptn-item' );
 		$( this ).replaceWith( addButton() );
 		$available.prepend( $item );
 		debounceSave();
 	} );
 
 	$selected.sortable( {
-		handle: '.cn-handle',
-		placeholder: 'cn-placeholder',
+		handle: '.ptn-handle',
+		placeholder: 'ptn-placeholder',
 		forcePlaceholderSize: true,
 		update: debounceSave
 	} );
@@ -74,7 +74,7 @@
 	// Search.
 	function selectedMap() {
 		var map = {};
-		$selected.find( '.cn-item' ).each( function () { map[ $( this ).attr( 'data-id' ) ] = true; } );
+		$selected.find( '.ptn-item' ).each( function () { map[ $( this ).attr( 'data-id' ) ] = true; } );
 		return map;
 	}
 
@@ -87,7 +87,7 @@
 			var chosen = selectedMap();
 			$available.empty();
 			if ( ! items.length ) {
-				$available.append( '<li class="cn-empty">No matching articles.</li>' );
+				$available.append( '<li class="ptn-empty">No matching articles.</li>' );
 				return;
 			}
 			items.forEach( function ( item ) {
@@ -106,12 +106,12 @@
 	}
 
 	// Push to platform.
-	$( '.cn-push' ).on( 'click', function () {
+	$( '.ptn-push' ).on( 'click', function () {
 		var platform = $( this ).attr( 'data-platform' );
 		var url = 'mailchimp' === platform ? cfg.mailchimp : cfg.cm;
 		var $btn = $( this );
 		$btn.prop( 'disabled', true );
-		$pushResult.removeClass( 'cn-error' ).text( 'Creating draft…' );
+		$pushResult.removeClass( 'ptn-error' ).text( 'Creating draft…' );
 		$.ajax( {
 			url: url,
 			method: 'POST',
@@ -124,7 +124,7 @@
 			}
 		} ).fail( function ( xhr ) {
 			var msg = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Push failed.';
-			$pushResult.addClass( 'cn-error' ).text( msg );
+			$pushResult.addClass( 'ptn-error' ).text( msg );
 		} ).always( function () {
 			$btn.prop( 'disabled', false );
 		} );

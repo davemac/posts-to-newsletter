@@ -6,12 +6,12 @@
 
 	// Colour pickers.
 	if ( $.fn.wpColorPicker ) {
-		$( '.cnl-color' ).wpColorPicker();
+		$( '.ptn-color' ).wpColorPicker();
 	}
 
 	var frames = {};
 
-	$( '.cnl-choose' ).on( 'click', function ( e ) {
+	$( '.ptn-choose' ).on( 'click', function ( e ) {
 		e.preventDefault();
 		var target = $( this ).attr( 'data-target' ); // 'logo' or 'hero'.
 		if ( typeof wp === 'undefined' || ! wp.media ) {
@@ -30,15 +30,15 @@
 		frames[ target ].on( 'select', function () {
 			var att = frames[ target ].state().get( 'selection' ).first().toJSON();
 			var src = att.sizes && att.sizes.medium ? att.sizes.medium.url : att.url;
-			$( '#cnl-' + target + '-id' ).val( att.id );
-			$( '#cnl-' + target + '-preview' ).attr( 'src', src );
+			$( '#ptn-' + target + '-id' ).val( att.id );
+			$( '#ptn-' + target + '-preview' ).attr( 'src', src );
 		} );
 		frames[ target ].open();
 	} );
 
-	$( '.cnl-clear' ).on( 'click', function () {
+	$( '.ptn-clear' ).on( 'click', function () {
 		var target = $( this ).attr( 'data-target' );
-		$( '#cnl-' + target + '-id' ).val( 0 );
-		$( '#cnl-' + target + '-preview' ).attr( 'src', '' );
+		$( '#ptn-' + target + '-id' ).val( 0 );
+		$( '#ptn-' + target + '-preview' ).attr( 'src', '' );
 	} );
 } )( jQuery );

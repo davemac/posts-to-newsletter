@@ -1,13 +1,13 @@
 <?php
 /**
- * Shared helpers for the curated post selection: the stored IDs, the ordered
+ * Shared helpers for the newsletter post selection: the stored IDs, the ordered
  * post query, and the byline. Centralises logic previously duplicated across
  * Curation, Renderer and Push.
  *
- * @package Cnl
+ * @package PostsToNewsletter
  */
 
-namespace Cnl;
+namespace PostsToNewsletter;
 
 use WP_Query;
 
@@ -23,7 +23,7 @@ class Selection {
 	 *
 	 * @var string
 	 */
-	public const OPTION = 'cnl_newsletter_post_ids';
+	public const OPTION = 'ptn_newsletter_post_ids';
 
 	/**
 	 * Clean a raw value into a list of positive integer IDs.

@@ -2,10 +2,10 @@
 /**
  * Curation admin screen: pick, order and search posts for the newsletter.
  *
- * @package Cnl
+ * @package PostsToNewsletter
  */
 
-namespace Cnl;
+namespace PostsToNewsletter;
 
 use WP_Query;
 use WP_REST_Request;
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 class Curation {
 
 	public const PAGE      = 'posts-to-newsletter';
-	public const REST_NS   = 'curated-newsletter/v1';
+	public const REST_NS   = 'posts-to-newsletter/v1';
 
 	private const PER_PAGE   = 50;
 	private const CAPABILITY = 'edit_others_posts';
@@ -52,9 +52,9 @@ class Curation {
 			return;
 		}
 
-		wp_enqueue_style( 'cnl-admin', URL . 'assets/css/admin.css', array(), Plugin::asset_version( 'assets/css/admin.css' ) );
+		wp_enqueue_style( 'ptn-admin', URL . 'assets/css/admin.css', array(), Plugin::asset_version( 'assets/css/admin.css' ) );
 		wp_enqueue_script(
-			'cnl-admin',
+			'ptn-admin',
 			URL . 'assets/js/admin.js',
 			array( 'jquery', 'jquery-ui-sortable' ),
 			Plugin::asset_version( 'assets/js/admin.js' ),
@@ -62,8 +62,8 @@ class Curation {
 		);
 
 		wp_localize_script(
-			'cnl-admin',
-			'cnlNewsletter',
+			'ptn-admin',
+			'ptnNewsletter',
 			array(
 				'saveUrl'   => esc_url_raw( rest_url( self::REST_NS . '/selection' ) ),
 				'searchUrl' => esc_url_raw( rest_url( self::REST_NS . '/search' ) ),
@@ -178,8 +178,8 @@ class Curation {
 		$selected_ids   = Selection::ids();
 		$selected_posts = Selection::posts( $selected_ids );
 		$recent_posts   = $this->query_recent();
-		$preview_cm     = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/cnl-newsletter/' ) );
-		$preview_mc     = add_query_arg( array( Renderer::PLATFORM_VAR => 'mailchimp' ), home_url( '/cnl-newsletter/' ) );
+		$preview_cm     = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/ptn-newsletter/' ) );
+		$preview_mc     = add_query_arg( array( Renderer::PLATFORM_VAR => 'mailchimp' ), home_url( '/ptn-newsletter/' ) );
 		$settings_url   = admin_url( 'admin.php?page=' . Settings::PAGE );
 
 		require DIR . 'templates/curation-page.php';
@@ -196,16 +196,16 @@ class Curation {
 		$thumb  = has_post_thumbnail( $post_id ) ? get_the_post_thumbnail( $post_id, array( 70, 50 ) ) : '';
 		$author = Selection::byline( $post_id );
 
-		echo '<li class="cn-item" data-id="' . esc_attr( (string) $post_id ) . '">';
-		echo '<span class="cn-handle dashicons dashicons-menu" aria-hidden="true"></span>';
-		echo '<span class="cn-thumb">' . wp_kses_post( $thumb ) . '</span>';
-		echo '<span class="cn-meta"><span class="cn-title">' . esc_html( get_the_title( $post_id ) ) . '</span>';
-		echo '<span class="cn-author">' . esc_html( $author ) . '</span>';
-		echo '<span class="cn-date">' . esc_html( get_the_date( '', $post_id ) ) . '</span></span>';
+		echo '<li class="ptn-item" data-id="' . esc_attr( (string) $post_id ) . '">';
+		echo '<span class="ptn-handle dashicons dashicons-menu" aria-hidden="true"></span>';
+		echo '<span class="ptn-thumb">' . wp_kses_post( $thumb ) . '</span>';
+		echo '<span class="ptn-meta"><span class="ptn-title">' . esc_html( get_the_title( $post_id ) ) . '</span>';
+		echo '<span class="ptn-author">' . esc_html( $author ) . '</span>';
+		echo '<span class="ptn-date">' . esc_html( get_the_date( '', $post_id ) ) . '</span></span>';
 		if ( $is_selected ) {
-			echo '<button type="button" class="button-link cn-remove" aria-label="' . esc_attr__( 'Remove', 'posts-to-newsletter' ) . '">&times;</button>';
+			echo '<button type="button" class="button-link ptn-remove" aria-label="' . esc_attr__( 'Remove', 'posts-to-newsletter' ) . '">&times;</button>';
 		} else {
-			echo '<button type="button" class="button cn-add">' . esc_html__( 'Add', 'posts-to-newsletter' ) . '</button>';
+			echo '<button type="button" class="button ptn-add">' . esc_html__( 'Add', 'posts-to-newsletter' ) . '</button>';
 		}
 		echo '</li>';
 	}

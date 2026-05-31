@@ -1,12 +1,12 @@
 <?php
 /**
- * Renders the curated newsletter as platform-aware email HTML and serves the
+ * Renders the newsletter as platform-aware email HTML and serves the
  * public preview/import endpoint.
  *
- * @package Cnl
+ * @package PostsToNewsletter
  */
 
-namespace Cnl;
+namespace PostsToNewsletter;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class Renderer {
 
-	public const QUERY_VAR   = 'cnl_newsletter';
-	public const PLATFORM_VAR = 'cnl_platform';
+	public const QUERY_VAR   = 'ptn_newsletter';
+	public const PLATFORM_VAR = 'ptn_platform';
 
 	private const PLATFORMS = array( 'campaignmonitor', 'mailchimp' );
 
@@ -37,12 +37,12 @@ class Renderer {
 	}
 
 	/**
-	 * Register the pretty rewrite endpoint (/cnl-newsletter/).
+	 * Register the pretty rewrite endpoint (/ptn-newsletter/).
 	 *
 	 * @return void
 	 */
 	public function register_endpoint(): void {
-		add_rewrite_rule( '^cnl-newsletter/?$', 'index.php?' . self::QUERY_VAR . '=1', 'top' );
+		add_rewrite_rule( '^ptn-newsletter/?$', 'index.php?' . self::QUERY_VAR . '=1', 'top' );
 	}
 
 	/**

@@ -30,11 +30,11 @@ Copy this folder into `wp-content/plugins/` and activate it from the **Plugins**
 ## Configuration
 
 - **API keys** can be set on the settings page or, more securely, via `wp-config.php` constants:
-  - `define( 'CNL_MAILCHIMP_API_KEY', '…-us13' );`
-  - `define( 'CNL_CM_API_KEY', '…' );`
+  - `define( 'PTN_MAILCHIMP_API_KEY', '…-us13' );`
+  - `define( 'PTN_CM_API_KEY', '…' );`
 - **Public render endpoint** (used for preview and as Campaign Monitor's fetch URL):
-  - `/cnl-newsletter/?cnl_platform=mailchimp`
-  - `/cnl-newsletter/?cnl_platform=campaignmonitor`
+  - `/ptn-newsletter/?ptn_platform=mailchimp`
+  - `/ptn-newsletter/?ptn_platform=campaignmonitor`
   - Must be publicly reachable for the Campaign Monitor push (it fetches the URL server-side).
 
 ## How the pushes work
