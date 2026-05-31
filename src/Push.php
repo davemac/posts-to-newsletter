@@ -1,6 +1,6 @@
 <?php
 /**
- * REST endpoints that create a DRAFT campaign on MailChimp or Campaign Monitor.
+ * REST endpoints that create a DRAFT campaign on Mailchimp or Campaign Monitor.
  *
  * @package Cnl
  */
@@ -77,7 +77,7 @@ class Push {
 	}
 
 	/**
-	 * Create a MailChimp draft.
+	 * Create a Mailchimp draft.
 	 *
 	 * @return WP_REST_Response
 	 */
@@ -86,7 +86,7 @@ class Push {
 		$audience = (string) $this->settings->get( 'mailchimp_audience_id' );
 
 		if ( '' === $key || '' === $audience ) {
-			return $this->error( __( 'Add a MailChimp API key and choose an audience in Settings first.', 'curated-newsletter' ) );
+			return $this->error( __( 'Add a Mailchimp API key and choose an audience in Settings first.', 'posts-to-newsletter' ) );
 		}
 
 		$client = new MailchimpClient( $key );
@@ -119,7 +119,7 @@ class Push {
 		$list_id   = (string) $this->settings->get( 'cm_list_id' );
 
 		if ( '' === $key || '' === $client_id || '' === $list_id ) {
-			return $this->error( __( 'Add a Campaign Monitor API key, client and list in Settings first.', 'curated-newsletter' ) );
+			return $this->error( __( 'Add a Campaign Monitor API key, client and list in Settings first.', 'posts-to-newsletter' ) );
 		}
 
 		$html_url = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/cnl-newsletter/' ) );
@@ -145,7 +145,7 @@ class Push {
 		return new WP_REST_Response(
 			array(
 				'ok'      => true,
-				'message' => __( 'Draft created in Campaign Monitor. Open Campaign Monitor to review and send.', 'curated-newsletter' ),
+				'message' => __( 'Draft created in Campaign Monitor. Open Campaign Monitor to review and send.', 'posts-to-newsletter' ),
 			),
 			200
 		);

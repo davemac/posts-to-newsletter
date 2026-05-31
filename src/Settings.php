@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
 class Settings {
 
 	public const OPTION       = 'cnl_settings';
-	public const PAGE         = 'curated-newsletter-settings';
-	public const PARENT       = 'curated-newsletter';
+	public const PAGE         = 'posts-to-newsletter-settings';
+	public const PARENT       = 'posts-to-newsletter';
 	public const CAPABILITY   = 'manage_options';
 	public const SAVE_ACTION  = 'cnl_save_settings';
 
@@ -69,7 +69,7 @@ class Settings {
 	}
 
 	/**
-	 * Resolve the MailChimp API key (wp-config constant wins over the option).
+	 * Resolve the Mailchimp API key (wp-config constant wins over the option).
 	 *
 	 * @return string
 	 */
@@ -141,8 +141,8 @@ class Settings {
 	public function register_settings_page(): void {
 		add_submenu_page(
 			self::PARENT,
-			__( 'Newsletter Settings', 'curated-newsletter' ),
-			__( 'Settings', 'curated-newsletter' ),
+			__( 'Newsletter Settings', 'posts-to-newsletter' ),
+			__( 'Settings', 'posts-to-newsletter' ),
 			self::CAPABILITY,
 			self::PAGE,
 			array( $this, 'render_settings_page' )
@@ -184,7 +184,7 @@ class Settings {
 	 */
 	public function handle_save(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'You do not have permission to do this.', 'curated-newsletter' ) );
+			wp_die( esc_html__( 'You do not have permission to do this.', 'posts-to-newsletter' ) );
 		}
 
 		check_admin_referer( self::SAVE_ACTION );

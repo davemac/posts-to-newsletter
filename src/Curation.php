@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 class Curation {
 
 	public const SELECTION = 'cnl_newsletter_post_ids';
-	public const PAGE      = 'curated-newsletter';
+	public const PAGE      = 'posts-to-newsletter';
 	public const REST_NS   = 'curated-newsletter/v1';
 
 	private const PER_PAGE   = 50;
@@ -32,8 +32,8 @@ class Curation {
 	 */
 	public function register_admin_page(): void {
 		add_menu_page(
-			__( 'Newsletter', 'curated-newsletter' ),
-			__( 'Newsletter', 'curated-newsletter' ),
+			__( 'Newsletter', 'posts-to-newsletter' ),
+			__( 'Newsletter', 'posts-to-newsletter' ),
 			self::CAPABILITY,
 			self::PAGE,
 			array( $this, 'render_admin_page' ),
@@ -130,7 +130,6 @@ class Curation {
 		$ids = array_values( array_filter( array_map( 'absint', (array) $request->get_param( 'ids' ) ) ) );
 		update_option( self::SELECTION, $ids );
 
-		do_action( 'litespeed_purge_url', home_url( '/cnl-newsletter/' ) );
 
 		return new WP_REST_Response( array( 'saved' => true, 'count' => count( $ids ) ), 200 );
 	}
@@ -206,9 +205,9 @@ class Curation {
 		echo '<span class="cn-author">' . esc_html( $author ) . '</span>';
 		echo '<span class="cn-date">' . esc_html( get_the_date( '', $post_id ) ) . '</span></span>';
 		if ( $is_selected ) {
-			echo '<button type="button" class="button-link cn-remove" aria-label="' . esc_attr__( 'Remove', 'curated-newsletter' ) . '">&times;</button>';
+			echo '<button type="button" class="button-link cn-remove" aria-label="' . esc_attr__( 'Remove', 'posts-to-newsletter' ) . '">&times;</button>';
 		} else {
-			echo '<button type="button" class="button cn-add">' . esc_html__( 'Add', 'curated-newsletter' ) . '</button>';
+			echo '<button type="button" class="button cn-add">' . esc_html__( 'Add', 'posts-to-newsletter' ) . '</button>';
 		}
 		echo '</li>';
 	}

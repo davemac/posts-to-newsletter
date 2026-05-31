@@ -117,7 +117,7 @@ class CampaignMonitorClient {
 	 */
 	private function request( string $method, string $path, ?array $body = null ) {
 		if ( ! $this->is_configured() ) {
-			return new WP_Error( 'cnl_cm', __( 'Campaign Monitor API key is missing.', 'curated-newsletter' ) );
+			return new WP_Error( 'cnl_cm', __( 'Campaign Monitor API key is missing.', 'posts-to-newsletter' ) );
 		}
 
 		$args = array(
@@ -143,7 +143,7 @@ class CampaignMonitorClient {
 		if ( $code < 200 || $code >= 300 ) {
 			$detail = is_array( $data ) ? ( $data['Message'] ?? '' ) : '';
 			/* translators: 1: HTTP status code, 2: error detail. */
-			return new WP_Error( 'cnl_cm', sprintf( __( 'Campaign Monitor error (HTTP %1$d): %2$s', 'curated-newsletter' ), $code, $detail ) );
+			return new WP_Error( 'cnl_cm', sprintf( __( 'Campaign Monitor error (HTTP %1$d): %2$s', 'posts-to-newsletter' ), $code, $detail ) );
 		}
 
 		return $data;
