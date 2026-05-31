@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name:       Curated Newsletter
+ * Plugin Name:       Posts to Newsletter
  * Plugin URI:        https://thecode.com.au/
- * Description:       Hand-pick and order posts into a branded email, then push a ready-to-send draft to MailChimp or Campaign Monitor.
+ * Description:       Turn your posts into a branded newsletter — hand-pick and order them, then push a ready-to-send draft to MailChimp or Campaign Monitor.
  * Version:           1.0.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
