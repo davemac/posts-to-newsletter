@@ -1,0 +1,303 @@
+<?php
+/**
+ * Curation admin screen: pick, order and search posts for the newsletter.
+ *
+ * @package Cnl
+ */
+
+namespace Cnl;
+
+use WP_Query;
+use WP_REST_Request;
+use WP_REST_Response;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Renders the drag-and-drop picker and stores the selected, ordered post IDs.
+ */
+class Curation {
+
+	public const SELECTION = 'cnl_newsletter_post_ids';
+	public const PAGE      = 'curated-newsletter';
+	public const REST_NS   = 'curated-newsletter/v1';
+
+	private const PER_PAGE   = 50;
+	private const CAPABILITY = 'edit_others_posts';
+
+	/**
+	 * Register the top-level Newsletter admin menu.
+	 *
+	 * @return void
+	 */
+	public function register_admin_page(): void {
+		add_menu_page(
+			__( 'Newsletter', 'curated-newsletter' ),
+			__( 'Newsletter', 'curated-newsletter' ),
+			self::CAPABILITY,
+			self::PAGE,
+			array( $this, 'render_admin_page' ),
+			'dashicons-email-alt',
+			26
+		);
+	}
+
+	/**
+	 * Enqueue the curation assets on its page only.
+	 *
+	 * @param string $hook_suffix Current admin page.
+	 * @return void
+	 */
+	public function enqueue_assets( $hook_suffix ): void {
+		if ( 'toplevel_page_' . self::PAGE !== $hook_suffix ) {
+			return;
+		}
+
+		wp_enqueue_style( 'cnl-admin', URL . 'assets/css/admin.css', array(), Plugin::asset_version( 'assets/css/admin.css' ) );
+		wp_enqueue_script(
+			'cnl-admin',
+			URL . 'assets/js/admin.js',
+			array( 'jquery', 'jquery-ui-sortable' ),
+			Plugin::asset_version( 'assets/js/admin.js' ),
+			true
+		);
+
+		wp_localize_script(
+			'cnl-admin',
+			'cnlNewsletter',
+			array(
+				'saveUrl'   => esc_url_raw( rest_url( self::REST_NS . '/selection' ) ),
+				'searchUrl' => esc_url_raw( rest_url( self::REST_NS . '/search' ) ),
+				'mailchimp' => esc_url_raw( rest_url( self::REST_NS . '/push/mailchimp' ) ),
+				'cm'        => esc_url_raw( rest_url( self::REST_NS . '/push/campaignmonitor' ) ),
+				'nonce'     => wp_create_nonce( 'wp_rest' ),
+			)
+		);
+	}
+
+	/**
+	 * Register the selection + search REST routes.
+	 *
+	 * @return void
+	 */
+	public function register_routes(): void {
+		$can = static function () {
+			return current_user_can( self::CAPABILITY );
+		};
+
+		register_rest_route(
+			self::REST_NS,
+			'/selection',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $this, 'save_selection' ),
+				'permission_callback' => $can,
+				'args'                => array(
+					'ids' => array(
+						'required' => true,
+						'type'     => 'array',
+						'items'    => array( 'type' => 'integer' ),
+					),
+				),
+			)
+		);
+
+		register_rest_route(
+			self::REST_NS,
+			'/search',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'search_articles' ),
+				'permission_callback' => $can,
+				'args'                => array(
+					'q' => array(
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_text_field',
+						'default'           => '',
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Save the ordered selection.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response
+	 */
+	public function save_selection( WP_REST_Request $request ): WP_REST_Response {
+		$ids = array_values( array_filter( array_map( 'absint', (array) $request->get_param( 'ids' ) ) ) );
+		update_option( self::SELECTION, $ids );
+
+		do_action( 'litespeed_purge_url', home_url( '/cnl-newsletter/' ) );
+
+		return new WP_REST_Response( array( 'saved' => true, 'count' => count( $ids ) ), 200 );
+	}
+
+	/**
+	 * Search published posts, returning rendered list items.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response
+	 */
+	public function search_articles( WP_REST_Request $request ): WP_REST_Response {
+		$search = trim( (string) $request->get_param( 'q' ) );
+
+		$args = array(
+			'post_type'           => 'post',
+			'post_status'         => 'publish',
+			'posts_per_page'      => self::PER_PAGE,
+			'ignore_sticky_posts' => true,
+			'no_found_rows'       => true,
+			'fields'              => 'ids',
+		);
+
+		if ( '' !== $search ) {
+			$args['s'] = $search;
+		} else {
+			$args['orderby'] = 'date';
+			$args['order']   = 'DESC';
+		}
+
+		$query = new WP_Query( $args );
+
+		$items = array();
+		foreach ( $query->posts as $post_id ) {
+			ob_start();
+			$this->render_item( (int) $post_id, false );
+			$items[] = array( 'id' => (int) $post_id, 'html' => ob_get_clean() );
+		}
+
+		return new WP_REST_Response( $items, 200 );
+	}
+
+	/**
+	 * Render the curation admin page.
+	 *
+	 * @return void
+	 */
+	public function render_admin_page(): void {
+		$selected_ids   = $this->get_selected_ids();
+		$selected_posts = $this->query_ids( $selected_ids );
+		$recent_posts   = $this->query_recent();
+		$preview_cm     = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/cnl-newsletter/' ) );
+		$preview_mc     = add_query_arg( array( Renderer::PLATFORM_VAR => 'mailchimp' ), home_url( '/cnl-newsletter/' ) );
+		$settings_url   = admin_url( 'admin.php?page=' . Settings::PAGE );
+
+		require DIR . 'templates/curation-page.php';
+	}
+
+	/**
+	 * Render one article list item.
+	 *
+	 * @param int  $post_id     Post ID.
+	 * @param bool $is_selected Whether it sits in the selected column.
+	 * @return void
+	 */
+	public function render_item( int $post_id, bool $is_selected ): void {
+		$thumb  = has_post_thumbnail( $post_id ) ? get_the_post_thumbnail( $post_id, array( 70, 50 ) ) : '';
+		$author = $this->byline( $post_id );
+
+		echo '<li class="cn-item" data-id="' . esc_attr( (string) $post_id ) . '">';
+		echo '<span class="cn-handle dashicons dashicons-menu" aria-hidden="true"></span>';
+		echo '<span class="cn-thumb">' . wp_kses_post( $thumb ) . '</span>';
+		echo '<span class="cn-meta"><span class="cn-title">' . esc_html( get_the_title( $post_id ) ) . '</span>';
+		echo '<span class="cn-author">' . esc_html( $author ) . '</span>';
+		echo '<span class="cn-date">' . esc_html( get_the_date( '', $post_id ) ) . '</span></span>';
+		if ( $is_selected ) {
+			echo '<button type="button" class="button-link cn-remove" aria-label="' . esc_attr__( 'Remove', 'curated-newsletter' ) . '">&times;</button>';
+		} else {
+			echo '<button type="button" class="button cn-add">' . esc_html__( 'Add', 'curated-newsletter' ) . '</button>';
+		}
+		echo '</li>';
+	}
+
+	/**
+	 * Byline honouring Co-Authors Plus when present.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return string
+	 */
+	private function byline( int $post_id ): string {
+		if ( function_exists( 'get_coauthors' ) ) {
+			$authors = get_coauthors( $post_id );
+			if ( ! empty( $authors ) ) {
+				$names = array_map( static fn( $a ) => $a->display_name, $authors );
+				return implode( ', ', array_filter( $names ) );
+			}
+		}
+		$name = get_the_author_meta( 'display_name', (int) get_post_field( 'post_author', $post_id ) );
+		return ! empty( $name ) ? $name : get_bloginfo( 'name' );
+	}
+
+	/**
+	 * Selected, cleaned post IDs.
+	 *
+	 * @return array<int, int>
+	 */
+	private function get_selected_ids(): array {
+		return array_values( array_filter( array_map( 'absint', (array) get_option( self::SELECTION, array() ) ) ) );
+	}
+
+	/**
+	 * Query posts by ID, preserving order.
+	 *
+	 * @param array<int, int> $ids Post IDs.
+	 * @return array<int, int>
+	 */
+	private function query_ids( array $ids ): array {
+		if ( empty( $ids ) ) {
+			return array();
+		}
+		$query = new WP_Query(
+			array(
+				'post_type'           => 'post',
+				'post_status'         => 'publish',
+				'post__in'            => $ids,
+				'orderby'             => 'post__in',
+				'posts_per_page'      => count( $ids ),
+				'ignore_sticky_posts' => true,
+				'no_found_rows'       => true,
+				'fields'              => 'ids',
+			)
+		);
+		return $query->posts;
+	}
+
+	/**
+	 * Latest published posts.
+	 *
+	 * @return array<int, int>
+	 */
+	private function query_recent(): array {
+		$query = new WP_Query(
+			array(
+				'post_type'           => 'post',
+				'post_status'         => 'publish',
+				'posts_per_page'      => self::PER_PAGE,
+				'orderby'             => 'date',
+				'order'               => 'DESC',
+				'ignore_sticky_posts' => true,
+				'no_found_rows'       => true,
+				'fields'              => 'ids',
+			)
+		);
+		return $query->posts;
+	}
+
+	/**
+	 * One-time migration of the legacy selection option.
+	 *
+	 * @return void
+	 */
+	public static function migrate_legacy(): void {
+		if ( false !== get_option( self::SELECTION, false ) ) {
+			return;
+		}
+		$legacy = get_option( 'colacnew_newsletter_post_ids', false );
+		if ( false !== $legacy ) {
+			update_option( self::SELECTION, $legacy );
+		}
+	}
+}
