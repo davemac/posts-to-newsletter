@@ -93,7 +93,7 @@ class Renderer {
 	public function render( string $platform ): string {
 		$settings   = $this->settings;
 		$tokens     = $this->tokens( $platform );
-		$posts      = $this->selected_posts();
+		$posts      = Selection::ordered();
 		$logo_url   = $settings->logo_url();
 		$hero_url   = $settings->hero_url();
 		$brand      = (string) $settings->get( 'brand_color' );
@@ -122,7 +122,7 @@ class Renderer {
 		}
 
 		$permalink  = get_permalink( $card_id );
-		$byline     = $this->byline( $card_id );
+		$byline     = Selection::byline( $card_id );
 		$date       = get_the_date( 'F j, Y', $card_id );
 		$excerpt    = wp_trim_words( get_the_excerpt( $card_id ), 22, '&hellip;' );
 		$image      = has_post_thumbnail( $card_id ) ? wp_get_attachment_image_src( get_post_thumbnail_id( $card_id ), $image_size ) : false;
@@ -186,27 +186,6 @@ class Renderer {
 	}
 
 	/**
-	 * Get the byline, honouring Co-Authors Plus when available.
-	 *
-	 * @param int $post_id Post ID.
-	 * @return string
-	 */
-	private function byline( int $post_id ): string {
-		if ( function_exists( 'get_coauthors' ) ) {
-			$authors = get_coauthors( $post_id );
-			if ( ! empty( $authors ) ) {
-				$names = array_map( static fn( $a ) => $a->display_name, $authors );
-				return implode( ', ', array_filter( $names ) );
-			}
-		}
-
-		$author_id = (int) get_post_field( 'post_author', $post_id );
-		$name      = get_the_author_meta( 'display_name', $author_id );
-
-		return ! empty( $name ) ? $name : (string) $this->settings->get( 'site_name' );
-	}
-
-	/**
 	 * Produce a light tint (≈10% on white) of a hex colour for the author pill.
 	 *
 	 * @param string $hex Hex colour like #e32441.
@@ -230,32 +209,5 @@ class Renderer {
 		$b = $mix( (int) hexdec( substr( $hex, 4, 2 ) ) );
 
 		return sprintf( '#%02x%02x%02x', $r, $g, $b );
-	}
-
-	/**
-	 * Ordered, published, selected post IDs.
-	 *
-	 * @return array<int, int>
-	 */
-	private function selected_posts(): array {
-		$ids = array_values( array_filter( array_map( 'absint', (array) get_option( Curation::SELECTION, array() ) ) ) );
-		if ( empty( $ids ) ) {
-			return array();
-		}
-
-		$query = new \WP_Query(
-			array(
-				'post_type'           => 'post',
-				'post_status'         => 'publish',
-				'post__in'            => $ids,
-				'orderby'             => 'post__in',
-				'posts_per_page'      => count( $ids ),
-				'ignore_sticky_posts' => true,
-				'no_found_rows'       => true,
-				'fields'              => 'ids',
-			)
-		);
-
-		return $query->posts;
 	}
 }

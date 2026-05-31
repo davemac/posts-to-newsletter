@@ -18,7 +18,6 @@ defined( 'ABSPATH' ) || exit;
  */
 class Curation {
 
-	public const SELECTION = 'cnl_newsletter_post_ids';
 	public const PAGE      = 'posts-to-newsletter';
 	public const REST_NS   = 'curated-newsletter/v1';
 
@@ -127,9 +126,8 @@ class Curation {
 	 * @return WP_REST_Response
 	 */
 	public function save_selection( WP_REST_Request $request ): WP_REST_Response {
-		$ids = array_values( array_filter( array_map( 'absint', (array) $request->get_param( 'ids' ) ) ) );
-		update_option( self::SELECTION, $ids );
-
+		$ids = Selection::sanitize( $request->get_param( 'ids' ) );
+		update_option( Selection::OPTION, $ids );
 
 		return new WP_REST_Response( array( 'saved' => true, 'count' => count( $ids ) ), 200 );
 	}
@@ -177,8 +175,8 @@ class Curation {
 	 * @return void
 	 */
 	public function render_admin_page(): void {
-		$selected_ids   = $this->get_selected_ids();
-		$selected_posts = $this->query_ids( $selected_ids );
+		$selected_ids   = Selection::ids();
+		$selected_posts = Selection::posts( $selected_ids );
 		$recent_posts   = $this->query_recent();
 		$preview_cm     = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/cnl-newsletter/' ) );
 		$preview_mc     = add_query_arg( array( Renderer::PLATFORM_VAR => 'mailchimp' ), home_url( '/cnl-newsletter/' ) );
@@ -196,7 +194,7 @@ class Curation {
 	 */
 	public function render_item( int $post_id, bool $is_selected ): void {
 		$thumb  = has_post_thumbnail( $post_id ) ? get_the_post_thumbnail( $post_id, array( 70, 50 ) ) : '';
-		$author = $this->byline( $post_id );
+		$author = Selection::byline( $post_id );
 
 		echo '<li class="cn-item" data-id="' . esc_attr( (string) $post_id ) . '">';
 		echo '<span class="cn-handle dashicons dashicons-menu" aria-hidden="true"></span>';
@@ -210,58 +208,6 @@ class Curation {
 			echo '<button type="button" class="button cn-add">' . esc_html__( 'Add', 'posts-to-newsletter' ) . '</button>';
 		}
 		echo '</li>';
-	}
-
-	/**
-	 * Byline honouring Co-Authors Plus when present.
-	 *
-	 * @param int $post_id Post ID.
-	 * @return string
-	 */
-	private function byline( int $post_id ): string {
-		if ( function_exists( 'get_coauthors' ) ) {
-			$authors = get_coauthors( $post_id );
-			if ( ! empty( $authors ) ) {
-				$names = array_map( static fn( $a ) => $a->display_name, $authors );
-				return implode( ', ', array_filter( $names ) );
-			}
-		}
-		$name = get_the_author_meta( 'display_name', (int) get_post_field( 'post_author', $post_id ) );
-		return ! empty( $name ) ? $name : get_bloginfo( 'name' );
-	}
-
-	/**
-	 * Selected, cleaned post IDs.
-	 *
-	 * @return array<int, int>
-	 */
-	private function get_selected_ids(): array {
-		return array_values( array_filter( array_map( 'absint', (array) get_option( self::SELECTION, array() ) ) ) );
-	}
-
-	/**
-	 * Query posts by ID, preserving order.
-	 *
-	 * @param array<int, int> $ids Post IDs.
-	 * @return array<int, int>
-	 */
-	private function query_ids( array $ids ): array {
-		if ( empty( $ids ) ) {
-			return array();
-		}
-		$query = new WP_Query(
-			array(
-				'post_type'           => 'post',
-				'post_status'         => 'publish',
-				'post__in'            => $ids,
-				'orderby'             => 'post__in',
-				'posts_per_page'      => count( $ids ),
-				'ignore_sticky_posts' => true,
-				'no_found_rows'       => true,
-				'fields'              => 'ids',
-			)
-		);
-		return $query->posts;
 	}
 
 	/**
@@ -291,12 +237,12 @@ class Curation {
 	 * @return void
 	 */
 	public static function migrate_legacy(): void {
-		if ( false !== get_option( self::SELECTION, false ) ) {
+		if ( false !== get_option( Selection::OPTION, false ) ) {
 			return;
 		}
 		$legacy = get_option( 'colacnew_newsletter_post_ids', false );
 		if ( false !== $legacy ) {
-			update_option( self::SELECTION, $legacy );
+			update_option( Selection::OPTION, $legacy );
 		}
 	}
 }

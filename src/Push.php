@@ -157,7 +157,7 @@ class Push {
 	 * @return string
 	 */
 	private function subject(): string {
-		$ids = array_values( array_filter( array_map( 'absint', (array) get_option( Curation::SELECTION, array() ) ) ) );
+		$ids = Selection::ids();
 		if ( ! empty( $ids ) ) {
 			$title = get_the_title( $ids[0] );
 			if ( '' !== $title ) {
