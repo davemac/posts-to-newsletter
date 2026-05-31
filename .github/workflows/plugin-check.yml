@@ -1,0 +1,24 @@
+# Runs WordPress Plugin Check on every pull request so the WordPress.org gate
+# (0 errors) is enforced before merge. Can later be made a required status check.
+name: Plugin Check
+
+on:
+  pull_request:
+
+jobs:
+  plugin-check:
+    name: Plugin Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Plugin Check
+        uses: wordpress/plugin-check-action@v1
+        with:
+          severity: 5
+          # Gate on .org-blocking errors; warnings are surfaced as annotations only.
+          ignore-warnings: true
+          # .git/.distignore/.github exist in the checkout but are excluded from the
+          # release build via .distignore, so hidden_files is a false positive here.
+          ignore-codes: hidden_files
