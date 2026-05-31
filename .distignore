@@ -4,4 +4,5 @@
 /.distignore
 /.github
 /README.md
+/CLAUDE.md
 /node_modules
