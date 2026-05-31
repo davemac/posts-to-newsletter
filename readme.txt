@@ -8,21 +8,21 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Hand-pick and order posts into a branded email, then push a draft to Mailchimp or Campaign Monitor. Drafts only — you review and send.
+Hand-pick and order posts into a branded email, then push a draft to Mailchimp or Campaign Monitor. Drafts only - you review and send.
 
 == Description ==
 
-**Posts to Newsletter** turns your published posts into a branded email newsletter. Search your posts, click to include them, drag to set the order, then push a ready-to-review **draft** to your email platform. It never sends — a human always reviews and sends inside the platform.
+**Posts to Newsletter** turns your published posts into a branded email newsletter. Search your posts, click to include them, drag to set the order, then push a ready-to-review **draft** to your email platform. It never sends - a human always reviews and sends inside the platform.
 
 Branding defaults from your WordPress site (title and custom logo) and everything is overridable on the settings page, so it works on any site out of the box.
 
 = What it does =
 
-* **Curation screen** — search all your posts, click to include, drag to reorder. Changes save automatically.
-* **Branded email** — a responsive, two-column article layout with hero image, logo, category labels, author bylines and a subscribe button. Colours and branding are configurable.
-* **One-click push to draft** — creates a draft campaign on the platform you choose. It never sends.
-* **Platform-aware merge tags** — your intro personalisation and the unsubscribe / preferences / web-version / address tags are written in each platform's own syntax automatically.
-* **Co-Authors Plus aware** — bylines respect Co-Authors Plus when it's active.
+* **Curation screen** - search all your posts, click to include, drag to reorder. Changes save automatically.
+* **Branded email** - a responsive, two-column article layout with hero image, logo, category labels, author bylines and a subscribe button. Colours and branding are configurable.
+* **One-click push to draft** - creates a draft campaign on the platform you choose. It never sends.
+* **Platform-aware merge tags** - your intro personalisation and the unsubscribe / preferences / web-version / address tags are written in each platform's own syntax automatically.
+* **Co-Authors Plus aware** - bylines respect Co-Authors Plus when it's active.
 
 = Email platforms =
 
@@ -72,8 +72,8 @@ No. Branding defaults are pulled from the current site and everything is overrid
 
 == Screenshots ==
 
-1. The curation screen — search, add and drag posts into order.
-2. The settings screen — branding, sender and platform connections.
+1. The curation screen - search, add and drag posts into order.
+2. The settings screen - branding, sender and platform connections.
 3. The rendered newsletter email.
 
 == Changelog ==
