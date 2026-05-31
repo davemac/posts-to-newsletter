@@ -8,11 +8,11 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Hand-pick and order posts into a branded email, then push a draft to Mailchimp or Campaign Monitor. Drafts only - you review and send.
+Hand-pick and order posts into a branded HTML email, then preview a platform-ready newsletter to import into your email service.
 
 == Description ==
 
-**Posts to Newsletter** turns your published posts into a branded email newsletter. Search your posts, click to include them, drag to set the order, then push a ready-to-review **draft** to your email platform. It never sends - a human always reviews and sends inside the platform.
+**Posts to Newsletter** turns your published posts into a branded email newsletter. Search your posts, click to include them, drag to set the order, then preview the finished newsletter at a public URL — ready to copy into your email platform.
 
 Branding defaults from your WordPress site (title and custom logo) and everything is overridable on the settings page, so it works on any site out of the box.
 
@@ -20,43 +20,46 @@ Branding defaults from your WordPress site (title and custom logo) and everythin
 
 * **Curation screen** - search all your posts, click to include, drag to reorder. Changes save automatically.
 * **Branded email** - a responsive, two-column article layout with hero image, logo, category labels, author bylines and a subscribe button. Colours and branding are configurable.
-* **One-click push to draft** - creates a draft campaign on the platform you choose. It never sends.
-* **Platform-aware merge tags** - your intro personalisation and the unsubscribe / preferences / web-version / address tags are written in each platform's own syntax automatically.
+* **Platform-ready preview** - the newsletter renders at a public URL in **Mailchimp** or **Campaign Monitor** flavour. Your intro personalisation and the unsubscribe / preferences / web-version / address tags are written in each platform's own merge-tag syntax, so you can import the HTML and the tags just work.
 * **Co-Authors Plus aware** - bylines respect Co-Authors Plus when it's active.
 
-= Email platforms =
+= One-click push (premium add-on) =
 
-This release connects to **Mailchimp** and **Campaign Monitor**. More providers are planned. Posts to Newsletter is an independent plugin and is not affiliated with, or endorsed by, Mailchimp or Campaign Monitor; those names are used only to describe the integrations.
+The free plugin produces newsletter HTML you import into your platform manually. The premium add-on **Posts to Newsletter Pro** adds **Push to Mailchimp** and **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform in one click. It never sends — a human always reviews and sends inside the platform.
+
+= Compatibility note =
+
+Posts to Newsletter is an independent plugin and is not affiliated with, or endorsed by, Mailchimp or Campaign Monitor; those names are used only to describe the newsletter formats it can produce.
 
 = Privacy =
 
-The plugin only talks to the email platform you configure, using the API key you provide. It does not phone home or send your content anywhere else.
+The free plugin does not phone home or send your content anywhere. It only renders the newsletter on your own site.
 
 == Installation ==
 
 1. Upload the `posts-to-newsletter` folder to `/wp-content/plugins/`, or install it through **Plugins → Add New**.
 2. Activate the plugin through the **Plugins** menu.
-3. Go to **Newsletter → Settings** and set your branding, sender details and platform API key(s).
-4. Open **Newsletter**, add and order your articles, then click **Push to Mailchimp** or **Push to Campaign Monitor**.
+3. Go to **Newsletter → Settings** and set your branding, sender details and article image size.
+4. Open **Newsletter**, add and order your articles, then copy a preview URL to import into your email platform.
 
-= API keys via wp-config.php (recommended) =
+= Preview URLs =
 
-Instead of storing keys in the database, define them as constants:
+The newsletter renders at:
 
-`define( 'PTN_MAILCHIMP_API_KEY', 'your-key-here-us13' );`
-`define( 'PTN_CM_API_KEY', 'your-key-here' );`
+`/ptn-newsletter/?ptn_platform=mailchimp`
+`/ptn-newsletter/?ptn_platform=campaignmonitor`
 
-When a constant is set, the matching settings field is hidden and the constant takes precedence.
+Open the one for your platform and import the HTML.
 
 == Frequently Asked Questions ==
 
 = Does it send the email? =
 
-No. It only ever creates a **draft** campaign on your platform. You review and send from inside Mailchimp or Campaign Monitor.
+No. The free plugin only renders the newsletter for you to import. The premium add-on can create a **draft** on your platform, but nothing ever sends automatically — you review and send from inside Mailchimp or Campaign Monitor.
 
-= Do I need an account with an email platform? =
+= Do I need an email platform account? =
 
-Yes. You need a Mailchimp API key and/or a Campaign Monitor (Create Send) API key, and at least one audience/list configured on that platform.
+Not for the free plugin — it renders HTML you can use anywhere. To push drafts automatically you need the premium add-on plus a Mailchimp or Campaign Monitor account.
 
 = Which posts can I include? =
 
@@ -73,13 +76,13 @@ No. Branding defaults are pulled from the current site and everything is overrid
 == Screenshots ==
 
 1. The curation screen - search, add and drag posts into order.
-2. The settings screen - branding, sender and platform connections.
+2. The settings screen - branding and sender details.
 3. The rendered newsletter email.
 
 == Changelog ==
 
 = 1.0.0 =
-* Initial release: post curation, branded email rendering, and draft push to Mailchimp and Campaign Monitor.
+* Initial release: post curation, branded email rendering, and a platform-aware public render endpoint for manual import. One-click draft push to Mailchimp and Campaign Monitor is available via the premium Posts to Newsletter Pro add-on.
 
 == Upgrade Notice ==
 
