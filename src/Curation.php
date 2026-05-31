@@ -68,6 +68,17 @@ class Curation {
 				'saveUrl'   => esc_url_raw( rest_url( self::REST_NS . '/selection' ) ),
 				'searchUrl' => esc_url_raw( rest_url( self::REST_NS . '/search' ) ),
 				'nonce'     => wp_create_nonce( 'wp_rest' ),
+				'i18n'      => array(
+					'saving'     => __( 'Saving…', 'posts-to-newsletter' ),
+					/* translators: %d: number of selected articles. */
+					'savedOne'   => __( 'Saved — %d article selected', 'posts-to-newsletter' ),
+					/* translators: %d: number of selected articles. */
+					'savedMany'  => __( 'Saved — %d articles selected', 'posts-to-newsletter' ),
+					'saveFailed' => __( 'Save failed — please try again', 'posts-to-newsletter' ),
+					'add'        => __( 'Add', 'posts-to-newsletter' ),
+					'remove'     => __( 'Remove', 'posts-to-newsletter' ),
+					'noMatches'  => __( 'No matching articles.', 'posts-to-newsletter' ),
+				),
 			)
 		);
 	}
@@ -93,6 +104,7 @@ class Curation {
 					'ids' => array(
 						'required' => true,
 						'type'     => 'array',
+						'maxItems' => Selection::MAX_SELECTION,
 						'items'    => array( 'type' => 'integer' ),
 					),
 				),
@@ -156,6 +168,10 @@ class Curation {
 		}
 
 		$query = new WP_Query( $args );
+
+		if ( ! empty( $query->posts ) ) {
+			_prime_post_caches( $query->posts, true, true );
+		}
 
 		$items = array();
 		foreach ( $query->posts as $post_id ) {

@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- View partial: required within Settings::render_settings_page(), so these variables are method-scoped, not global.
 
-$sizes = array_values( array_unique( array_merge( array( 'medium', 'medium_large', 'large', 'full' ), get_intermediate_image_sizes() ) ) );
+$sizes = $this->allowed_image_sizes();
 ?>
 <div class="wrap ptn-settings-page">
 	<h1><?php esc_html_e( 'Newsletter Settings', 'posts-to-newsletter' ); ?></h1>
