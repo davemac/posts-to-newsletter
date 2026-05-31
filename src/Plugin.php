@@ -75,9 +75,6 @@ class Plugin {
 	 * @return void
 	 */
 	public static function activate(): void {
-		Settings::migrate_legacy();
-		Curation::migrate_legacy();
-
 		( new Renderer( new Settings() ) )->register_endpoint();
 		flush_rewrite_rules();
 	}

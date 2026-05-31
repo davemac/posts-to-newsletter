@@ -19,7 +19,7 @@ Reusable on any site: branding defaults from the WordPress site (title, custom l
 
 ## Installation
 
-Copy this folder to `wp-content/plugins/curated-newsletter/` and activate. On activation it registers the public render endpoint and migrates any legacy `colacnew_newsletter_*` options.
+Copy this folder into `wp-content/plugins/` and activate it from the **Plugins** menu. On activation it registers the public render endpoint.
 
 ## Usage
 

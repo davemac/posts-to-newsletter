@@ -232,31 +232,4 @@ class Settings {
 		$s = $this->all();
 		require DIR . 'templates/settings-page.php';
 	}
-
-	/**
-	 * One-time migration of legacy colacnew_* newsletter settings.
-	 *
-	 * @return void
-	 */
-	public static function migrate_legacy(): void {
-		if ( false !== get_option( self::OPTION, false ) ) {
-			return;
-		}
-
-		$instance = new self();
-		$settings = $instance->defaults();
-
-		$legacy_hero  = (int) get_option( 'colacnew_newsletter_hero_id', 0 );
-		$legacy_intro = get_option( 'colacnew_newsletter_intro', '' );
-
-		if ( $legacy_hero > 0 ) {
-			$settings['hero_id'] = $legacy_hero;
-		}
-		if ( ! empty( $legacy_intro ) ) {
-			// Normalise the old CM personalisation tag to the neutral token.
-			$settings['intro'] = str_replace( '[firstname,fallback=there]', '{firstname}', (string) $legacy_intro );
-		}
-
-		update_option( self::OPTION, $settings );
-	}
 }

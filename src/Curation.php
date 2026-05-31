@@ -230,19 +230,4 @@ class Curation {
 		);
 		return $query->posts;
 	}
-
-	/**
-	 * One-time migration of the legacy selection option.
-	 *
-	 * @return void
-	 */
-	public static function migrate_legacy(): void {
-		if ( false !== get_option( Selection::OPTION, false ) ) {
-			return;
-		}
-		$legacy = get_option( 'colacnew_newsletter_post_ids', false );
-		if ( false !== $legacy ) {
-			update_option( Selection::OPTION, $legacy );
-		}
-	}
 }
