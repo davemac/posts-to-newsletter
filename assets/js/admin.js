@@ -10,7 +10,6 @@
 	var $selected = $( '#ptn-selected' );
 	var $status = $( '.ptn-status' );
 	var $search = $( '#ptn-search' );
-	var $pushResult = $( '.ptn-push-result' );
 	var saveTimer = null;
 	var searchTimer = null;
 
@@ -104,29 +103,4 @@
 			searchTimer = window.setTimeout( runSearch, 300 );
 		} );
 	}
-
-	// Push to platform.
-	$( '.ptn-push' ).on( 'click', function () {
-		var platform = $( this ).attr( 'data-platform' );
-		var url = 'mailchimp' === platform ? cfg.mailchimp : cfg.cm;
-		var $btn = $( this );
-		$btn.prop( 'disabled', true );
-		$pushResult.removeClass( 'ptn-error' ).text( 'Creating draft…' );
-		$.ajax( {
-			url: url,
-			method: 'POST',
-			beforeSend: function ( xhr ) { xhr.setRequestHeader( 'X-WP-Nonce', cfg.nonce ); }
-		} ).done( function ( res ) {
-			if ( res && res.url ) {
-				$pushResult.html( 'Draft created. <a href="' + res.url + '" target="_blank" rel="noopener">Open draft</a>' );
-			} else {
-				$pushResult.text( res && res.message ? res.message : 'Draft created.' );
-			}
-		} ).fail( function ( xhr ) {
-			var msg = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Push failed.';
-			$pushResult.addClass( 'ptn-error' ).text( msg );
-		} ).always( function () {
-			$btn.prop( 'disabled', false );
-		} );
-	} );
 } )( jQuery );

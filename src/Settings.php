@@ -27,7 +27,7 @@ class Settings {
 	 * @return array<string, mixed>
 	 */
 	public function defaults(): array {
-		return array(
+		$defaults = array(
 			'site_name'             => get_bloginfo( 'name' ),
 			'logo_id'               => 0,
 			'hero_id'               => 0,
@@ -39,12 +39,18 @@ class Settings {
 			'from_name'             => get_bloginfo( 'name' ),
 			'from_email'            => get_bloginfo( 'admin_email' ),
 			'reply_to'              => get_bloginfo( 'admin_email' ),
-			'mailchimp_api_key'     => '',
-			'mailchimp_audience_id' => '',
-			'cm_api_key'            => '',
-			'cm_client_id'          => '',
-			'cm_list_id'            => '',
 		);
+
+		/**
+		 * Filter the default settings.
+		 *
+		 * Add-ons can register their own default keys (for example the premium
+		 * push layer's platform-credential fields), keeping them in the shared
+		 * ptn_settings option.
+		 *
+		 * @param array<string, mixed> $defaults Default settings.
+		 */
+		return apply_filters( 'posts_to_newsletter_settings_defaults', $defaults );
 	}
 
 	/**
@@ -66,30 +72,6 @@ class Settings {
 	public function get( string $key ) {
 		$all = $this->all();
 		return $all[ $key ] ?? null;
-	}
-
-	/**
-	 * Resolve the Mailchimp API key (wp-config constant wins over the option).
-	 *
-	 * @return string
-	 */
-	public function mailchimp_key(): string {
-		if ( defined( 'PTN_MAILCHIMP_API_KEY' ) && '' !== (string) PTN_MAILCHIMP_API_KEY ) {
-			return (string) PTN_MAILCHIMP_API_KEY;
-		}
-		return (string) $this->get( 'mailchimp_api_key' );
-	}
-
-	/**
-	 * Resolve the Campaign Monitor API key (wp-config constant wins).
-	 *
-	 * @return string
-	 */
-	public function cm_key(): string {
-		if ( defined( 'PTN_CM_API_KEY' ) && '' !== (string) PTN_CM_API_KEY ) {
-			return (string) PTN_CM_API_KEY;
-		}
-		return (string) $this->get( 'cm_api_key' );
 	}
 
 	/**
@@ -204,18 +186,19 @@ class Settings {
 			'from_name'             => sanitize_text_field( $in['from_name'] ?? '' ),
 			'from_email'            => sanitize_email( $in['from_email'] ?? '' ),
 			'reply_to'              => sanitize_email( $in['reply_to'] ?? '' ),
-			'mailchimp_audience_id' => sanitize_text_field( $in['mailchimp_audience_id'] ?? '' ),
-			'cm_client_id'          => sanitize_text_field( $in['cm_client_id'] ?? '' ),
-			'cm_list_id'            => sanitize_text_field( $in['cm_list_id'] ?? '' ),
 		);
 
-		// Only overwrite stored API keys when a new value is submitted (fields render blank).
-		$clean['mailchimp_api_key'] = '' !== trim( (string) ( $in['mailchimp_api_key'] ?? '' ) )
-			? sanitize_text_field( $in['mailchimp_api_key'] )
-			: $existing['mailchimp_api_key'];
-		$clean['cm_api_key']        = '' !== trim( (string) ( $in['cm_api_key'] ?? '' ) )
-			? sanitize_text_field( $in['cm_api_key'] )
-			: $existing['cm_api_key'];
+		/**
+		 * Filter the sanitised settings before they are stored.
+		 *
+		 * Lets add-ons (for example the premium push layer) sanitise and merge
+		 * their own submitted fields into the shared ptn_settings option.
+		 *
+		 * @param array<string, mixed> $clean    Sanitised settings to store.
+		 * @param array<string, mixed> $in       Unslashed raw $_POST input.
+		 * @param array<string, mixed> $existing Previously stored settings.
+		 */
+		$clean = apply_filters( 'posts_to_newsletter_settings_save', $clean, $in, $existing );
 
 		update_option( self::OPTION, $clean );
 
