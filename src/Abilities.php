@@ -264,10 +264,7 @@ class Abilities {
 	 */
 	public function render_preview( $input ): string {
 		$input    = is_array( $input ) ? $input : array();
-		$platform = isset( $input['platform'] ) ? (string) $input['platform'] : 'campaignmonitor';
-		if ( ! in_array( $platform, array( 'campaignmonitor', 'mailchimp' ), true ) ) {
-			$platform = 'campaignmonitor';
-		}
+		$platform = $this->renderer->resolve_platform( isset( $input['platform'] ) ? (string) $input['platform'] : 'campaignmonitor' );
 
 		return $this->renderer->render( $platform );
 	}

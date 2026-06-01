@@ -96,12 +96,12 @@ class Renderer {
 	}
 
 	/**
-	 * Validate/normalise the platform.
+	 * Validate/normalise the platform, falling back to the default.
 	 *
 	 * @param string $raw Requested platform.
 	 * @return string One of self::PLATFORMS.
 	 */
-	private function resolve_platform( string $raw ): string {
+	public function resolve_platform( string $raw ): string {
 		return in_array( $raw, self::PLATFORMS, true ) ? $raw : 'campaignmonitor';
 	}
 
