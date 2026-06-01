@@ -84,6 +84,12 @@ class Renderer {
 
 		$platform = $this->resolve_platform( (string) get_query_var( self::PLATFORM_VAR ) );
 
+		// This is a raw email document for an email platform to import. Tell LiteSpeed
+		// not to optimise it — its image Lazy Load injects a JavaScript loader (and it
+		// varies output by user-agent), which Campaign Monitor rejects on import. No-op
+		// when LiteSpeed is not active.
+		do_action( 'litespeed_disable_all', 'Posts to Newsletter raw email output' );
+
 		header( 'Content-Type: text/html; charset=utf-8' );
 		echo $this->render( $platform ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- composed, escaped HTML email.
 		exit;
