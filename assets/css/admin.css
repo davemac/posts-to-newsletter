@@ -1,14 +1,13 @@
 /* Curated Newsletter admin styles. */
 
-.ptn-actions {
-	margin: 12px 0;
+.ptn-actions-row {
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	flex-wrap: wrap;
+	margin: 8px 0;
 }
 
-.ptn-actions .ptn-settings-link {
+.ptn-settings-link {
 	margin-left: auto;
 }
 
@@ -18,12 +17,54 @@
 	margin-left: 6px;
 }
 
-.ptn-urls code {
+.ptn-platforms {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 24px;
+	max-width: 1100px;
+	margin: 0 0 16px;
+}
+
+.ptn-platform {
+	flex: 1 1 0;
+	min-width: 300px;
 	background: #fff;
-	padding: 2px 6px;
 	border: 1px solid #dcdcde;
-	border-radius: 3px;
-	font-size: 11px;
+	border-radius: 6px;
+	padding: 12px 16px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.ptn-platform__title {
+	margin: 0 0 10px;
+	padding: 0;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.ptn-platform__body {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.ptn-platform__actions {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.ptn-platform__actions:empty {
+	display: none;
+}
+
+.ptn-platform__import-row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-left: auto;
 }
 
 .ptn-columns {

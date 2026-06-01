@@ -14,6 +14,8 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- View partial: required within Curation::render_admin_page(), so these variables are method-scoped, not global.
 ?>
 <div class="wrap ptn-curation">
 	<h1><?php esc_html_e( 'Newsletter', 'posts-to-newsletter' ); ?></h1>
@@ -22,24 +24,59 @@ defined( 'ABSPATH' ) || exit;
 		<span class="ptn-status" aria-live="polite"></span>
 	</p>
 
-	<div class="ptn-actions">
+	<p class="ptn-actions-row">
 		<?php
 		/**
-		 * Fires at the start of the curation action bar.
+		 * Fires in the curation action bar, outside the platform cards.
 		 *
-		 * Add-ons render extra action buttons here (for example the premium
-		 * push-to-platform buttons).
+		 * General (non-platform-specific) add-on buttons render here. Platform
+		 * push buttons use posts_to_newsletter_platform_actions instead.
 		 */
 		do_action( 'posts_to_newsletter_curation_actions' );
 		?>
-		<a class="ptn-settings-link" href="<?php echo esc_url( $settings_url ); ?>"><?php esc_html_e( 'Settings', 'posts-to-newsletter' ); ?></a>
-	</div>
-
-	<p class="ptn-urls">
-		<strong><?php esc_html_e( 'Preview / import URLs:', 'posts-to-newsletter' ); ?></strong>
-		Mailchimp <code><?php echo esc_html( $preview_mc ); ?></code> &nbsp;·&nbsp;
-		Campaign Monitor <code><?php echo esc_html( $preview_cm ); ?></code>
+		<a class="button button-small ptn-settings-link" href="<?php echo esc_url( $settings_url ); ?>"><?php esc_html_e( 'Settings', 'posts-to-newsletter' ); ?></a>
 	</p>
+
+	<?php
+	$ptn_platforms = array(
+		'mailchimp'       => array(
+			'label' => __( 'Mailchimp', 'posts-to-newsletter' ),
+			'url'   => $preview_mc,
+		),
+		'campaignmonitor' => array(
+			'label' => __( 'Campaign Monitor', 'posts-to-newsletter' ),
+			'url'   => $preview_cm,
+		),
+	);
+	?>
+	<div class="ptn-platforms">
+		<?php foreach ( $ptn_platforms as $ptn_key => $ptn_platform ) : ?>
+		<section class="ptn-platform" aria-label="<?php echo esc_attr( $ptn_platform['label'] ); ?>">
+			<h2 class="ptn-platform__title"><?php echo esc_html( $ptn_platform['label'] ); ?></h2>
+
+			<div class="ptn-platform__body">
+				<div class="ptn-platform__actions">
+					<?php
+					/**
+					 * Fires inside a single platform card on the curation screen.
+					 *
+					 * Add-ons render that platform's push button and status here, so
+					 * each platform's controls stay grouped in its own card.
+					 *
+					 * @param string $platform Platform key (mailchimp|campaignmonitor).
+					 */
+					do_action( 'posts_to_newsletter_platform_actions', $ptn_key );
+					?>
+				</div>
+
+				<span class="ptn-platform__import-row">
+					<a class="button button-small" href="<?php echo esc_url( $ptn_platform['url'] ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Preview', 'posts-to-newsletter' ); ?></a>
+					<button type="button" class="button button-small ptn-copy-url" data-url="<?php echo esc_url( $ptn_platform['url'] ); ?>"><?php esc_html_e( 'Copy URL', 'posts-to-newsletter' ); ?></button>
+				</span>
+			</div>
+		</section>
+		<?php endforeach; ?>
+	</div>
 
 	<div class="ptn-columns">
 		<div class="ptn-col">

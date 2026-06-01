@@ -78,6 +78,7 @@ class Curation {
 					'add'        => __( 'Add', 'posts-to-newsletter' ),
 					'remove'     => __( 'Remove', 'posts-to-newsletter' ),
 					'noMatches'  => __( 'No matching articles.', 'posts-to-newsletter' ),
+					'copied'     => __( 'Copied!', 'posts-to-newsletter' ),
 				),
 			)
 		);
