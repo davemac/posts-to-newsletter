@@ -20,9 +20,10 @@ class Plugin {
 	 * @return void
 	 */
 	public function boot(): void {
-		$settings = new Settings();
-		$renderer = new Renderer( $settings );
-		$curation = new Curation();
+		$settings  = new Settings();
+		$renderer  = new Renderer( $settings );
+		$curation  = new Curation();
+		$abilities = new Abilities( $renderer );
 
 		// Public render endpoint.
 		add_action( 'init', array( $renderer, 'register_endpoint' ) );
@@ -38,6 +39,11 @@ class Plugin {
 
 		// REST routes.
 		add_action( 'rest_api_init', array( $curation, 'register_routes' ) );
+
+		// Abilities API (WordPress 6.9+). Categories must register before abilities;
+		// both hooks only fire when the API is present, so this is a no-op on older WP.
+		add_action( 'wp_abilities_api_categories_init', array( $abilities, 'register_category' ) );
+		add_action( 'wp_abilities_api_init', array( $abilities, 'register' ) );
 	}
 
 	/**
