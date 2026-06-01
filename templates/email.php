@@ -38,9 +38,6 @@ defined( 'ABSPATH' ) || exit;
 </head>
 <body style="margin:0; padding:0; background-color:#f4f4f4;">
 
-	<?php // Cloudflare Email Obfuscation rewrites @-strings (e.g. a retina logo like logo-ch@2x.png) into JavaScript, which email platforms such as Campaign Monitor reject on import. The email_off markers tell Cloudflare to skip obfuscation for this region. ?>
-	<!--email_off-->
-
 	<div style="display:none; max-height:0; overflow:hidden;">The latest news from <?php echo esc_html( $site_name ); ?>. <?php echo $tokens['preheader']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 
 	<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
@@ -103,8 +100,6 @@ defined( 'ABSPATH' ) || exit;
 			</td>
 		</tr>
 	</table>
-
-	<!--/email_off-->
 
 </body>
 </html>
