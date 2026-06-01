@@ -103,4 +103,34 @@
 			searchTimer = window.setTimeout( runSearch, 300 );
 		} );
 	}
+
+	// Copy the platform's preview/import URL to the clipboard, with brief feedback.
+	$( document ).on( 'click', '.ptn-copy-url', function () {
+		var $btn = $( this );
+		var url = $btn.attr( 'data-url' ) || '';
+		if ( ! url ) {
+			return;
+		}
+		var flash = function () {
+			var original = $btn.data( 'label' );
+			if ( undefined === original ) {
+				original = $btn.text();
+				$btn.data( 'label', original );
+			}
+			$btn.text( i18n.copied || 'Copied!' );
+			window.clearTimeout( $btn.data( 'timer' ) );
+			$btn.data( 'timer', window.setTimeout( function () {
+				$btn.text( original );
+			}, 1500 ) );
+		};
+		if ( window.navigator.clipboard && window.navigator.clipboard.writeText ) {
+			window.navigator.clipboard.writeText( url ).then( flash );
+		} else {
+			// Fallback for non-secure contexts: copy via a temporary field.
+			var $tmp = $( '<input type="text" />' ).val( url ).appendTo( 'body' ).select();
+			try { document.execCommand( 'copy' ); } catch ( e ) {}
+			$tmp.remove();
+			flash();
+		}
+	} );
 } )( jQuery );

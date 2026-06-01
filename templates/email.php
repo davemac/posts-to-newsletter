@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<?php if ( '' !== $logo_url ) : ?>
 					<tr>
-						<td align="center" style="padding:22px 20px 8px 20px;"><a href="<?php echo esc_url( $subscribe ); ?>"><img src="<?php echo esc_url( $logo_url ); ?>" width="220" alt="<?php echo esc_attr( $site_name ); ?>" style="display:block; width:auto; max-width:240px; max-height:60px; height:auto; border:0;" /></a></td>
+						<td align="center" style="padding:22px 20px 8px 20px;"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><img src="<?php echo esc_url( $logo_url ); ?>" width="220" alt="<?php echo esc_attr( $site_name ); ?>" style="display:block; width:auto; max-width:240px; max-height:60px; height:auto; border:0;" /></a></td>
 					</tr>
 					<?php endif; ?>
 
