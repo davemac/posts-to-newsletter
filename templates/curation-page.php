@@ -11,6 +11,7 @@
  * @var string         $preview_cm     Campaign Monitor preview URL.
  * @var string         $preview_mc     Mailchimp preview URL.
  * @var string         $settings_url   Settings page URL.
+ * @var string         $accent_color   Brand accent colour (drives the author pills).
  * @var \PostsToNewsletter\Curation  $this           Curation (for render_item()).
  */
 
@@ -21,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 $ptn_selected_count  = count( $selected_posts );
 $ptn_available_count = count( array_diff( $recent_posts, $selected_ids ) );
 ?>
-<div class="wrap ptn-curation">
+<div class="wrap ptn-curation" style="--ptn-author-color: <?php echo esc_attr( $accent_color ); ?>">
 
 	<header class="pagehead">
 		<div class="pagehead__main">
