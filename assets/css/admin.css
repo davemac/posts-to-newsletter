@@ -197,8 +197,16 @@
 
 .ptn-curation .dist__grid {
 	display: grid;
-	grid-template-columns: repeat( auto-fit, minmax( 330px, 1fr ) );
+	/* Two equal columns. A single card sits in the left column at half width
+	   rather than stretching the full row (which auto-fit would do once the
+	   empty track collapsed); two cards sit side by side. */
+	grid-template-columns: repeat( 2, minmax( 0, 1fr ) );
 	gap: 16px;
+}
+@media ( max-width: 782px ) {
+	.ptn-curation .dist__grid {
+		grid-template-columns: 1fr;
+	}
 }
 
 .ptn-curation .platform {
