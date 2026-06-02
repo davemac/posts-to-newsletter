@@ -190,6 +190,7 @@ class Settings {
 				'i18n' => array(
 					'chooseImage' => __( 'Choose image', 'posts-to-newsletter' ),
 					'useImage'    => __( 'Use this image', 'posts-to-newsletter' ),
+					'unsaved'     => __( 'Unsaved changes', 'posts-to-newsletter' ),
 				),
 			)
 		);
