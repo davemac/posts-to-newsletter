@@ -48,6 +48,18 @@ defined( 'ABSPATH' ) || exit;
 			'url'   => $preview_cm,
 		),
 	);
+
+	/**
+	 * Filters the platform cards shown on the curation screen.
+	 *
+	 * Add-ons can remove a platform that an editor cannot use (e.g. one whose
+	 * API credentials are not configured) so its card does not render at all.
+	 * With no add-on active this is unfiltered and every platform shows, since
+	 * the core's Preview/Copy URL buttons support manual import without an API.
+	 *
+	 * @param array<string,array<string,string>> $ptn_platforms Platform cards, keyed by platform (mailchimp|campaignmonitor).
+	 */
+	$ptn_platforms = apply_filters( 'posts_to_newsletter_platforms', $ptn_platforms );
 	?>
 	<div class="ptn-platforms">
 		<?php foreach ( $ptn_platforms as $ptn_key => $ptn_platform ) : ?>

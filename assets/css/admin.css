@@ -26,7 +26,15 @@
 }
 
 .ptn-platform {
-	flex: 1 1 0;
+	/* Size each card to exactly one article-column width: (row - gap) / 2, the
+	   same formula the flex:1 1 0 columns below resolve to. grow is 0 so a lone
+	   card (the other platform unconfigured) holds one column's width and stays
+	   left-aligned instead of stretching the full row; two cards still fill the
+	   row and line up with the columns. Keep the 24px in sync with the gap. */
+	flex: 0 1 calc((100% - 24px) / 2);
+	/* border-box so the basis above is the full card width (padding + border
+	   included), matching the no-padding columns below to the pixel. */
+	box-sizing: border-box;
 	min-width: 300px;
 	background: #fff;
 	border: 1px solid #dcdcde;

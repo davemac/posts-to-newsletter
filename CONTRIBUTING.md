@@ -41,6 +41,7 @@ The core stays free of any email-platform integration. Add-ons extend it through
 | `posts_to_newsletter_settings_defaults` | filter | Register extra default keys in `ptn_settings` |
 | `posts_to_newsletter_settings_save` | filter | Sanitise and merge extra submitted fields |
 | `posts_to_newsletter_settings_cards` | action | Render extra cards inside the settings form |
+| `posts_to_newsletter_platforms` | filter | Filter the curation screen's platform card list (keyed by platform); remove a platform an editor cannot use (e.g. unconfigured) so its card does not render |
 | `posts_to_newsletter_platform_actions` | action | Fires once per platform card on the curation screen, passed the platform key (`mailchimp`\|`campaignmonitor`); render that platform's buttons here |
 | `posts_to_newsletter_curation_actions` | action | Render general (non-platform) buttons in the curation action bar |
 
