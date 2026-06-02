@@ -57,3 +57,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full architecture and coding stan
 - No build step - plain PHP, vanilla jQuery (bundled with WP), and hand-written CSS.
 - Lightweight SPL autoloader: `PostsToNewsletter\` → `src/`.
 - HTTP via `wp_remote_*` (no third-party SDKs).
+
+## Credits
+
+Built and maintained by [DMC Web](https://dmcweb.com.au).

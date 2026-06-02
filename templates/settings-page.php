@@ -24,9 +24,10 @@ $curation_url = admin_url( 'admin.php?page=' . \PostsToNewsletter\Curation::PAGE
 	<?php endif; ?>
 
 	<div class="settings__head">
+		<img class="ptn-pagelogo" src="<?php echo esc_url( \PostsToNewsletter\URL . 'assets/img/p2n-logo.png' ); ?>" alt="" width="40" height="40" />
 		<div>
-			<h1><?php esc_html_e( 'Newsletter Settings', 'posts-to-newsletter' ); ?></h1>
-			<p><?php esc_html_e( 'Branding, sender details and platform connections for your curated newsletter.', 'posts-to-newsletter' ); ?></p>
+			<h1><?php esc_html_e( 'Posts to Newsletter Settings', 'posts-to-newsletter' ); ?></h1>
+			<p><?php esc_html_e( 'Branding, sender details and platform connections for your newsletter.', 'posts-to-newsletter' ); ?></p>
 		</div>
 	</div>
 
@@ -159,7 +160,7 @@ $curation_url = admin_url( 'admin.php?page=' . \PostsToNewsletter\Curation::PAGE
 				</div>
 				<div class="scard__body">
 					<p><?php esc_html_e( 'Send your curated newsletter straight to Mailchimp or Campaign Monitor as a ready-to-review draft - no copy and paste.', 'posts-to-newsletter' ); ?></p>
-					<p><a class="btn btn--primary" href="https://thecode.com.au/" target="_blank" rel="noopener"><?php esc_html_e( 'Upgrade to Pro', 'posts-to-newsletter' ); ?></a></p>
+					<p><a class="btn btn--primary" href="https://dmcweb.com.au" target="_blank" rel="noopener"><?php esc_html_e( 'Upgrade to Pro', 'posts-to-newsletter' ); ?></a></p>
 					<p class="fhint"><?php esc_html_e( 'For now, use the preview / import URLs on the Newsletter screen to import into your platform manually.', 'posts-to-newsletter' ); ?></p>
 				</div>
 			</section>

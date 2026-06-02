@@ -25,9 +25,10 @@ $ptn_available_count = count( array_diff( $recent_posts, $selected_ids ) );
 <div class="wrap ptn-curation" style="--ptn-author-color: <?php echo esc_attr( $accent_color ); ?>">
 
 	<header class="pagehead">
+		<img class="ptn-pagelogo" src="<?php echo esc_url( \PostsToNewsletter\URL . 'assets/img/p2n-logo.png' ); ?>" alt="" width="40" height="40" />
 		<div class="pagehead__main">
-			<h1><?php esc_html_e( 'Newsletter', 'posts-to-newsletter' ); ?></h1>
-			<p><?php esc_html_e( 'Add articles, then drag them in the right-hand column to set the running order. Every change saves automatically.', 'posts-to-newsletter' ); ?></p>
+			<h1><?php esc_html_e( 'Posts to Newsletter', 'posts-to-newsletter' ); ?></h1>
+			<p><?php esc_html_e( 'Add available articles, then drag and drop in the right-hand column to set the order. Changes save automatically.', 'posts-to-newsletter' ); ?></p>
 		</div>
 		<div class="pagehead__aside">
 			<span class="savechip">
@@ -84,7 +85,7 @@ $ptn_available_count = count( array_diff( $recent_posts, $selected_ids ) );
 	<section class="dist">
 		<div class="dist__head">
 			<h2><?php esc_html_e( 'Distribution', 'posts-to-newsletter' ); ?></h2>
-			<span class="sub"><?php esc_html_e( 'Push the current selection straight into your email platform as a draft.', 'posts-to-newsletter' ); ?></span>
+			<span class="sub"><?php esc_html_e( 'Push the current selection into your email platform as a draft.', 'posts-to-newsletter' ); ?></span>
 		</div>
 		<div class="dist__grid">
 			<?php
@@ -179,7 +180,7 @@ $ptn_available_count = count( array_diff( $recent_posts, $selected_ids ) );
 
 		<section class="col col--out">
 			<div class="col__head">
-				<h2><?php esc_html_e( 'In the newsletter', 'posts-to-newsletter' ); ?></h2>
+				<h2><?php esc_html_e( 'Articles in the newsletter', 'posts-to-newsletter' ); ?></h2>
 				<span class="count" id="ptn-selected-count"><?php echo (int) $ptn_selected_count; ?></span>
 				<span class="spacer"></span>
 				<button type="button" class="clearbtn" id="ptn-clear"<?php echo 0 === $ptn_selected_count ? ' hidden' : ''; ?>><?php esc_html_e( 'Clear all', 'posts-to-newsletter' ); ?></button>

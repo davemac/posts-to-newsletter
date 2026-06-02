@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name:       Posts to Newsletter
- * Plugin URI:        https://thecode.com.au/
- * Description:       Turn your posts into a branded newsletter — hand-pick and order them, then push a ready-to-send draft to Mailchimp or Campaign Monitor.
+ * Plugin URI:        https://dmcweb.com.au
+ * Description:       Turn your posts into a branded newsletter. Hand-pick and order them, then push a ready-to-send draft to Mailchimp or Campaign Monitor with one click.
  * Version:           1.0.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
- * Author:            The Code Company
+ * Author:            DMC Web
  * License:           GPL-2.0-or-later
  * Text Domain:       posts-to-newsletter
  *

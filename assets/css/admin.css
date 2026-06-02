@@ -11,9 +11,13 @@
    ============================================================ */
 :root {
 	--ptn-accent: #2463eb;
-	--ptn-accent-hover: #1d4ed8;
 	--ptn-accent-soft: #eff3ff;
 	--ptn-accent-ring: rgba( 36, 99, 235, 0.28 );
+
+	--ptn-brand-green: #51ad05;
+	--ptn-brand-green-soft: #eef7e6;
+	--ptn-brand-green-strong: #3c8504;
+	--ptn-brand-green-strong-hover: #316d03;
 
 	--ptn-ink: #1d2327;
 	--ptn-ink-2: #50575e;
@@ -31,7 +35,6 @@
 	--ptn-danger-soft: #fbeceb;
 
 	--ptn-radius-lg: 16px;
-	--ptn-radius: 12px;
 	--ptn-radius-sm: 10px;
 	--ptn-shadow-sm: 0 1px 2px rgba( 16, 24, 40, 0.05 );
 	--ptn-shadow-md: 0 6px 20px -6px rgba( 16, 24, 40, 0.14 ), 0 2px 6px -2px rgba( 16, 24, 40, 0.06 );
@@ -99,6 +102,18 @@
 	align-items: center;
 	gap: 10px;
 	flex: none;
+}
+
+/* page logo — sits left of the heading, its top aligned to the title's cap-height on both admin screens */
+.ptn-curation .ptn-pagelogo,
+.ptn-settings-page .ptn-pagelogo {
+	width: 40px;
+	height: 40px;
+	flex: none;
+	align-self: flex-start;
+	/* Nudge the logo down to sit against the 26px heading's letters (line-box-to-cap gap). */
+	margin-top: 6px;
+	display: block;
 }
 
 /* save chip — wraps the existing .ptn-status aria-live region */
@@ -308,17 +323,17 @@
 	padding: 0 18px;
 	border-radius: 10px;
 	border: 0;
-	background: var( --ptn-accent );
+	background: var( --ptn-brand-green-strong );
 	color: #fff;
 	font: inherit;
 	font-size: 14.5px;
 	font-weight: 600;
 	cursor: pointer;
-	box-shadow: 0 1px 2px rgba( 36, 99, 235, 0.4 );
+	box-shadow: 0 1px 2px rgba( 60, 133, 4, 0.4 );
 	transition: background 0.15s, transform 0.08s, box-shadow 0.15s;
 }
 .ptn-curation .pushbtn:hover {
-	background: var( --ptn-accent-hover );
+	background: var( --ptn-brand-green-strong-hover );
 }
 .ptn-curation .pushbtn:active {
 	transform: translateY( 1px );
@@ -452,7 +467,7 @@
 	font-weight: 700;
 }
 .ptn-curation .col--out .count {
-	background: var( --ptn-accent );
+	background: var( --ptn-brand-green );
 	color: #fff;
 }
 .ptn-curation .col__head .spacer {
@@ -531,13 +546,24 @@
 /* ---------- filter chips ---------- */
 .ptn-curation .chips {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	gap: 7px;
 	margin-bottom: 18px;
+	overflow-x: auto;
+	scrollbar-width: thin;
+	padding-bottom: 4px;
+}
+.ptn-curation .chips::-webkit-scrollbar {
+	height: 6px;
+}
+.ptn-curation .chips::-webkit-scrollbar-thumb {
+	background: var( --ptn-line );
+	border-radius: 999px;
 }
 .ptn-curation .chip {
 	display: inline-flex;
 	align-items: center;
+	flex: none;
 	height: 30px;
 	padding: 0 12px;
 	border-radius: 999px;
@@ -550,13 +576,15 @@
 	cursor: pointer;
 	transition: all 0.13s;
 }
-.ptn-curation .chip:hover {
-	border-color: #cfd2d8;
+.ptn-curation .chip:not( .is-on ):hover {
+	background: color-mix( in srgb, var( --ptn-brand-green ) 16%, #fff );
+	border-color: transparent;
+	color: var( --ptn-brand-green-strong );
 }
 .ptn-curation .chip.is-on {
-	background: var( --ptn-ink );
-	border-color: var( --ptn-ink );
-	color: #fff;
+	background: var( --ptn-brand-green-soft );
+	border-color: transparent;
+	color: var( --ptn-brand-green-strong );
 }
 
 /* ---------- lists ---------- */
@@ -644,7 +672,7 @@
 	text-align: center;
 	font-size: 13px;
 	font-weight: 700;
-	color: var( --ptn-accent );
+	color: var( --ptn-brand-green );
 	font-variant-numeric: tabular-nums;
 }
 .ptn-curation .tray .row__index::before {
@@ -779,8 +807,8 @@
 	padding: 0 14px 0 12px;
 	border-radius: 8px;
 	border: 1px solid transparent;
-	background: var( --ptn-accent-soft );
-	color: var( --ptn-accent );
+	background: var( --ptn-brand-green-soft );
+	color: var( --ptn-brand-green-strong );
 	font: inherit;
 	font-size: 13px;
 	font-weight: 600;
@@ -792,8 +820,8 @@
 	height: 14px;
 }
 .ptn-curation .addbtn:hover {
-	background: color-mix( in srgb, var( --ptn-accent ) 16%, #fff );
-	color: var( --ptn-accent );
+	background: color-mix( in srgb, var( --ptn-brand-green ) 16%, #fff );
+	color: var( --ptn-brand-green-strong );
 }
 .ptn-curation .addbtn.is-added {
 	border-color: var( --ptn-ok );
@@ -1294,12 +1322,12 @@ body.folded .ptn-settings-page .savebar {
 	cursor: pointer;
 }
 .ptn-settings-page .btn--primary {
-	background: var( --ptn-accent );
+	background: var( --ptn-brand-green-strong );
 	color: #fff;
-	box-shadow: 0 1px 2px rgba( 36, 99, 235, 0.4 );
+	box-shadow: 0 1px 2px rgba( 60, 133, 4, 0.4 );
 }
 .ptn-settings-page .btn--primary:hover {
-	background: var( --ptn-accent-hover );
+	background: var( --ptn-brand-green-strong-hover );
 }
 .ptn-settings-page .btn--primary:active {
 	transform: translateY( 1px );
