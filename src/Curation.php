@@ -244,12 +244,7 @@ class Curation {
 		}
 		echo '<span class="datepill">' . esc_html( get_the_date( '', $post_id ) ) . '</span>';
 		if ( null !== $category ) {
-			$cat_hue = self::hue( $category->slug );
-			printf(
-				'<span class="catpill" style="--ptn-cat:hsl(%1$d 60%% 42%%);--ptn-catbg:hsl(%1$d 62%% 95%%)">%2$s</span>',
-				(int) $cat_hue,
-				esc_html( $category->name )
-			);
+			echo '<span class="catpill">' . esc_html( $category->name ) . '</span>';
 		}
 		echo '</span>'; // .meta__sub
 		echo '</span>'; // .meta
@@ -267,19 +262,6 @@ class Curation {
 		}
 
 		echo '</li>';
-	}
-
-	/**
-	 * Map a seed string to a stable hue (0–359) for category pills.
-	 *
-	 * Public so the curation template can colour the filter chip dots with the
-	 * same hue their matching category pills use.
-	 *
-	 * @param string $seed Seed (category slug).
-	 * @return int Hue in degrees.
-	 */
-	public static function hue( string $seed ): int {
-		return ( crc32( $seed ) & 0x7fffffff ) % 360;
 	}
 
 	/**

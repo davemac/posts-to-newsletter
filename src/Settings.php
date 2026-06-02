@@ -175,11 +175,10 @@ class Settings {
 		}
 
 		wp_enqueue_media();
-		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script(
 			'ptn-settings',
 			URL . 'assets/js/settings.js',
-			array( 'jquery', 'wp-color-picker' ),
+			array( 'jquery' ),
 			Plugin::asset_version( 'assets/js/settings.js' ),
 			true
 		);
