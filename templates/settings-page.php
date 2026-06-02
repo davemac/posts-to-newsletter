@@ -49,7 +49,7 @@ $curation_url = admin_url( 'admin.php?page=' . \PostsToNewsletter\Curation::PAGE
 						</div>
 						<input type="hidden" id="ptn-logo-id" name="logo_id" value="<?php echo esc_attr( (string) $s['logo_id'] ); ?>" />
 						<div class="media__actions">
-							<button type="button" class="btn btn--ghost ptn-choose" data-target="logo"><?php esc_html_e( 'Choose', 'posts-to-newsletter' ); ?></button>
+							<button type="button" class="btn btn--primary ptn-choose" data-target="logo"><?php esc_html_e( 'Choose', 'posts-to-newsletter' ); ?></button>
 							<button type="button" class="media__clear ptn-clear" data-target="logo"><?php esc_html_e( 'Clear', 'posts-to-newsletter' ); ?></button>
 						</div>
 					</div>
@@ -60,7 +60,7 @@ $curation_url = admin_url( 'admin.php?page=' . \PostsToNewsletter\Curation::PAGE
 						</div>
 						<input type="hidden" id="ptn-hero-id" name="hero_id" value="<?php echo esc_attr( (string) $s['hero_id'] ); ?>" />
 						<div class="media__actions">
-							<button type="button" class="btn btn--ghost ptn-choose" data-target="hero"><?php esc_html_e( 'Choose', 'posts-to-newsletter' ); ?></button>
+							<button type="button" class="btn btn--primary ptn-choose" data-target="hero"><?php esc_html_e( 'Choose', 'posts-to-newsletter' ); ?></button>
 							<button type="button" class="media__clear ptn-clear" data-target="hero"><?php esc_html_e( 'Clear', 'posts-to-newsletter' ); ?></button>
 						</div>
 					</div>
@@ -78,14 +78,20 @@ $curation_url = admin_url( 'admin.php?page=' . \PostsToNewsletter\Curation::PAGE
 					<div class="ptn-field field">
 						<label for="ptn-brand"><?php esc_html_e( 'Brand colour', 'posts-to-newsletter' ); ?></label>
 						<div class="colorfield">
-							<input name="brand_color" id="ptn-brand" class="ptn-color" type="text" value="<?php echo esc_attr( $s['brand_color'] ); ?>" data-default-color="#cc3300" />
+							<div class="color-row">
+								<input type="color" class="ptn-color-swatch" value="<?php echo esc_attr( strtolower( (string) $s['brand_color'] ) ); ?>" aria-label="<?php esc_attr_e( 'Brand colour picker', 'posts-to-newsletter' ); ?>" />
+								<input name="brand_color" id="ptn-brand" class="input ptn-color-hex" type="text" value="<?php echo esc_attr( $s['brand_color'] ); ?>" autocomplete="off" spellcheck="false" />
+							</div>
 							<span class="fhint"><?php esc_html_e( 'Header accents, buttons.', 'posts-to-newsletter' ); ?></span>
 						</div>
 					</div>
 					<div class="ptn-field field">
 						<label for="ptn-accent"><?php esc_html_e( 'Accent colour', 'posts-to-newsletter' ); ?></label>
 						<div class="colorfield">
-							<input name="accent_color" id="ptn-accent" class="ptn-color" type="text" value="<?php echo esc_attr( $s['accent_color'] ); ?>" data-default-color="#e32441" />
+							<div class="color-row">
+								<input type="color" class="ptn-color-swatch" value="<?php echo esc_attr( strtolower( (string) $s['accent_color'] ) ); ?>" aria-label="<?php esc_attr_e( 'Accent colour picker', 'posts-to-newsletter' ); ?>" />
+								<input name="accent_color" id="ptn-accent" class="input ptn-color-hex" type="text" value="<?php echo esc_attr( $s['accent_color'] ); ?>" autocomplete="off" spellcheck="false" />
+							</div>
 							<span class="fhint"><?php esc_html_e( 'Category labels, author pills.', 'posts-to-newsletter' ); ?></span>
 						</div>
 					</div>

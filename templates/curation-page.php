@@ -91,17 +91,19 @@ $ptn_available_count = count( array_diff( $recent_posts, $selected_ids ) );
 			foreach ( $ptn_platforms as $ptn_key => $ptn_platform ) :
 				$ptn_logo_mod = 'mailchimp' === $ptn_key ? 'platform__logo--mc' : ( 'campaignmonitor' === $ptn_key ? 'platform__logo--cm' : '' );
 				$ptn_glyph    = mb_strtoupper( mb_substr( (string) $ptn_platform['label'], 0, 1 ) );
-				$ptn_meta     = isset( $ptn_platform['meta'] ) ? (string) $ptn_platform['meta'] : '';
-				$ptn_state    = array_key_exists( 'connected', $ptn_platform ) ? (bool) $ptn_platform['connected'] : null;
+				// Sub-line: the add-on's audience/list line when it is known, otherwise a
+				// plain "Email platform" descriptor so every card carries a sub-line.
+				$ptn_meta  = ( isset( $ptn_platform['meta'] ) && '' !== (string) $ptn_platform['meta'] )
+					? (string) $ptn_platform['meta']
+					: __( 'Email platform', 'posts-to-newsletter' );
+				$ptn_state = array_key_exists( 'connected', $ptn_platform ) ? (bool) $ptn_platform['connected'] : null;
 				?>
 			<section class="platform ptn-platform" aria-label="<?php echo esc_attr( $ptn_platform['label'] ); ?>">
 				<div class="platform__top">
 					<span class="platform__logo <?php echo esc_attr( $ptn_logo_mod ); ?>" aria-hidden="true"><?php echo esc_html( $ptn_glyph ); ?></span>
 					<div class="platform__id">
 						<div class="platform__name"><?php echo esc_html( $ptn_platform['label'] ); ?></div>
-						<?php if ( '' !== $ptn_meta ) : ?>
-							<div class="platform__meta"><?php echo esc_html( $ptn_meta ); ?></div>
-						<?php endif; ?>
+						<div class="platform__meta"><?php echo esc_html( $ptn_meta ); ?></div>
 					</div>
 					<?php if ( true === $ptn_state ) : ?>
 						<span class="badge badge--ok"><span class="dot" aria-hidden="true"></span><?php esc_html_e( 'Connected', 'posts-to-newsletter' ); ?></span>
@@ -155,7 +157,6 @@ $ptn_available_count = count( array_diff( $recent_posts, $selected_ids ) );
 					<button type="button" class="chip is-on" data-cat="all" aria-pressed="true"><?php esc_html_e( 'All categories', 'posts-to-newsletter' ); ?></button>
 					<?php foreach ( $categories as $ptn_cat ) : ?>
 						<button type="button" class="chip" data-cat="<?php echo (int) $ptn_cat->term_id; ?>" aria-pressed="false">
-							<span class="chipdot" style="background:hsl(<?php echo (int) $this->hue( $ptn_cat->slug ); ?> 60% 46%)" aria-hidden="true"></span>
 							<?php echo esc_html( $ptn_cat->name ); ?>
 						</button>
 					<?php endforeach; ?>

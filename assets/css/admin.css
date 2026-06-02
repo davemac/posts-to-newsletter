@@ -10,10 +10,10 @@
    Design tokens
    ============================================================ */
 :root {
-	--ptn-accent: #2271b1;
-	--ptn-accent-hover: #185a92;
-	--ptn-accent-soft: #eaf2fa;
-	--ptn-accent-ring: rgba( 34, 113, 177, 0.28 );
+	--ptn-accent: #2463eb;
+	--ptn-accent-hover: #1d4ed8;
+	--ptn-accent-soft: #eff3ff;
+	--ptn-accent-ring: rgba( 36, 99, 235, 0.28 );
 
 	--ptn-ink: #1d2327;
 	--ptn-ink-2: #50575e;
@@ -24,17 +24,15 @@
 	--ptn-line-2: #eef0f2;
 	--ptn-surface: #fff;
 	--ptn-canvas: #f3f4f6;
-	--ptn-tray: #f6f7f8;
 
 	--ptn-ok: #137a44;
 	--ptn-ok-soft: #e8f5ee;
-	--ptn-warn: #9a6700;
-	--ptn-warn-soft: #fdf6e3;
 	--ptn-danger: #b32d2e;
 	--ptn-danger-soft: #fbeceb;
 
+	--ptn-radius-lg: 16px;
 	--ptn-radius: 12px;
-	--ptn-radius-sm: 9px;
+	--ptn-radius-sm: 10px;
 	--ptn-shadow-sm: 0 1px 2px rgba( 16, 24, 40, 0.05 );
 	--ptn-shadow-md: 0 6px 20px -6px rgba( 16, 24, 40, 0.14 ), 0 2px 6px -2px rgba( 16, 24, 40, 0.06 );
 
@@ -212,12 +210,12 @@
 .ptn-curation .platform {
 	background: var( --ptn-surface );
 	border: 1px solid var( --ptn-line );
-	border-radius: var( --ptn-radius );
-	padding: 16px 18px;
+	border-radius: var( --ptn-radius-lg );
+	padding: 20px 22px;
 	box-shadow: var( --ptn-shadow-sm );
 	display: flex;
 	flex-direction: column;
-	gap: 14px;
+	gap: 18px;
 	transition: box-shadow 0.18s, border-color 0.18s;
 }
 .ptn-curation .platform:hover {
@@ -230,36 +228,37 @@
 	gap: 12px;
 }
 .ptn-curation .platform__logo {
-	width: 38px;
-	height: 38px;
-	border-radius: 10px;
+	width: 46px;
+	height: 46px;
+	border-radius: 12px;
 	display: grid;
 	place-items: center;
 	font-weight: 800;
-	font-size: 16px;
+	font-size: 19px;
 	color: #fff;
 	flex: none;
 	letter-spacing: -0.02em;
 }
 .ptn-curation .platform__logo--mc {
-	background: linear-gradient( 135deg, #ffe01b, #f7c600 );
+	background: #f3c742;
 	color: #1d2327;
 }
 .ptn-curation .platform__logo--cm {
-	background: linear-gradient( 135deg, #3a76f0, #2456c8 );
+	background: #101d6c;
+	color: #fff;
 }
 .ptn-curation .platform__id {
 	min-width: 0;
 }
 .ptn-curation .platform__name {
 	font-weight: 700;
-	font-size: 14.5px;
-	line-height: 1.1;
+	font-size: 16px;
+	line-height: 1.15;
 }
 .ptn-curation .platform__meta {
-	font-size: 12px;
+	font-size: 12.5px;
 	color: var( --ptn-ink-3 );
-	margin-top: 2px;
+	margin-top: 3px;
 }
 
 .ptn-curation .badge {
@@ -303,19 +302,19 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	gap: 8px;
+	gap: 9px;
 	flex: 1 1 auto;
-	height: 38px;
-	padding: 0 16px;
-	border-radius: 9px;
+	height: 46px;
+	padding: 0 18px;
+	border-radius: 10px;
 	border: 0;
 	background: var( --ptn-accent );
 	color: #fff;
 	font: inherit;
-	font-size: 13.5px;
+	font-size: 14.5px;
 	font-weight: 600;
 	cursor: pointer;
-	box-shadow: 0 1px 2px rgba( 34, 113, 177, 0.4 );
+	box-shadow: 0 1px 2px rgba( 36, 99, 235, 0.4 );
 	transition: background 0.15s, transform 0.08s, box-shadow 0.15s;
 }
 .ptn-curation .pushbtn:hover {
@@ -345,11 +344,11 @@
 }
 
 .ptn-curation .iconbtn {
-	width: 38px;
-	height: 38px;
+	width: 46px;
+	height: 46px;
 	display: grid;
 	place-items: center;
-	border-radius: 9px;
+	border-radius: 10px;
 	border: 1px solid var( --ptn-line );
 	background: var( --ptn-surface );
 	color: var( --ptn-ink-2 );
@@ -396,8 +395,10 @@
 /* ---------- curation columns ---------- */
 .ptn-curation .curate {
 	display: grid;
-	grid-template-columns: 1fr 460px;
-	gap: 22px;
+	/* Match the distribution grid above (same template + gap) so the two lower
+	   panels line up exactly under the two platform cards. */
+	grid-template-columns: repeat( 2, minmax( 0, 1fr ) );
+	gap: 16px;
 	align-items: start;
 }
 @media ( max-width: 1080px ) {
@@ -411,6 +412,11 @@
 
 .ptn-curation .col {
 	min-width: 0;
+	background: var( --ptn-surface );
+	border: 1px solid var( --ptn-line );
+	border-radius: var( --ptn-radius-lg );
+	box-shadow: var( --ptn-shadow-sm );
+	padding: 20px 22px;
 }
 .ptn-curation .col--out {
 	position: sticky;
@@ -421,8 +427,8 @@
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	margin: 0 0 12px;
-	padding: 0 2px;
+	margin: 0 0 18px;
+	padding: 0;
 }
 .ptn-curation .col__head h2 {
 	font-size: 13px;
@@ -468,7 +474,7 @@
 /* ---------- search ---------- */
 .ptn-curation .search {
 	position: relative;
-	margin-bottom: 12px;
+	margin-bottom: 18px;
 }
 .ptn-curation .search .ico {
 	position: absolute;
@@ -527,12 +533,11 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 7px;
-	margin-bottom: 14px;
+	margin-bottom: 18px;
 }
 .ptn-curation .chip {
 	display: inline-flex;
 	align-items: center;
-	gap: 6px;
 	height: 30px;
 	padding: 0 12px;
 	border-radius: 999px;
@@ -553,12 +558,6 @@
 	border-color: var( --ptn-ink );
 	color: #fff;
 }
-.ptn-curation .chip .chipdot {
-	width: 7px;
-	height: 7px;
-	border-radius: 50%;
-	flex: none;
-}
 
 /* ---------- lists ---------- */
 .ptn-curation .list {
@@ -567,19 +566,11 @@
 	padding: 0;
 }
 
-/* available list = one card, hairline-divided rows */
+/* available list = stacked cards (the column panel is the surrounding surface) */
 .ptn-curation .list--avail {
-	background: var( --ptn-surface );
-	border: 1px solid var( --ptn-line );
-	border-radius: var( --ptn-radius );
-	box-shadow: var( --ptn-shadow-sm );
-	overflow: hidden;
-}
-.ptn-curation .list--avail .row {
-	border-bottom: 1px solid var( --ptn-line-2 );
-}
-.ptn-curation .list--avail .row:last-child {
-	border-bottom: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 }
 
 /* rows hidden by the active category chip */
@@ -587,26 +578,23 @@
 	display: none;
 }
 
-/* selected list = grey tray of cards */
+/* selected list = stacked cards inside the column panel (no separate tray fill) */
 .ptn-curation .tray {
-	background: var( --ptn-tray );
-	border: 1px solid var( --ptn-line );
-	border-radius: var( --ptn-radius );
-	padding: 10px;
 	min-height: 160px;
-	box-shadow: inset 0 1px 3px rgba( 16, 24, 40, 0.03 );
 }
 .ptn-curation .tray .list {
 	display: flex;
 	flex-direction: column;
-	gap: 9px;
+	gap: 8px;
 }
 
-/* scroll region for the available list */
+/* scroll region for the available list; small right pad keeps the scrollbar off
+   the card edges and a little side breathing room stops hover shadows clipping. */
 .ptn-curation .scroller {
-	max-height: calc( 100vh - 360px );
+	max-height: calc( 100vh - 380px );
 	overflow-y: auto;
-	border-radius: var( --ptn-radius );
+	padding: 2px 4px 2px 2px;
+	margin: -2px -2px 0;
 }
 .ptn-curation .scroller::-webkit-scrollbar {
 	width: 10px;
@@ -620,29 +608,21 @@
 	background: transparent;
 }
 
-/* ---------- article row ---------- */
+/* ---------- article card (shared by both columns) ---------- */
 .ptn-curation .row {
 	display: flex;
 	align-items: center;
 	gap: 12px;
-	padding: var( --ptn-row-pad-y ) 14px;
+	padding: var( --ptn-row-pad-y ) 13px;
 	background: var( --ptn-surface );
-	position: relative;
-}
-.ptn-curation .list--avail .row {
-	transition: background 0.12s;
-}
-.ptn-curation .list--avail .row:hover {
-	background: #f9fafb;
-}
-
-.ptn-curation .tray .row {
 	border: 1px solid var( --ptn-line );
 	border-radius: var( --ptn-radius-sm );
 	box-shadow: var( --ptn-shadow-sm );
-	padding-left: 8px;
+	position: relative;
+	transition: box-shadow 0.14s, border-color 0.14s;
 }
-.ptn-curation .tray .row:hover {
+.ptn-curation .row:hover {
+	border-color: #d7dade;
 	box-shadow: var( --ptn-shadow-md );
 }
 .ptn-curation .tray .row.is-dragging {
@@ -752,13 +732,12 @@
 	color: var( --ptn-ink-3 );
 }
 
-/* Meta pills — date / author / category share one pill shape; only the colours
-   differ. The author pill is tinted from the brand accent colour (the
-   --ptn-author-color the curation wrapper sets from ptn_settings), so it matches
-   the site's branding without depending on the theme's own stylesheet. */
+/* Meta — date + author render as pills (date grey; author tinted from the brand
+   accent the curation wrapper sets from ptn_settings, so it tracks the site's
+   branding without depending on the theme's stylesheet). The category renders as
+   a plain uppercase accent kicker (no pill), matching the email renderer. */
 .ptn-curation .datepill,
-.ptn-curation .authorpill,
-.ptn-curation .catpill {
+.ptn-curation .authorpill {
 	display: inline-flex;
 	align-items: center;
 	height: 19px;
@@ -779,8 +758,15 @@
 	background: color-mix( in srgb, var( --ptn-author-color, var( --ptn-danger ) ) 12%, #fff );
 }
 .ptn-curation .catpill {
-	color: var( --ptn-cat, var( --ptn-ink-2 ) );
-	background: var( --ptn-catbg, #f0f1f3 );
+	display: inline-flex;
+	align-items: center;
+	font-size: 10.5px;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: var( --ptn-author-color, var( --ptn-danger ) );
+	white-space: nowrap;
+	flex: none;
 }
 
 /* row action buttons */
@@ -789,14 +775,14 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
-	height: 32px;
-	padding: 0 13px 0 11px;
+	height: 34px;
+	padding: 0 14px 0 12px;
 	border-radius: 8px;
-	border: 1px solid var( --ptn-accent );
-	background: var( --ptn-surface );
+	border: 1px solid transparent;
+	background: var( --ptn-accent-soft );
 	color: var( --ptn-accent );
 	font: inherit;
-	font-size: 12.5px;
+	font-size: 13px;
 	font-weight: 600;
 	cursor: pointer;
 	transition: background 0.13s, color 0.13s;
@@ -806,8 +792,8 @@
 	height: 14px;
 }
 .ptn-curation .addbtn:hover {
-	background: var( --ptn-accent );
-	color: #fff;
+	background: color-mix( in srgb, var( --ptn-accent ) 16%, #fff );
+	color: var( --ptn-accent );
 }
 .ptn-curation .addbtn.is-added {
 	border-color: var( --ptn-ok );
@@ -938,7 +924,7 @@
 .ptn-settings-page .scard {
 	background: var( --ptn-surface );
 	border: 1px solid var( --ptn-line );
-	border-radius: 14px;
+	border-radius: var( --ptn-radius-lg );
 	box-shadow: var( --ptn-shadow-sm );
 	margin-bottom: 20px;
 	overflow: hidden;
@@ -991,11 +977,12 @@
 	letter-spacing: -0.02em;
 }
 .ptn-settings-page .logochip.mc {
-	background: linear-gradient( 135deg, #ffe01b, #f7c600 );
+	background: #f3c742;
 	color: #1d2327;
 }
 .ptn-settings-page .logochip.cm {
-	background: linear-gradient( 135deg, #3a76f0, #2456c8 );
+	background: #101d6c;
+	color: #fff;
 }
 
 .ptn-settings-page .scols {
@@ -1057,7 +1044,7 @@
 	color: var( --ptn-ink );
 	background: var( --ptn-surface );
 	border: 1px solid var( --ptn-line );
-	border-radius: 9px;
+	border-radius: 10px;
 	padding: 0 12px;
 	height: 40px;
 	margin: 0;
@@ -1110,7 +1097,7 @@
 .ptn-settings-page .media__frame {
 	width: 230px;
 	height: 124px;
-	border-radius: 11px;
+	border-radius: 12px;
 	border: 1px solid var( --ptn-line );
 	background: #f6f7f8;
 	display: grid;
@@ -1159,7 +1146,7 @@
 	padding: 0 12px;
 }
 
-/* colour field — WP's Iris picker (.ptn-color) given the new card framing */
+/* colour field — native colour swatch + hex text input */
 .ptn-settings-page .colorfield {
 	display: flex;
 	flex-direction: column;
@@ -1170,20 +1157,33 @@
 	align-items: center;
 	gap: 10px;
 }
-.ptn-settings-page .wp-picker-container .wp-color-result.button {
-	height: 40px;
-	border-radius: 9px;
-	border-color: var( --ptn-line );
-}
-.ptn-settings-page .wp-picker-container .wp-color-result-text {
-	border-radius: 0 9px 9px 0;
-	line-height: 38px;
+.ptn-settings-page .ptn-color-swatch {
+	width: 44px;
+	height: 44px;
+	flex: none;
+	margin: 0;
+	padding: 0;
+	border: 1px solid var( --ptn-line );
+	border-radius: 10px;
 	background: var( --ptn-surface );
-	border-left-color: var( --ptn-line );
+	cursor: pointer;
+	-webkit-appearance: none;
+	appearance: none;
 }
-.ptn-settings-page .wp-picker-input-wrap .wp-color-picker {
-	border-radius: 9px;
-	height: 40px;
+.ptn-settings-page .ptn-color-swatch::-webkit-color-swatch-wrapper {
+	padding: 3px;
+}
+.ptn-settings-page .ptn-color-swatch::-webkit-color-swatch {
+	border: none;
+	border-radius: 7px;
+}
+.ptn-settings-page .ptn-color-swatch::-moz-color-swatch {
+	border: none;
+	border-radius: 7px;
+}
+.ptn-settings-page .ptn-color-hex {
+	max-width: 220px;
+	text-transform: uppercase;
 }
 
 /* badge in the card head */
@@ -1285,7 +1285,7 @@ body.folded .ptn-settings-page .savebar {
 	gap: 8px;
 	height: 38px;
 	padding: 0 18px;
-	border-radius: 9px;
+	border-radius: 10px;
 	border: 0;
 	font: inherit;
 	font-size: 13.5px;
@@ -1296,7 +1296,7 @@ body.folded .ptn-settings-page .savebar {
 .ptn-settings-page .btn--primary {
 	background: var( --ptn-accent );
 	color: #fff;
-	box-shadow: 0 1px 2px rgba( 34, 113, 177, 0.4 );
+	box-shadow: 0 1px 2px rgba( 36, 99, 235, 0.4 );
 }
 .ptn-settings-page .btn--primary:hover {
 	background: var( --ptn-accent-hover );

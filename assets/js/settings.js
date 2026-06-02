@@ -6,10 +6,23 @@
 
 	var i18n = ( window.ptnSettings || {} ).i18n || {};
 
-	// Colour pickers.
-	if ( $.fn.wpColorPicker ) {
-		$( '.ptn-color' ).wpColorPicker();
-	}
+	// Colour fields: keep the native swatch and the hex text input in sync.
+	$( '.color-row' ).each( function () {
+		var $swatch = $( this ).find( '.ptn-color-swatch' );
+		var $hex = $( this ).find( '.ptn-color-hex' );
+		if ( ! $swatch.length || ! $hex.length ) {
+			return;
+		}
+		$swatch.on( 'input', function () {
+			$hex.val( $swatch.val().toUpperCase() );
+		} );
+		$hex.on( 'input', function () {
+			var v = $hex.val().trim();
+			if ( /^#?[0-9a-fA-F]{6}$/.test( v ) ) {
+				$swatch.val( ( '#' === v.charAt( 0 ) ? v : '#' + v ).toLowerCase() );
+			}
+		} );
+	} );
 
 	var frames = {};
 
