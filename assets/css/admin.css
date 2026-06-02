@@ -1,349 +1,1356 @@
-/* Curated Newsletter admin styles. */
+/* Posts to Newsletter — admin UI styles (curation + settings).
+   Hand-written, no build step; Plugin::asset_version() cache-busts via filemtime.
 
-.ptn-actions-row {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	margin: 8px 0;
+   Layout note: every component rule is scoped under the page wrappers
+   (.ptn-curation / .ptn-settings-page) so these styles only ever touch the
+   plugin's own screens and never leak into the surrounding wp-admin chrome.
+   Design tokens are prefixed --ptn-* for the same reason. */
+
+/* ============================================================
+   Design tokens
+   ============================================================ */
+:root {
+	--ptn-accent: #2271b1;
+	--ptn-accent-hover: #185a92;
+	--ptn-accent-soft: #eaf2fa;
+	--ptn-accent-ring: rgba( 34, 113, 177, 0.28 );
+
+	--ptn-ink: #1d2327;
+	--ptn-ink-2: #50575e;
+	--ptn-ink-3: #787c82;
+	--ptn-ink-4: #9296a0;
+
+	--ptn-line: #e4e6ea;
+	--ptn-line-2: #eef0f2;
+	--ptn-surface: #fff;
+	--ptn-canvas: #f3f4f6;
+	--ptn-tray: #f6f7f8;
+
+	--ptn-ok: #137a44;
+	--ptn-ok-soft: #e8f5ee;
+	--ptn-warn: #9a6700;
+	--ptn-warn-soft: #fdf6e3;
+	--ptn-danger: #b32d2e;
+	--ptn-danger-soft: #fbeceb;
+
+	--ptn-radius: 12px;
+	--ptn-radius-sm: 9px;
+	--ptn-shadow-sm: 0 1px 2px rgba( 16, 24, 40, 0.05 );
+	--ptn-shadow-md: 0 6px 20px -6px rgba( 16, 24, 40, 0.14 ), 0 2px 6px -2px rgba( 16, 24, 40, 0.06 );
+
+	/* Row density (default: comfortable). Overridden by the .density-* modifiers. */
+	--ptn-row-pad-y: 11px;
+	--ptn-thumb: 64px;
+
+	--ptn-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
-.ptn-settings-link {
-	margin-left: auto;
-}
-
-.ptn-status {
-	color: #2271b1;
-	font-weight: 600;
-	margin-left: 6px;
-}
-
-.ptn-platforms {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 24px;
-	max-width: 1100px;
-	margin: 0 0 16px;
-}
-
-.ptn-platform {
-	/* Size each card to exactly one article-column width: (row - gap) / 2, the
-	   same formula the flex:1 1 0 columns below resolve to. grow is 0 so a lone
-	   card (the other platform unconfigured) holds one column's width and stays
-	   left-aligned instead of stretching the full row; two cards still fill the
-	   row and line up with the columns. Keep the 24px in sync with the gap. */
-	flex: 0 1 calc((100% - 24px) / 2);
-	/* border-box so the basis above is the full card width (padding + border
-	   included), matching the no-padding columns below to the pixel. */
+/* Shared resets, scoped to the plugin screens only. */
+.ptn-curation *,
+.ptn-settings-page * {
 	box-sizing: border-box;
-	min-width: 300px;
-	background: #fff;
-	border: 1px solid #dcdcde;
-	border-radius: 6px;
-	padding: 12px 16px;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 }
 
-.ptn-platform__title {
-	margin: 0 0 10px;
-	padding: 0;
-	font-size: 13px;
-	font-weight: 600;
+.ptn-curation svg.ico,
+.ptn-settings-page svg.ico {
+	width: 16px;
+	height: 16px;
+	flex: none;
+	display: inline-block;
+	vertical-align: middle;
 }
 
-.ptn-platform__body {
+/* ============================================================
+   Curation screen
+   ============================================================ */
+.ptn-curation {
+	max-width: 1180px;
+	font-family: var( --ptn-sans );
+	color: var( --ptn-ink );
+	font-size: 14px;
+	line-height: 1.45;
+}
+
+/* ---------- page header ---------- */
+.ptn-curation .pagehead {
 	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 10px;
-}
-
-.ptn-platform__actions {
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 8px;
-}
-
-.ptn-platform__actions:empty {
-	display: none;
-}
-
-.ptn-platform__import-row {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-	margin-left: auto;
-}
-
-.ptn-columns {
-	display: flex;
-	gap: 24px;
 	align-items: flex-start;
-	max-width: 1100px;
+	gap: 20px;
+	margin-bottom: 22px;
 }
-
-.ptn-col {
-	flex: 1 1 0;
+.ptn-curation .pagehead__main {
 	min-width: 0;
 }
+.ptn-curation .pagehead h1 {
+	font-size: 26px;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	margin: 0 0 4px;
+	padding: 0;
+	color: var( --ptn-ink );
+}
+.ptn-curation .pagehead p {
+	margin: 0;
+	color: var( --ptn-ink-2 );
+	max-width: 56ch;
+	font-size: 13.5px;
+}
+.ptn-curation .pagehead__aside {
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex: none;
+}
 
-.ptn-col h2 {
+/* save chip — wraps the existing .ptn-status aria-live region */
+.ptn-curation .savechip {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 6px 12px 6px 10px;
+	border-radius: 999px;
+	font-size: 12.5px;
+	font-weight: 600;
+	background: var( --ptn-ok-soft );
+	color: var( --ptn-ok );
+	border: 1px solid color-mix( in srgb, var( --ptn-ok ) 22%, transparent );
+	white-space: nowrap;
+	transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.ptn-curation .savechip .dot {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: currentColor;
+	flex: none;
+}
+.ptn-curation .savechip .ptn-status {
+	color: inherit;
+	font-weight: 600;
+	margin: 0;
+}
+.ptn-curation .savechip.is-saving {
+	background: var( --ptn-accent-soft );
+	color: var( --ptn-accent );
+	border-color: var( --ptn-accent-ring );
+}
+.ptn-curation .savechip.is-saving .dot {
+	animation: ptn-pulse 1s ease-in-out infinite;
+}
+@keyframes ptn-pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.3; }
+}
+
+/* settings ghost button — replaces the old .ptn-settings-link */
+.ptn-curation .ghostbtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	height: 34px;
+	padding: 0 14px;
+	border-radius: 9px;
+	border: 1px solid var( --ptn-line );
+	background: var( --ptn-surface );
+	color: var( --ptn-ink-2 );
+	font: inherit;
 	font-size: 13px;
+	font-weight: 600;
+	text-decoration: none;
+	cursor: pointer;
+	box-shadow: var( --ptn-shadow-sm );
+	transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.ptn-curation .ghostbtn:hover {
+	border-color: #cfd2d8;
+	color: var( --ptn-ink );
+}
+.ptn-curation .ghostbtn .ico {
+	width: 15px;
+	height: 15px;
+}
+
+/* ---------- distribution / platform cards ---------- */
+.ptn-curation .dist {
+	margin-bottom: 26px;
+}
+.ptn-curation .dist__head {
+	display: flex;
+	align-items: baseline;
+	gap: 10px;
+	margin: 0 0 12px;
+}
+.ptn-curation .dist__head h2 {
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.08em;
 	text-transform: uppercase;
-	letter-spacing: 0.5px;
-	color: #50575e;
+	color: var( --ptn-ink-3 );
+	margin: 0;
+	padding: 0;
+}
+.ptn-curation .dist__head .sub {
+	font-size: 12.5px;
+	color: var( --ptn-ink-4 );
 }
 
-.ptn-search {
+.ptn-curation .dist__grid {
+	display: grid;
+	grid-template-columns: repeat( auto-fit, minmax( 330px, 1fr ) );
+	gap: 16px;
+}
+
+.ptn-curation .platform {
+	background: var( --ptn-surface );
+	border: 1px solid var( --ptn-line );
+	border-radius: var( --ptn-radius );
+	padding: 16px 18px;
+	box-shadow: var( --ptn-shadow-sm );
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	transition: box-shadow 0.18s, border-color 0.18s;
+}
+.ptn-curation .platform:hover {
+	box-shadow: var( --ptn-shadow-md );
+}
+
+.ptn-curation .platform__top {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+.ptn-curation .platform__logo {
+	width: 38px;
+	height: 38px;
+	border-radius: 10px;
+	display: grid;
+	place-items: center;
+	font-weight: 800;
+	font-size: 16px;
+	color: #fff;
+	flex: none;
+	letter-spacing: -0.02em;
+}
+.ptn-curation .platform__logo--mc {
+	background: linear-gradient( 135deg, #ffe01b, #f7c600 );
+	color: #1d2327;
+}
+.ptn-curation .platform__logo--cm {
+	background: linear-gradient( 135deg, #3a76f0, #2456c8 );
+}
+.ptn-curation .platform__id {
+	min-width: 0;
+}
+.ptn-curation .platform__name {
+	font-weight: 700;
+	font-size: 14.5px;
+	line-height: 1.1;
+}
+.ptn-curation .platform__meta {
+	font-size: 12px;
+	color: var( --ptn-ink-3 );
+	margin-top: 2px;
+}
+
+.ptn-curation .badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	margin-left: auto;
+	padding: 4px 10px;
+	border-radius: 999px;
+	font-size: 11.5px;
+	font-weight: 700;
+	background: #f0f1f3;
+	color: var( --ptn-ink-2 );
+}
+.ptn-curation .badge .dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: currentColor;
+}
+.ptn-curation .badge--ok {
+	background: var( --ptn-ok-soft );
+	color: var( --ptn-ok );
+}
+.ptn-curation .badge--err {
+	background: var( --ptn-danger-soft );
+	color: var( --ptn-danger );
+}
+
+/* Actions row holds the push button + the Preview/Copy icon buttons; the
+   pro add-on's push-result and last-pushed lines wrap onto their own rows
+   below (via flex-basis + order) to form the dashed footer. */
+.ptn-curation .platform__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 9px;
+}
+
+.ptn-curation .pushbtn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	flex: 1 1 auto;
+	height: 38px;
+	padding: 0 16px;
+	border-radius: 9px;
+	border: 0;
+	background: var( --ptn-accent );
+	color: #fff;
+	font: inherit;
+	font-size: 13.5px;
+	font-weight: 600;
+	cursor: pointer;
+	box-shadow: 0 1px 2px rgba( 34, 113, 177, 0.4 );
+	transition: background 0.15s, transform 0.08s, box-shadow 0.15s;
+}
+.ptn-curation .pushbtn:hover {
+	background: var( --ptn-accent-hover );
+}
+.ptn-curation .pushbtn:active {
+	transform: translateY( 1px );
+}
+.ptn-curation .pushbtn:disabled {
+	opacity: 0.65;
+	cursor: default;
+}
+.ptn-curation .pushbtn .ico {
+	width: 16px;
+	height: 16px;
+}
+.ptn-curation .pushbtn .spin {
+	width: 14px;
+	height: 14px;
+	border: 2px solid rgba( 255, 255, 255, 0.45 );
+	border-top-color: #fff;
+	border-radius: 50%;
+	animation: ptn-spin 0.7s linear infinite;
+}
+@keyframes ptn-spin {
+	to { transform: rotate( 360deg ); }
+}
+
+.ptn-curation .iconbtn {
+	width: 38px;
+	height: 38px;
+	display: grid;
+	place-items: center;
+	border-radius: 9px;
+	border: 1px solid var( --ptn-line );
+	background: var( --ptn-surface );
+	color: var( --ptn-ink-2 );
+	cursor: pointer;
+	flex: none;
+	order: 1;
+	text-decoration: none;
+	transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.ptn-curation .iconbtn:hover {
+	border-color: #cfd2d8;
+	color: var( --ptn-ink );
+	background: #fafbfc;
+}
+.ptn-curation .iconbtn .ico {
+	width: 16px;
+	height: 16px;
+}
+.ptn-curation .iconbtn.is-copied {
+	border-color: var( --ptn-ok );
+	color: var( --ptn-ok );
+	background: var( --ptn-ok-soft );
+}
+
+/* Footer look for the pro add-on's lines (defined here so the dashed top
+   border + spacing live with the rest of the card; the add-on supplies the
+   markup). */
+.ptn-curation .platform__foot {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 12px;
+	color: var( --ptn-ink-3 );
+	border-top: 1px dashed var( --ptn-line );
+	padding-top: 11px;
+	min-height: 20px;
+}
+.ptn-curation .platform__foot .tick {
+	color: var( --ptn-ok );
+	width: 14px;
+	height: 14px;
+}
+
+/* ---------- curation columns ---------- */
+.ptn-curation .curate {
+	display: grid;
+	grid-template-columns: 1fr 460px;
+	gap: 22px;
+	align-items: start;
+}
+@media ( max-width: 1080px ) {
+	.ptn-curation .curate {
+		grid-template-columns: 1fr;
+	}
+	.ptn-curation .col--out {
+		position: static !important;
+	}
+}
+
+.ptn-curation .col {
+	min-width: 0;
+}
+.ptn-curation .col--out {
+	position: sticky;
+	top: 46px;
+}
+
+.ptn-curation .col__head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 0 0 12px;
+	padding: 0 2px;
+}
+.ptn-curation .col__head h2 {
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var( --ptn-ink-2 );
+	margin: 0;
+	padding: 0;
+}
+.ptn-curation .count {
+	display: inline-grid;
+	place-items: center;
+	min-width: 22px;
+	height: 22px;
+	padding: 0 7px;
+	border-radius: 999px;
+	background: #e9ebef;
+	color: var( --ptn-ink-2 );
+	font-size: 12px;
+	font-weight: 700;
+}
+.ptn-curation .col--out .count {
+	background: var( --ptn-accent );
+	color: #fff;
+}
+.ptn-curation .col__head .spacer {
+	margin-left: auto;
+}
+.ptn-curation .clearbtn {
+	border: 0;
+	background: none;
+	cursor: pointer;
+	font: inherit;
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var( --ptn-ink-3 );
+}
+.ptn-curation .clearbtn:hover {
+	color: var( --ptn-danger );
+}
+
+/* ---------- search ---------- */
+.ptn-curation .search {
+	position: relative;
+	margin-bottom: 12px;
+}
+.ptn-curation .search .ico {
+	position: absolute;
+	left: 13px;
+	top: 50%;
+	transform: translateY( -50% );
+	width: 16px;
+	height: 16px;
+	color: var( --ptn-ink-4 );
+	pointer-events: none;
+}
+.ptn-curation .search input[type="search"] {
 	width: 100%;
-	margin: 0 0 10px;
-	padding: 7px 10px;
-	box-sizing: border-box;
+	height: 42px;
+	margin: 0;
+	padding: 0 38px;
+	border: 1px solid var( --ptn-line );
+	border-radius: 10px;
+	background: var( --ptn-surface );
+	font: inherit;
+	font-size: 14px;
+	color: var( --ptn-ink );
+	box-shadow: var( --ptn-shadow-sm );
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ptn-curation .search input::placeholder {
+	color: var( --ptn-ink-4 );
+}
+.ptn-curation .search input[type="search"]:focus {
+	outline: none;
+	border-color: var( --ptn-accent );
+	box-shadow: 0 0 0 3px var( --ptn-accent-ring );
+}
+.ptn-curation .search__clear {
+	position: absolute;
+	right: 8px;
+	top: 50%;
+	transform: translateY( -50% );
+	width: 26px;
+	height: 26px;
+	border: 0;
+	background: none;
+	display: grid;
+	place-items: center;
+	border-radius: 7px;
+	cursor: pointer;
+	color: var( --ptn-ink-4 );
+}
+.ptn-curation .search__clear:hover {
+	background: #f0f1f3;
+	color: var( --ptn-ink-2 );
 }
 
-.ptn-list {
+/* ---------- filter chips ---------- */
+.ptn-curation .chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 7px;
+	margin-bottom: 14px;
+}
+.ptn-curation .chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 30px;
+	padding: 0 12px;
+	border-radius: 999px;
+	border: 1px solid var( --ptn-line );
+	background: var( --ptn-surface );
+	color: var( --ptn-ink-2 );
+	font: inherit;
+	font-size: 12.5px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.13s;
+}
+.ptn-curation .chip:hover {
+	border-color: #cfd2d8;
+}
+.ptn-curation .chip.is-on {
+	background: var( --ptn-ink );
+	border-color: var( --ptn-ink );
+	color: #fff;
+}
+.ptn-curation .chip .chipdot {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	flex: none;
+}
+
+/* ---------- lists ---------- */
+.ptn-curation .list {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	min-height: 80px;
-	background: #fff;
-	border: 1px solid #dcdcde;
-	border-radius: 4px;
 }
 
-/* Available list: one rounded, shadowed card wrapping every row. The base
-   .ptn-list already paints the white fill and border; here we match the
-   platform cards' 6px curve and soft shadow, and clip the row hairlines to the
-   rounded corners. */
-#ptn-available {
-	border-radius: 6px;
+/* available list = one card, hairline-divided rows */
+.ptn-curation .list--avail {
+	background: var( --ptn-surface );
+	border: 1px solid var( --ptn-line );
+	border-radius: var( --ptn-radius );
+	box-shadow: var( --ptn-shadow-sm );
 	overflow: hidden;
-	box-shadow: 0 1px 1px rgba( 0, 0, 0, 0.04 );
 }
-
-/* Selected list: a grey tray. Each article becomes its own card (below), with
-   the grey showing through the gaps, so drop the base white fill, border and
-   radius and add a little padding for the surrounding gutter. */
-#ptn-selected.ptn-sortable {
-	background: #f6f7f7;
-	border: 0;
-	border-radius: 0;
-	padding: 8px;
+.ptn-curation .list--avail .row {
+	border-bottom: 1px solid var( --ptn-line-2 );
 }
-
-/* Each selected article is its own card: full border, matching curve and
-   shadow, with a gap below so the grey tray shows between cards. The id
-   specificity also overrides the base row hairline and its last-child reset. */
-#ptn-selected .ptn-item {
-	margin-bottom: 8px;
-	border: 1px solid #dcdcde;
-	border-radius: 6px;
-	box-shadow: 0 1px 1px rgba( 0, 0, 0, 0.04 );
-}
-
-#ptn-selected .ptn-item:last-child {
-	margin-bottom: 0;
-}
-
-.ptn-item {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	padding: 8px 10px;
-	border-bottom: 1px solid #f0f0f1;
-	background: #fff;
-}
-
-.ptn-item:last-child {
+.ptn-curation .list--avail .row:last-child {
 	border-bottom: 0;
 }
 
-.ptn-handle {
+/* rows hidden by the active category chip */
+.ptn-curation .ptn-item.is-filtered-out {
+	display: none;
+}
+
+/* selected list = grey tray of cards */
+.ptn-curation .tray {
+	background: var( --ptn-tray );
+	border: 1px solid var( --ptn-line );
+	border-radius: var( --ptn-radius );
+	padding: 10px;
+	min-height: 160px;
+	box-shadow: inset 0 1px 3px rgba( 16, 24, 40, 0.03 );
+}
+.ptn-curation .tray .list {
+	display: flex;
+	flex-direction: column;
+	gap: 9px;
+}
+
+/* scroll region for the available list */
+.ptn-curation .scroller {
+	max-height: calc( 100vh - 360px );
+	overflow-y: auto;
+	border-radius: var( --ptn-radius );
+}
+.ptn-curation .scroller::-webkit-scrollbar {
+	width: 10px;
+}
+.ptn-curation .scroller::-webkit-scrollbar-thumb {
+	background: #d7dade;
+	border-radius: 6px;
+	border: 3px solid var( --ptn-canvas );
+}
+.ptn-curation .scroller::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+/* ---------- article row ---------- */
+.ptn-curation .row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: var( --ptn-row-pad-y ) 14px;
+	background: var( --ptn-surface );
+	position: relative;
+}
+.ptn-curation .list--avail .row {
+	transition: background 0.12s;
+}
+.ptn-curation .list--avail .row:hover {
+	background: #f9fafb;
+}
+
+.ptn-curation .tray .row {
+	border: 1px solid var( --ptn-line );
+	border-radius: var( --ptn-radius-sm );
+	box-shadow: var( --ptn-shadow-sm );
+	padding-left: 8px;
+}
+.ptn-curation .tray .row:hover {
+	box-shadow: var( --ptn-shadow-md );
+}
+.ptn-curation .tray .row.is-dragging {
+	box-shadow: 0 14px 30px -8px rgba( 16, 24, 40, 0.28 );
+	opacity: 0.97;
+}
+
+/* order index in the selected list, driven by a CSS counter so re-ordering and
+   add/remove stay numbered without any JS bookkeeping. */
+.ptn-curation .tray .list {
+	counter-reset: ptn-order;
+}
+.ptn-curation .tray .row {
+	counter-increment: ptn-order;
+}
+.ptn-curation .row__index {
+	flex: none;
+	width: 22px;
+	text-align: center;
+	font-size: 13px;
+	font-weight: 700;
+	color: var( --ptn-accent );
+	font-variant-numeric: tabular-nums;
+}
+.ptn-curation .tray .row__index::before {
+	content: counter( ptn-order );
+}
+
+/* drag handle */
+.ptn-curation .handle {
+	flex: none;
+	width: 20px;
+	display: grid;
+	place-items: center;
+	color: var( --ptn-ink-4 );
 	cursor: grab;
-	color: #a7aaad;
+}
+.ptn-curation .handle:active {
+	cursor: grabbing;
+}
+.ptn-curation .handle .ico {
+	width: 16px;
+	height: 16px;
 }
 
-#ptn-available .ptn-handle {
-	visibility: hidden;
+/* The handle + order index render in every row so an item keeps them when moved
+   between columns; only the selected tray reveals them. */
+.ptn-curation #ptn-available .handle,
+.ptn-curation #ptn-available .row__index {
+	display: none;
 }
 
-.ptn-thumb {
-	flex: 0 0 70px;
-	width: 70px;
+/* thumb */
+.ptn-curation .thumb {
+	flex: none;
+	width: var( --ptn-thumb );
+	height: calc( var( --ptn-thumb ) * 0.72 );
+	border-radius: 8px;
+	overflow: hidden;
+	background: #eceef1;
+	position: relative;
 }
-
-.ptn-thumb img {
+.ptn-curation .thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 	display: block;
-	border-radius: 3px;
+}
+.ptn-curation .thumb--ph {
+	display: grid;
+	place-items: center;
+	background: repeating-linear-gradient( 135deg, #eceef1 0 7px, #e6e8ec 7px 14px );
+	color: var( --ptn-ink-4 );
+}
+.ptn-curation .thumb--ph .ico {
+	width: 18px;
+	height: 18px;
+	opacity: 0.7;
 }
 
-.ptn-meta {
+/* meta */
+.ptn-curation .meta {
 	flex: 1 1 auto;
 	min-width: 0;
 	display: flex;
 	flex-direction: column;
-	gap: 1px;
+	gap: 3px;
 }
-
-.ptn-title {
+.ptn-curation .meta__title {
 	font-weight: 600;
+	font-size: 14px;
 	line-height: 1.3;
+	color: var( --ptn-ink );
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	-webkit-box-orient: vertical;
+	text-wrap: pretty;
 }
-
-.ptn-author {
-	color: #c30;
-	font-size: 11px;
-	text-transform: uppercase;
-	letter-spacing: 0.3px;
-}
-
-.ptn-date {
-	color: #787c82;
-	font-size: 12px;
-}
-
-.ptn-add {
-	flex: 0 0 auto;
-}
-
-.ptn-remove {
-	flex: 0 0 auto;
-	color: #b32d2e !important;
-	font-size: 20px;
-	line-height: 1;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-.ptn-placeholder {
-	height: 50px;
-	margin: 0;
-	background: #fffbe5;
-	border: 1px dashed #dba617;
-}
-
-/* Match the placeholder to the card rhythm it stands in for: same gap below and
-   curve as the selected cards (forcePlaceholderSize sets its height to the
-   dragged card). */
-#ptn-selected .ptn-placeholder {
-	margin-bottom: 8px;
-	border-radius: 6px;
-}
-
-.ptn-empty {
-	padding: 16px;
-	color: #787c82;
-	font-style: italic;
-}
-
-/* Settings page. */
-.ptn-grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 20px;
-	max-width: 1080px;
-	align-items: start;
-	margin-top: 16px;
-}
-
-@media ( max-width: 960px ) {
-	.ptn-grid { grid-template-columns: 1fr; }
-}
-
-.ptn-card {
-	background: #fff;
-	border: 1px solid #dcdcde;
-	border-radius: 8px;
-	padding: 18px 22px 22px;
-	box-shadow: 0 1px 2px rgba( 0, 0, 0, 0.04 );
-}
-
-.ptn-card--full {
-	grid-column: 1 / -1;
-}
-
-.ptn-card h2 {
+.ptn-curation .meta__sub {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	margin: 0 0 16px;
-	padding-bottom: 12px;
-	border-bottom: 1px solid #f0f0f1;
-	font-size: 15px;
+	gap: 8px;
+	font-size: 12px;
+	color: var( --ptn-ink-3 );
 }
-
-.ptn-fields {
+.ptn-curation .byline {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+}
+.ptn-curation .byline__av {
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
 	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 14px 20px;
+	place-items: center;
+	font-size: 9.5px;
+	font-weight: 700;
+	color: #fff;
+	flex: none;
 }
-
-.ptn-fields--three {
-	grid-template-columns: repeat( 3, 1fr );
-}
-
-@media ( max-width: 600px ) {
-	.ptn-fields,
-	.ptn-fields--three { grid-template-columns: 1fr; }
-}
-
-.ptn-field {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-	margin: 0;
-}
-
-.ptn-field--full {
-	grid-column: 1 / -1;
-}
-
-.ptn-field > label,
-.ptn-label {
+.ptn-curation .byline__name {
 	font-weight: 600;
+	color: var( --ptn-ink-2 );
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.ptn-curation .dot-sep {
+	color: var( --ptn-line );
+}
+.ptn-curation .meta__date {
+	white-space: nowrap;
+	flex: none;
+}
+
+.ptn-curation .catpill {
+	display: inline-flex;
+	align-items: center;
+	height: 18px;
+	padding: 0 8px;
+	border-radius: 999px;
+	font-size: 10.5px;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	color: var( --ptn-cat, var( --ptn-ink-2 ) );
+	background: var( --ptn-catbg, #f0f1f3 );
+	white-space: nowrap;
+	flex: none;
+}
+
+/* row action buttons */
+.ptn-curation .addbtn {
+	flex: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 32px;
+	padding: 0 13px 0 11px;
+	border-radius: 8px;
+	border: 1px solid var( --ptn-accent );
+	background: var( --ptn-surface );
+	color: var( --ptn-accent );
+	font: inherit;
+	font-size: 12.5px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.13s, color 0.13s;
+}
+.ptn-curation .addbtn .ico {
+	width: 14px;
+	height: 14px;
+}
+.ptn-curation .addbtn:hover {
+	background: var( --ptn-accent );
+	color: #fff;
+}
+.ptn-curation .addbtn.is-added {
+	border-color: var( --ptn-ok );
+	color: var( --ptn-ok );
+	background: var( --ptn-ok-soft );
+}
+
+.ptn-curation .removebtn {
+	flex: none;
+	width: 30px;
+	height: 30px;
+	display: grid;
+	place-items: center;
+	border-radius: 8px;
+	border: 1px solid transparent;
+	background: none;
+	color: var( --ptn-ink-4 );
+	cursor: pointer;
+	transition: all 0.13s;
+}
+.ptn-curation .removebtn .ico {
+	width: 16px;
+	height: 16px;
+}
+.ptn-curation .removebtn:hover {
+	background: var( --ptn-danger-soft );
+	color: var( --ptn-danger );
+	border-color: color-mix( in srgb, var( --ptn-danger ) 20%, transparent );
+}
+
+/* density modifiers */
+.ptn-curation.density-compact {
+	--ptn-row-pad-y: 7px;
+	--ptn-thumb: 52px;
+}
+.ptn-curation.density-comfortable {
+	--ptn-row-pad-y: 11px;
+	--ptn-thumb: 64px;
+}
+.ptn-curation.density-roomy {
+	--ptn-row-pad-y: 15px;
+	--ptn-thumb: 76px;
+}
+
+/* empty states */
+.ptn-curation .empty {
+	padding: 34px 20px;
+	text-align: center;
+	color: var( --ptn-ink-3 );
+}
+.ptn-curation .empty .ico {
+	width: 26px;
+	height: 26px;
+	opacity: 0.5;
+	margin-bottom: 8px;
+}
+.ptn-curation .empty__title {
+	font-weight: 600;
+	color: var( --ptn-ink-2 );
+	margin-bottom: 3px;
+}
+.ptn-curation .empty__hint {
+	font-size: 12.5px;
+}
+
+.ptn-curation .tray__drophint {
+	border: 1.5px dashed #c9ccd2;
+	border-radius: var( --ptn-radius-sm );
+	padding: 26px 18px;
+	text-align: center;
+	color: var( --ptn-ink-4 );
 	font-size: 13px;
 }
 
-.ptn-field input[type="text"],
-.ptn-field input[type="url"],
-.ptn-field input[type="email"],
-.ptn-field input[type="password"],
-.ptn-field textarea,
-.ptn-field select {
-	width: 100%;
-	max-width: 100%;
+/* jQuery UI sortable placeholder, styled as the design's drop line */
+.ptn-curation .ptn-placeholder {
+	height: 3px;
+	min-height: 3px;
+	margin: -3px 4px 6px;
+	background: var( --ptn-accent );
+	border: 0;
+	border-radius: 3px;
+	box-shadow: 0 0 0 3px var( --ptn-accent-ring );
+	visibility: visible;
 }
 
-.ptn-hint {
-	font-size: 12px;
-	color: #787c82;
+/* fade-in for newly added rows */
+@keyframes ptn-rowin {
+	from { opacity: 0; transform: translateY( -4px ); }
+	to { opacity: 1; transform: none; }
+}
+.ptn-curation .row--enter {
+	animation: ptn-rowin 0.18s ease;
 }
 
-.ptn-media-row {
+/* ============================================================
+   Settings screen
+   ============================================================ */
+.ptn-settings-page {
+	max-width: 1180px;
+	padding-bottom: 96px;
+	font-family: var( --ptn-sans );
+	color: var( --ptn-ink );
+	font-size: 14px;
+	line-height: 1.45;
+}
+
+.ptn-settings-page .settings__head {
 	display: flex;
-	flex-wrap: wrap;
-	gap: 28px;
-	margin-bottom: 18px;
+	align-items: flex-end;
+	gap: 16px;
+	margin-bottom: 22px;
+}
+.ptn-settings-page .settings__head h1 {
+	font-size: 26px;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	margin: 0 0 4px;
+	padding: 0;
+}
+.ptn-settings-page .settings__head p {
+	margin: 0;
+	color: var( --ptn-ink-2 );
+	font-size: 13.5px;
 }
 
-.ptn-media {
+/* card */
+.ptn-settings-page .scard {
+	background: var( --ptn-surface );
+	border: 1px solid var( --ptn-line );
+	border-radius: 14px;
+	box-shadow: var( --ptn-shadow-sm );
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+.ptn-settings-page .scard__head {
+	display: flex;
+	align-items: center;
+	gap: 11px;
+	padding: 17px 24px;
+	border-bottom: 1px solid var( --ptn-line-2 );
+}
+.ptn-settings-page .scard__head .ico {
+	width: 18px;
+	height: 18px;
+	color: var( --ptn-ink-3 );
+}
+.ptn-settings-page .scard__head h2 {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 15px;
+	font-weight: 700;
+}
+.ptn-settings-page .scard__head .hint {
+	font-size: 12.5px;
+	color: var( --ptn-ink-4 );
+	margin-left: auto;
+}
+.ptn-settings-page .scard__body {
+	padding: 22px 24px 24px;
+}
+
+/* dashed upsell variant (shown when the pro add-on is absent) */
+.ptn-settings-page .scard--upsell {
+	border-style: dashed;
+	border-color: #c3c4c7;
+	background: #fbfbfc;
+}
+
+.ptn-settings-page .logochip {
+	width: 28px;
+	height: 28px;
+	border-radius: 8px;
+	display: grid;
+	place-items: center;
+	font-weight: 800;
+	font-size: 13px;
+	color: #fff;
+	flex: none;
+	letter-spacing: -0.02em;
+}
+.ptn-settings-page .logochip.mc {
+	background: linear-gradient( 135deg, #ffe01b, #f7c600 );
+	color: #1d2327;
+}
+.ptn-settings-page .logochip.cm {
+	background: linear-gradient( 135deg, #3a76f0, #2456c8 );
+}
+
+.ptn-settings-page .scols {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+}
+@media ( max-width: 980px ) {
+	.ptn-settings-page .scols {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* fields */
+.ptn-settings-page .field {
 	display: flex;
 	flex-direction: column;
 	gap: 6px;
+	margin: 0;
+}
+.ptn-settings-page .field--full {
+	grid-column: 1 / -1;
+}
+.ptn-settings-page .grid2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 18px 22px;
+}
+.ptn-settings-page .grid3 {
+	display: grid;
+	grid-template-columns: repeat( 3, 1fr );
+	gap: 18px 22px;
+}
+@media ( max-width: 720px ) {
+	.ptn-settings-page .grid2,
+	.ptn-settings-page .grid3 {
+		grid-template-columns: 1fr;
+	}
 }
 
-.ptn-media-preview {
-	display: block;
-	width: 260px;
+.ptn-settings-page .field > label,
+.ptn-settings-page .flabel {
+	font-size: 13px;
+	font-weight: 600;
+	color: var( --ptn-ink );
+}
+.ptn-settings-page .field .fhint {
+	font-size: 12px;
+	color: var( --ptn-ink-3 );
+}
+
+.ptn-settings-page .input,
+.ptn-settings-page .select,
+.ptn-settings-page .textarea {
+	width: 100%;
 	max-width: 100%;
-	max-height: 120px;
+	font: inherit;
+	font-size: 14px;
+	color: var( --ptn-ink );
+	background: var( --ptn-surface );
+	border: 1px solid var( --ptn-line );
+	border-radius: 9px;
+	padding: 0 12px;
+	height: 40px;
+	margin: 0;
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ptn-settings-page .textarea {
 	height: auto;
-	background: #f6f7f7;
-	border: 1px solid #dcdcde;
-	border-radius: 4px;
+	min-height: 64px;
+	padding: 9px 12px;
+	resize: vertical;
+	line-height: 1.5;
+}
+.ptn-settings-page .input::placeholder,
+.ptn-settings-page .textarea::placeholder {
+	color: var( --ptn-ink-4 );
+}
+.ptn-settings-page .input:focus,
+.ptn-settings-page .select:focus,
+.ptn-settings-page .textarea:focus {
+	outline: none;
+	border-color: var( --ptn-accent );
+	box-shadow: 0 0 0 3px var( --ptn-accent-ring );
 }
 
-.ptn-card--upsell {
-	border: 1px dashed #c3c4c7;
-	background: #fbfbfc;
+.ptn-settings-page .select {
+	appearance: none;
+	-webkit-appearance: none;
+	background-image: url( "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23787c82' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>" );
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	padding-right: 36px;
+	cursor: pointer;
+}
+
+/* media frames */
+.ptn-settings-page .media-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 30px;
+	margin-bottom: 24px;
+}
+.ptn-settings-page .media {
+	display: flex;
+	flex-direction: column;
+	gap: 9px;
+}
+.ptn-settings-page .media .flabel {
+	margin-bottom: 1px;
+}
+.ptn-settings-page .media__frame {
+	width: 230px;
+	height: 124px;
+	border-radius: 11px;
+	border: 1px solid var( --ptn-line );
+	background: #f6f7f8;
+	display: grid;
+	place-items: center;
+	overflow: hidden;
+	position: relative;
+}
+.ptn-settings-page .media__frame img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+.ptn-settings-page .media__frame--logo {
+	background: #fff;
+	padding: 16px;
+}
+.ptn-settings-page .media__actions {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+.ptn-settings-page .media__clear {
+	border: 0;
+	background: none;
+	cursor: pointer;
+	font: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	color: var( --ptn-ink-3 );
+}
+.ptn-settings-page .media__clear:hover {
+	color: var( --ptn-danger );
+}
+
+/* striped placeholder for an empty hero frame */
+.ptn-settings-page .hero-ph {
+	width: 100%;
+	height: 100%;
+	display: grid;
+	place-items: center;
+	color: var( --ptn-ink-4 );
+	background: repeating-linear-gradient( 135deg, #eef0f2 0 9px, #e8eaed 9px 18px );
+	font-size: 12px;
+	font-weight: 600;
+	text-align: center;
+	padding: 0 12px;
+}
+
+/* colour field — WP's Iris picker (.ptn-color) given the new card framing */
+.ptn-settings-page .colorfield {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.ptn-settings-page .color-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.ptn-settings-page .wp-picker-container .wp-color-result.button {
+	height: 40px;
+	border-radius: 9px;
+	border-color: var( --ptn-line );
+}
+.ptn-settings-page .wp-picker-container .wp-color-result-text {
+	border-radius: 0 9px 9px 0;
+	line-height: 38px;
+	background: var( --ptn-surface );
+	border-left-color: var( --ptn-line );
+}
+.ptn-settings-page .wp-picker-input-wrap .wp-color-picker {
+	border-radius: 9px;
+	height: 40px;
+}
+
+/* badge in the card head */
+.ptn-settings-page .badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 4px 10px;
+	border-radius: 999px;
+	font-size: 11.5px;
+	font-weight: 700;
+	background: #f0f1f3;
+	color: var( --ptn-ink-2 );
+}
+.ptn-settings-page .badge .dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: currentColor;
+}
+.ptn-settings-page .badge--ok {
+	background: var( --ptn-ok-soft );
+	color: var( --ptn-ok );
+}
+.ptn-settings-page .badge--err {
+	background: var( --ptn-danger-soft );
+	color: var( --ptn-danger );
+}
+
+.ptn-settings-page .constnote {
+	font-size: 13px;
+	color: var( --ptn-ink-2 );
+	font-style: italic;
+	background: #f6f7f8;
+	border: 1px solid var( --ptn-line-2 );
+	border-radius: 8px;
+	padding: 9px 12px;
+}
+.ptn-settings-page .constnote code {
+	font-style: normal;
+	font-weight: 600;
+	color: var( --ptn-ink );
+	font-size: 12.5px;
+}
+
+.ptn-settings-page .refresh {
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var( --ptn-accent );
+	text-decoration: none;
+	align-self: flex-start;
+}
+.ptn-settings-page .refresh:hover {
+	text-decoration: underline;
+}
+
+/* sticky save bar — anchored to the right of the wp-admin menu column */
+.ptn-settings-page .savebar {
+	position: fixed;
+	left: 160px;
+	right: 0;
+	bottom: 0;
+	background: rgba( 255, 255, 255, 0.92 );
+	backdrop-filter: blur( 8px );
+	border-top: 1px solid var( --ptn-line );
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 12px 34px;
+	z-index: 30;
+}
+.ptn-settings-page .savebar__note {
+	font-size: 13px;
+	color: var( --ptn-ink-3 );
+}
+.ptn-settings-page .savebar__note strong {
+	color: var( --ptn-ink-2 );
+}
+.ptn-settings-page .savebar .spacer {
+	margin-left: auto;
+}
+body.folded .ptn-settings-page .savebar {
+	left: 36px;
+}
+@media screen and ( max-width: 960px ) {
+	.ptn-settings-page .savebar {
+		left: 36px;
+	}
+}
+@media screen and ( max-width: 782px ) {
+	.ptn-settings-page .savebar {
+		left: 0;
+	}
+}
+
+.ptn-settings-page .btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	height: 38px;
+	padding: 0 18px;
+	border-radius: 9px;
+	border: 0;
+	font: inherit;
+	font-size: 13.5px;
+	font-weight: 600;
+	text-decoration: none;
+	cursor: pointer;
+}
+.ptn-settings-page .btn--primary {
+	background: var( --ptn-accent );
+	color: #fff;
+	box-shadow: 0 1px 2px rgba( 34, 113, 177, 0.4 );
+}
+.ptn-settings-page .btn--primary:hover {
+	background: var( --ptn-accent-hover );
+}
+.ptn-settings-page .btn--primary:active {
+	transform: translateY( 1px );
+}
+.ptn-settings-page .btn--ghost {
+	background: var( --ptn-surface );
+	border: 1px solid var( --ptn-line );
+	color: var( --ptn-ink-2 );
+}
+.ptn-settings-page .btn--ghost:hover {
+	border-color: #cfd2d8;
+	color: var( --ptn-ink );
+}
+.ptn-settings-page .btn .ico {
+	width: 16px;
+	height: 16px;
+}
+
+/* toast on save */
+.ptn-settings-page .toast {
+	position: fixed;
+	bottom: 76px;
+	left: 50%;
+	transform: translateX( -50% ) translateY( 12px );
+	background: var( --ptn-ink );
+	color: #fff;
+	padding: 10px 18px;
+	border-radius: 10px;
+	font-size: 13px;
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	box-shadow: var( --ptn-shadow-md );
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s, transform 0.2s;
+	z-index: 50;
+}
+.ptn-settings-page .toast.show {
+	opacity: 1;
+	transform: translateX( -50% ) translateY( 0 );
+}
+.ptn-settings-page .toast .ico {
+	width: 16px;
+	height: 16px;
+	color: #5fd68a;
 }

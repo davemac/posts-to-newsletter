@@ -42,5 +42,19 @@
 		var target = $( this ).attr( 'data-target' );
 		$( '#ptn-' + target + '-id' ).val( 0 );
 		$( '#ptn-' + target + '-preview' ).attr( 'src', '' );
+		markDirty();
 	} );
+
+	// Sticky save bar: flag unsaved changes once the form is touched. The note
+	// resets to its "all saved" state on the post-save reload.
+	var $note = $( '#ptn-save-note' );
+	var dirty = false;
+	function markDirty() {
+		if ( dirty || ! $note.length ) {
+			return;
+		}
+		dirty = true;
+		$note.html( $( '<strong></strong>' ).text( ( window.ptnSettings && window.ptnSettings.i18n && window.ptnSettings.i18n.unsaved ) || 'Unsaved changes' ) );
+	}
+	$( '#ptn-settings-form' ).on( 'input change', markDirty );
 } )( jQuery );

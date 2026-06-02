@@ -69,16 +69,14 @@ class Curation {
 				'searchUrl' => esc_url_raw( rest_url( self::REST_NS . '/search' ) ),
 				'nonce'     => wp_create_nonce( 'wp_rest' ),
 				'i18n'      => array(
-					'saving'     => __( 'Saving…', 'posts-to-newsletter' ),
+					'saving'        => __( 'Saving…', 'posts-to-newsletter' ),
 					/* translators: %d: number of selected articles. */
-					'savedOne'   => __( 'Saved — %d article selected', 'posts-to-newsletter' ),
-					/* translators: %d: number of selected articles. */
-					'savedMany'  => __( 'Saved — %d articles selected', 'posts-to-newsletter' ),
-					'saveFailed' => __( 'Save failed — please try again', 'posts-to-newsletter' ),
-					'add'        => __( 'Add', 'posts-to-newsletter' ),
-					'remove'     => __( 'Remove', 'posts-to-newsletter' ),
-					'noMatches'  => __( 'No matching articles.', 'posts-to-newsletter' ),
-					'copied'     => __( 'Copied!', 'posts-to-newsletter' ),
+					'saved'         => __( 'Saved · %d selected', 'posts-to-newsletter' ),
+					'saveFailed'    => __( 'Save failed — please try again', 'posts-to-newsletter' ),
+					'add'           => __( 'Add', 'posts-to-newsletter' ),
+					'remove'        => __( 'Remove', 'posts-to-newsletter' ),
+					'noMatches'     => __( 'No matching articles.', 'posts-to-newsletter' ),
+					'noMatchesHint' => __( 'Try a different search or clear the filter.', 'posts-to-newsletter' ),
 				),
 			)
 		);
@@ -193,6 +191,7 @@ class Curation {
 		$selected_ids   = Selection::ids();
 		$selected_posts = Selection::posts( $selected_ids );
 		$recent_posts   = $this->query_recent();
+		$categories     = get_categories( array( 'orderby' => 'count', 'order' => 'DESC' ) );
 		$preview_cm     = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/ptn-newsletter/' ) );
 		$preview_mc     = add_query_arg( array( Renderer::PLATFORM_VAR => 'mailchimp' ), home_url( '/ptn-newsletter/' ) );
 		$settings_url   = admin_url( 'admin.php?page=' . Settings::PAGE );
@@ -203,26 +202,133 @@ class Curation {
 	/**
 	 * Render one article list item.
 	 *
+	 * The same markup serves both columns; CSS shows the drag handle and order
+	 * index only inside the selected tray, so an item keeps both pieces when the
+	 * JS moves it between columns without re-rendering.
+	 *
 	 * @param int  $post_id     Post ID.
 	 * @param bool $is_selected Whether it sits in the selected column.
 	 * @return void
 	 */
 	public function render_item( int $post_id, bool $is_selected ): void {
-		$thumb  = has_post_thumbnail( $post_id ) ? get_the_post_thumbnail( $post_id, array( 70, 50 ) ) : '';
-		$author = Selection::byline( $post_id );
+		$thumb    = has_post_thumbnail( $post_id ) ? get_the_post_thumbnail( $post_id, array( 96, 69 ) ) : '';
+		$byline   = Selection::byline( $post_id );
+		$initials = self::avatar_initials( $byline );
+		$av_hue   = self::hue( $byline );
+		$cats     = get_the_category( $post_id );
+		$category = ! empty( $cats ) ? $cats[0] : null;
+		$cat_ids  = ! empty( $cats ) ? array_map( 'intval', wp_list_pluck( $cats, 'term_id' ) ) : array();
 
-		echo '<li class="ptn-item" data-id="' . esc_attr( (string) $post_id ) . '">';
-		echo '<span class="ptn-handle dashicons dashicons-menu" aria-hidden="true"></span>';
-		echo '<span class="ptn-thumb">' . wp_kses_post( $thumb ) . '</span>';
-		echo '<span class="ptn-meta"><span class="ptn-title">' . esc_html( get_the_title( $post_id ) ) . '</span>';
-		echo '<span class="ptn-author">' . esc_html( $author ) . '</span>';
-		echo '<span class="ptn-date">' . esc_html( get_the_date( '', $post_id ) ) . '</span></span>';
-		if ( $is_selected ) {
-			echo '<button type="button" class="button-link ptn-remove" aria-label="' . esc_attr__( 'Remove', 'posts-to-newsletter' ) . '">&times;</button>';
+		echo '<li class="ptn-item row" data-id="' . esc_attr( (string) $post_id ) . '" data-cats="' . esc_attr( implode( ',', $cat_ids ) ) . '">';
+
+		// Order index (filled by a CSS counter inside the tray) and drag handle.
+		echo '<span class="row__index" aria-hidden="true"></span>';
+		echo '<span class="ptn-handle handle" aria-hidden="true">';
+		echo self::icon( 'grip' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup.
+		echo '</span>';
+
+		// Thumbnail, or a striped placeholder when the post has no featured image.
+		if ( '' !== $thumb ) {
+			echo '<span class="thumb">' . wp_kses_post( $thumb ) . '</span>';
 		} else {
-			echo '<button type="button" class="button ptn-add">' . esc_html__( 'Add', 'posts-to-newsletter' ) . '</button>';
+			echo '<span class="thumb thumb--ph">';
+			echo self::icon( 'image' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup.
+			echo '</span>';
 		}
+
+		// Title + byline (avatar initials) + date + first category as a colour pill.
+		echo '<span class="meta">';
+		echo '<span class="meta__title">' . esc_html( get_the_title( $post_id ) ) . '</span>';
+		echo '<span class="meta__sub">';
+		echo '<span class="byline"><span class="byline__av" style="background:hsl(' . esc_attr( (string) $av_hue ) . ' 55% 45%)">' . esc_html( $initials ) . '</span>';
+		echo '<span class="byline__name">' . esc_html( $byline ) . '</span></span>';
+		echo '<span class="dot-sep" aria-hidden="true">&bull;</span>';
+		echo '<span class="meta__date">' . esc_html( get_the_date( '', $post_id ) ) . '</span>';
+		if ( null !== $category ) {
+			$cat_hue = self::hue( $category->slug );
+			printf(
+				'<span class="catpill" style="--ptn-cat:hsl(%1$d 60%% 42%%);--ptn-catbg:hsl(%1$d 62%% 95%%)">%2$s</span>',
+				(int) $cat_hue,
+				esc_html( $category->name )
+			);
+		}
+		echo '</span>'; // .meta__sub
+		echo '</span>'; // .meta
+
+		// Add / Remove control.
+		if ( $is_selected ) {
+			echo '<button type="button" class="ptn-remove removebtn" aria-label="' . esc_attr__( 'Remove', 'posts-to-newsletter' ) . '">';
+			echo self::icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup.
+			echo '</button>';
+		} else {
+			echo '<button type="button" class="ptn-add addbtn">';
+			echo self::icon( 'plus' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup.
+			echo '<span>' . esc_html__( 'Add', 'posts-to-newsletter' ) . '</span>';
+			echo '</button>';
+		}
+
 		echo '</li>';
+	}
+
+	/**
+	 * Two-letter avatar initials derived from a byline.
+	 *
+	 * @param string $name Byline (one or more author names).
+	 * @return string Uppercase initials.
+	 */
+	private static function avatar_initials( string $name ): string {
+		$name = trim( $name );
+		if ( '' === $name ) {
+			return '—';
+		}
+
+		$parts = preg_split( '/\s+/', $name );
+		if ( is_array( $parts ) && count( $parts ) >= 2 ) {
+			$initials = mb_substr( $parts[0], 0, 1 ) . mb_substr( $parts[ count( $parts ) - 1 ], 0, 1 );
+		} else {
+			$initials = mb_substr( $name, 0, 2 );
+		}
+
+		return mb_strtoupper( $initials );
+	}
+
+	/**
+	 * Map a seed string to a stable hue (0–359) for avatars and category pills.
+	 *
+	 * Public so the curation template can colour the filter chip dots with the
+	 * same hue their matching category pills use.
+	 *
+	 * @param string $seed Seed (byline or category slug).
+	 * @return int Hue in degrees.
+	 */
+	public static function hue( string $seed ): int {
+		return ( crc32( $seed ) & 0x7fffffff ) % 360;
+	}
+
+	/**
+	 * Return an inline stroke icon by name.
+	 *
+	 * Static, developer-defined SVG markup (echoed raw — never user input), so
+	 * the curation list and the JS-built controls share one icon set.
+	 *
+	 * @param string $name Icon name.
+	 * @return string SVG markup, or an empty string for an unknown name.
+	 */
+	public static function icon( string $name ): string {
+		$icons = array(
+			'search' => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
+			'plus'   => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>',
+			'x'      => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>',
+			'check'  => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+			'grip'   => '<svg class="ico" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>',
+			'image'  => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg>',
+			'eye'    => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+			'copy'   => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9h10v10H9z"/><path d="M5 15V5h10"/></svg>',
+			'send'   => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>',
+			'gear'   => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>',
+		);
+
+		return $icons[ $name ] ?? '';
 	}
 
 	/**
