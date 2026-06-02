@@ -745,56 +745,42 @@
 }
 .ptn-curation .meta__sub {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
-	gap: 8px;
+	gap: 6px 8px;
 	font-size: 12px;
 	color: var( --ptn-ink-3 );
 }
-.ptn-curation .byline {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	min-width: 0;
-}
-.ptn-curation .byline__av {
-	width: 18px;
-	height: 18px;
-	border-radius: 50%;
-	display: grid;
-	place-items: center;
-	font-size: 9.5px;
-	font-weight: 700;
-	color: #fff;
-	flex: none;
-}
-.ptn-curation .byline__name {
-	font-weight: 600;
-	color: var( --ptn-ink-2 );
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-.ptn-curation .dot-sep {
-	color: var( --ptn-line );
-}
-.ptn-curation .meta__date {
-	white-space: nowrap;
-	flex: none;
-}
 
+/* Meta pills — date / author / category share one pill shape; only the colours
+   differ. The author pill is tinted from the brand accent colour (the
+   --ptn-author-color the curation wrapper sets from ptn_settings), so it matches
+   the site's branding without depending on the theme's own stylesheet. */
+.ptn-curation .datepill,
+.ptn-curation .authorpill,
 .ptn-curation .catpill {
 	display: inline-flex;
 	align-items: center;
-	height: 18px;
-	padding: 0 8px;
+	height: 19px;
+	padding: 0 9px;
 	border-radius: 999px;
-	font-size: 10.5px;
+	font-size: 11px;
 	font-weight: 700;
-	letter-spacing: 0.02em;
-	color: var( --ptn-cat, var( --ptn-ink-2 ) );
-	background: var( --ptn-catbg, #f0f1f3 );
+	letter-spacing: 0.01em;
 	white-space: nowrap;
 	flex: none;
+}
+.ptn-curation .datepill {
+	color: var( --ptn-ink-2 );
+	background: #f0f1f3;
+}
+.ptn-curation .authorpill {
+	color: var( --ptn-author-color, var( --ptn-danger ) );
+	background: color-mix( in srgb, var( --ptn-author-color, var( --ptn-danger ) ) 12%, #fff );
+}
+.ptn-curation .catpill {
+	color: var( --ptn-cat, var( --ptn-ink-2 ) );
+	background: var( --ptn-catbg, #f0f1f3 );
 }
 
 /* row action buttons */

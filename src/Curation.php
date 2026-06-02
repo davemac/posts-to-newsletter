@@ -192,6 +192,7 @@ class Curation {
 		$selected_posts = Selection::posts( $selected_ids );
 		$recent_posts   = $this->query_recent();
 		$categories     = get_categories( array( 'orderby' => 'count', 'order' => 'DESC' ) );
+		$accent_color   = ( new Settings() )->get( 'accent_color' );
 		$preview_cm     = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/ptn-newsletter/' ) );
 		$preview_mc     = add_query_arg( array( Renderer::PLATFORM_VAR => 'mailchimp' ), home_url( '/ptn-newsletter/' ) );
 		$settings_url   = admin_url( 'admin.php?page=' . Settings::PAGE );
@@ -213,8 +214,6 @@ class Curation {
 	public function render_item( int $post_id, bool $is_selected ): void {
 		$thumb    = has_post_thumbnail( $post_id ) ? get_the_post_thumbnail( $post_id, array( 96, 69 ) ) : '';
 		$byline   = Selection::byline( $post_id );
-		$initials = self::avatar_initials( $byline );
-		$av_hue   = self::hue( $byline );
 		$cats     = get_the_category( $post_id );
 		$category = ! empty( $cats ) ? $cats[0] : null;
 		$cat_ids  = ! empty( $cats ) ? array_map( 'intval', wp_list_pluck( $cats, 'term_id' ) ) : array();
@@ -236,14 +235,14 @@ class Curation {
 			echo '</span>';
 		}
 
-		// Title + byline (avatar initials) + date + first category as a colour pill.
+		// Title + meta pills: date, author (accent-tinted) and the first category.
 		echo '<span class="meta">';
 		echo '<span class="meta__title">' . esc_html( get_the_title( $post_id ) ) . '</span>';
 		echo '<span class="meta__sub">';
-		echo '<span class="byline"><span class="byline__av" style="background:hsl(' . esc_attr( (string) $av_hue ) . ' 55% 45%)">' . esc_html( $initials ) . '</span>';
-		echo '<span class="byline__name">' . esc_html( $byline ) . '</span></span>';
-		echo '<span class="dot-sep" aria-hidden="true">&bull;</span>';
-		echo '<span class="meta__date">' . esc_html( get_the_date( '', $post_id ) ) . '</span>';
+		echo '<span class="datepill">' . esc_html( get_the_date( '', $post_id ) ) . '</span>';
+		if ( '' !== $byline ) {
+			echo '<span class="authorpill">' . esc_html( $byline ) . '</span>';
+		}
 		if ( null !== $category ) {
 			$cat_hue = self::hue( $category->slug );
 			printf(
@@ -271,34 +270,12 @@ class Curation {
 	}
 
 	/**
-	 * Two-letter avatar initials derived from a byline.
-	 *
-	 * @param string $name Byline (one or more author names).
-	 * @return string Uppercase initials.
-	 */
-	private static function avatar_initials( string $name ): string {
-		$name = trim( $name );
-		if ( '' === $name ) {
-			return '—';
-		}
-
-		$parts = preg_split( '/\s+/', $name );
-		if ( is_array( $parts ) && count( $parts ) >= 2 ) {
-			$initials = mb_substr( $parts[0], 0, 1 ) . mb_substr( $parts[ count( $parts ) - 1 ], 0, 1 );
-		} else {
-			$initials = mb_substr( $name, 0, 2 );
-		}
-
-		return mb_strtoupper( $initials );
-	}
-
-	/**
-	 * Map a seed string to a stable hue (0–359) for avatars and category pills.
+	 * Map a seed string to a stable hue (0–359) for category pills.
 	 *
 	 * Public so the curation template can colour the filter chip dots with the
 	 * same hue their matching category pills use.
 	 *
-	 * @param string $seed Seed (byline or category slug).
+	 * @param string $seed Seed (category slug).
 	 * @return int Hue in degrees.
 	 */
 	public static function hue( string $seed ): int {
