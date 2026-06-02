@@ -239,10 +239,10 @@ class Curation {
 		echo '<span class="meta">';
 		echo '<span class="meta__title">' . esc_html( get_the_title( $post_id ) ) . '</span>';
 		echo '<span class="meta__sub">';
-		echo '<span class="datepill">' . esc_html( get_the_date( '', $post_id ) ) . '</span>';
 		if ( '' !== $byline ) {
 			echo '<span class="authorpill">' . esc_html( $byline ) . '</span>';
 		}
+		echo '<span class="datepill">' . esc_html( get_the_date( '', $post_id ) ) . '</span>';
 		if ( null !== $category ) {
 			$cat_hue = self::hue( $category->slug );
 			printf(
