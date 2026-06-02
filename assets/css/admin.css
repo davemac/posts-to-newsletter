@@ -111,8 +111,38 @@
 	border-radius: 4px;
 }
 
+/* Available list: one rounded, shadowed card wrapping every row. The base
+   .ptn-list already paints the white fill and border; here we match the
+   platform cards' 6px curve and soft shadow, and clip the row hairlines to the
+   rounded corners. */
+#ptn-available {
+	border-radius: 6px;
+	overflow: hidden;
+	box-shadow: 0 1px 1px rgba( 0, 0, 0, 0.04 );
+}
+
+/* Selected list: a grey tray. Each article becomes its own card (below), with
+   the grey showing through the gaps, so drop the base white fill, border and
+   radius and add a little padding for the surrounding gutter. */
 #ptn-selected.ptn-sortable {
 	background: #f6f7f7;
+	border: 0;
+	border-radius: 0;
+	padding: 8px;
+}
+
+/* Each selected article is its own card: full border, matching curve and
+   shadow, with a gap below so the grey tray shows between cards. The id
+   specificity also overrides the base row hairline and its last-child reset. */
+#ptn-selected .ptn-item {
+	margin-bottom: 8px;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	box-shadow: 0 1px 1px rgba( 0, 0, 0, 0.04 );
+}
+
+#ptn-selected .ptn-item:last-child {
+	margin-bottom: 0;
 }
 
 .ptn-item {
@@ -190,6 +220,14 @@
 	margin: 0;
 	background: #fffbe5;
 	border: 1px dashed #dba617;
+}
+
+/* Match the placeholder to the card rhythm it stands in for: same gap below and
+   curve as the selected cards (forcePlaceholderSize sets its height to the
+   dragged card). */
+#ptn-selected .ptn-placeholder {
+	margin-bottom: 8px;
+	border-radius: 6px;
 }
 
 .ptn-empty {
