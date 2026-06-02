@@ -35,6 +35,10 @@ Posts to Newsletter is an independent plugin and is not affiliated with, or endo
 
 The free plugin does not phone home or send your content anywhere. It only renders the newsletter on your own site.
 
+= Credits =
+
+Built and maintained by DMC Web (https://dmcweb.com.au).
+
 == Installation ==
 
 1. Upload the `posts-to-newsletter` folder to `/wp-content/plugins/`, or install it through **Plugins → Add New**.
