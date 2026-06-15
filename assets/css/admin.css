@@ -952,18 +952,21 @@
 	margin: 0 0 16px;
 	padding: 0;
 }
-.ptn-curation .dfield {
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
-	margin-bottom: 16px;
+/* Subject line — sits below the template controls, constrained to the email's
+   600px width (and centred) so it lines up with the canvas; styled like the
+   standard form fields so long subjects aren't cut off. */
+.ptn-curation .ptn-subjectbar {
+	max-width: 600px;
+	margin: 0 auto 16px;
 }
-.ptn-curation .dfield label {
+.ptn-curation .ptn-subjectbar label {
+	display: block;
 	font-size: 13px;
 	font-weight: 600;
 	color: var( --ptn-ink );
+	margin-bottom: 6px;
 }
-.ptn-curation .dinput {
+.ptn-curation .ptn-subject-input {
 	width: 100%;
 	height: 40px;
 	margin: 0;
@@ -977,10 +980,10 @@
 	box-shadow: var( --ptn-shadow-sm );
 	transition: border-color 0.15s, box-shadow 0.15s;
 }
-.ptn-curation .dinput::placeholder {
+.ptn-curation .ptn-subject-input::placeholder {
 	color: var( --ptn-ink-4 );
 }
-.ptn-curation .dinput:focus {
+.ptn-curation .ptn-subject-input:focus {
 	outline: none;
 	border-color: var( --ptn-accent );
 	box-shadow: 0 0 0 3px var( --ptn-accent-ring );

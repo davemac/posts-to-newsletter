@@ -127,6 +127,11 @@ $ptn_selected_count = count( $selected_posts );
 				</div>
 			</div>
 
+			<div class="ptn-subjectbar">
+				<label for="ptn-subject"><?php esc_html_e( 'Subject line', 'posts-to-newsletter' ); ?></label>
+				<input type="text" id="ptn-subject" class="ptn-subject-input" maxlength="150" value="<?php echo esc_attr( $subject ); ?>" placeholder="<?php esc_attr_e( 'Subject line — defaults to the lead story', 'posts-to-newsletter' ); ?>" />
+			</div>
+
 			<div class="ptn-pv-stage">
 				<div class="ptn-pv" data-mode="desktop">
 					<?php if ( '' !== $logo_url ) : ?>
@@ -188,11 +193,6 @@ $ptn_selected_count = count( $selected_posts );
 		<?php // ---------- Right: delivery ---------- ?>
 		<aside class="compose__delivery col">
 			<h2 class="dpanel__title"><?php esc_html_e( 'Delivery', 'posts-to-newsletter' ); ?></h2>
-
-			<div class="dfield">
-				<label for="ptn-subject"><?php esc_html_e( 'Subject line', 'posts-to-newsletter' ); ?></label>
-				<input type="text" id="ptn-subject" class="dinput" maxlength="150" value="<?php echo esc_attr( $subject ); ?>" placeholder="<?php esc_attr_e( 'Defaults to the lead story', 'posts-to-newsletter' ); ?>" />
-			</div>
 
 			<?php
 			/**
