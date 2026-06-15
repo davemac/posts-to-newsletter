@@ -159,21 +159,7 @@ class Renderer {
 		$category   = ! empty( $categories ) ? $categories[0]->name : '';
 		$pill_bg    = $this->tint( $accent );
 
-		echo '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">';
-		if ( false !== $image ) {
-			echo '<tr><td style="padding-bottom:10px;"><a href="' . esc_url( $permalink ) . '"><img src="' . esc_url( $image[0] ) . '" width="270" alt="" style="display:block; width:100%; max-width:270px; height:auto;" /></a></td></tr>';
-		}
-		if ( '' !== $category ) {
-			echo '<tr><td style="font-family:Arial,Helvetica,sans-serif; font-size:12px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:' . esc_attr( $accent ) . '; padding-bottom:4px;">' . esc_html( $category ) . '</td></tr>';
-		}
-		echo '<tr><td style="font-family:Arial,Helvetica,sans-serif; font-size:18px; line-height:23px; font-weight:bold; padding-bottom:6px;"><a href="' . esc_url( $permalink ) . '" style="color:#111111; text-decoration:none;">' . esc_html( get_the_title( $card_id ) ) . '</a></td></tr>';
-		echo '<tr><td style="font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:21px; color:#333333; padding-bottom:12px;">' . esc_html( $excerpt ) . '</td></tr>';
-		echo '<tr><td><table role="presentation" cellpadding="0" cellspacing="0"><tr>';
-		echo '<td bgcolor="#f3f4f6" style="font-family:Arial,Helvetica,sans-serif; font-size:12px; color:#949494; padding:4px 8px; border-radius:4px;">' . esc_html( $date ) . '</td>';
-		echo '<td width="6" style="font-size:0; line-height:0;">&nbsp;</td>';
-		echo '<td bgcolor="' . esc_attr( $pill_bg ) . '" style="font-family:Arial,Helvetica,sans-serif; font-size:12px; font-weight:600; color:' . esc_attr( $accent ) . '; padding:4px 8px; border-radius:4px;">' . esc_html( $byline ) . '</td>';
-		echo '</tr></table></td></tr>';
-		echo '</table>';
+		require DIR . 'templates/card.php';
 	}
 
 	/**

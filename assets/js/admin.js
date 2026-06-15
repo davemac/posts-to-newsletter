@@ -195,11 +195,13 @@
 		debounceSave();
 	} );
 
-	// Drag to reorder — the first card becomes the lead story via CSS :first-child.
+	// Drag to reorder the two-up grid of email cards.
 	$selected.sortable( {
+		items: '> .ptn-pv-card',
 		handle: '.ptn-handle',
 		placeholder: 'ptn-pv-placeholder',
 		forcePlaceholderSize: true,
+		tolerance: 'pointer',
 		update: debounceSave
 	} );
 

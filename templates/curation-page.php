@@ -144,10 +144,10 @@ $ptn_selected_count = count( $selected_posts );
 						<p class="ptn-pv__intro"><?php echo esc_html( $intro ); ?></p>
 					<?php endif; ?>
 
-					<ul id="ptn-selected" class="ptn-pv__list ptn-sortable">
+					<ul id="ptn-selected" class="ptn-pv__grid ptn-sortable">
 						<?php
 						foreach ( $selected_posts as $post_id ) {
-							$this->render_preview_card( (int) $post_id );
+							$this->render_canvas_card( (int) $post_id );
 						}
 						?>
 					</ul>

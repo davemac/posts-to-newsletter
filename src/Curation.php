@@ -238,7 +238,7 @@ class Curation {
 
 		ob_start();
 		if ( 0 !== $id && 'publish' === get_post_status( $id ) ) {
-			$this->render_preview_card( $id );
+			$this->render_canvas_card( $id );
 		}
 
 		return new WP_REST_Response( array( 'id' => $id, 'html' => ob_get_clean() ), 200 );
@@ -276,20 +276,19 @@ class Curation {
 	}
 
 	/**
-	 * Render one article as a live-canvas card by including its template part.
+	 * Render one article as a live-canvas card: the email card (Renderer) wrapped
+	 * with the drag/remove controls, so the canvas is the email two-up.
 	 *
 	 * @param int $post_id Post ID.
 	 * @return void
 	 */
-	public function render_preview_card( int $post_id ): void {
-		$thumb_id = get_post_thumbnail_id( $post_id );
-		$image    = 0 !== $thumb_id ? (string) wp_get_attachment_image_url( $thumb_id, 'large' ) : '';
-		$byline   = Selection::byline( $post_id );
-		$cats     = get_the_category( $post_id );
-		$category = ! empty( $cats ) ? $cats[0]->name : '';
-		$excerpt  = wp_trim_words( get_the_excerpt( $post_id ), 26, '…' );
+	public function render_canvas_card( int $post_id ): void {
+		$settings   = new Settings();
+		$renderer   = new Renderer( $settings );
+		$image_size = (string) $settings->get( 'image_size' );
+		$accent     = (string) $settings->get( 'accent_color' );
 
-		require DIR . 'templates/preview-card.php';
+		require DIR . 'templates/canvas-card.php';
 	}
 
 	/**
