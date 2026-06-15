@@ -18,14 +18,13 @@
  * @var string         $accent_color     Brand accent colour (drives the author pills).
  * @var string         $brand_color      Brand colour (hero border, subscribe button).
  * @var string         $subject          Edition subject line.
- * @var string         $preview_text     Edition inbox preview text.
  * @var array<string,array{label:string,file:string}> $templates Registered templates.
  * @var string         $current_template Chosen template id.
  * @var string         $logo_url         Masthead logo URL (may be empty).
  * @var string         $hero_url         Hero image URL (may be empty).
  * @var string         $site_name        Publication name.
  * @var string         $subscribe_url    Subscribe URL.
- * @var string         $intro            Intro line ({firstname} resolved).
+ * @var string         $intro            Intro line, raw (inline-editable; {firstname} token intact).
  * @var \PostsToNewsletter\Curation  $this           Curation (for render_item()/render_canvas_card()).
  */
 
@@ -140,9 +139,7 @@ $ptn_selected_count = count( $selected_posts );
 						<div class="ptn-pv__hero"><img src="<?php echo esc_url( $hero_url ); ?>" alt="" /></div>
 					<?php endif; ?>
 
-					<?php if ( '' !== trim( $intro ) ) : ?>
-						<p class="ptn-pv__intro"><?php echo esc_html( $intro ); ?></p>
-					<?php endif; ?>
+					<p class="ptn-pv__intro" id="ptn-intro" contenteditable="true" role="textbox" aria-label="<?php esc_attr_e( 'Intro greeting', 'posts-to-newsletter' ); ?>" data-placeholder="<?php esc_attr_e( 'Add an intro line…', 'posts-to-newsletter' ); ?>"><?php echo esc_html( $intro ); ?></p>
 
 					<ul id="ptn-selected" class="ptn-pv__grid ptn-sortable">
 						<?php
@@ -195,11 +192,6 @@ $ptn_selected_count = count( $selected_posts );
 			<div class="dfield">
 				<label for="ptn-subject"><?php esc_html_e( 'Subject line', 'posts-to-newsletter' ); ?></label>
 				<input type="text" id="ptn-subject" class="dinput" maxlength="150" value="<?php echo esc_attr( $subject ); ?>" placeholder="<?php esc_attr_e( 'Defaults to the lead story', 'posts-to-newsletter' ); ?>" />
-			</div>
-
-			<div class="dfield">
-				<label for="ptn-preview"><?php esc_html_e( 'Preview text', 'posts-to-newsletter' ); ?></label>
-				<input type="text" id="ptn-preview" class="dinput" maxlength="150" value="<?php echo esc_attr( $preview_text ); ?>" placeholder="<?php esc_attr_e( 'Short inbox preview line', 'posts-to-newsletter' ); ?>" />
 			</div>
 
 			<?php

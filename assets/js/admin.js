@@ -20,7 +20,7 @@
 	var $drophint = $( '#ptn-drophint' );
 	var $chips = $( '#ptn-chips' );
 	var $subject = $( '#ptn-subject' );
-	var $preview = $( '#ptn-preview' );
+	var $intro = $( '#ptn-intro' );
 	var $template = $( '#ptn-template' );
 	var currentCat = 'all';
 	var saveTimer = null;
@@ -119,8 +119,8 @@
 		if ( $subject.length ) {
 			payload.subject = $subject.val();
 		}
-		if ( $preview.length ) {
-			payload.preview_text = $preview.val();
+		if ( $intro.length ) {
+			payload.intro = $intro.text();
 		}
 		if ( $template.length ) {
 			payload.template = $template.val();
@@ -335,10 +335,19 @@
 		}
 	} );
 
-	// Subject, preview text and template all ride the same debounced autosave.
+	// Subject and template ride the same debounced autosave.
 	$subject.on( 'input', debounceSave );
-	$preview.on( 'input', debounceSave );
 	$template.on( 'change', debounceSave );
+
+	// The intro is a contenteditable line in the canvas: save on edit, and keep it
+	// to a single line (Enter commits + blurs rather than inserting a newline).
+	$intro.on( 'input', debounceSave );
+	$intro.on( 'keydown', function ( e ) {
+		if ( 'Enter' === e.key ) {
+			e.preventDefault();
+			$intro.trigger( 'blur' );
+		}
+	} );
 
 	// Desktop/Mobile preview width is a class on the canvas; the cards are already
 	// responsive, so narrowing it fires their own compact breakpoint.

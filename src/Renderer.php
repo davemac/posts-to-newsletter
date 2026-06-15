@@ -118,19 +118,20 @@ class Renderer {
 		$template_id   = '' !== $template_id ? Templates::sanitize( $template_id ) : Templates::current();
 		$template_file = Templates::file( $template_id );
 
-		$settings     = $this->settings;
-		$tokens       = $this->tokens( $platform );
-		$posts        = Selection::ordered();
-		$subject      = Selection::subject();
-		$preview_text = Selection::preview_text();
-		$logo_url     = $settings->logo_url();
-		$hero_url     = $settings->hero_url();
-		$brand        = (string) $settings->get( 'brand_color' );
-		$accent       = (string) $settings->get( 'accent_color' );
-		$image_size   = (string) $settings->get( 'image_size' );
-		$site_name    = (string) $settings->get( 'site_name' );
-		$subscribe    = (string) $settings->get( 'subscribe_url' );
-		$intro        = str_replace( '{firstname}', $tokens['firstname'], (string) $settings->get( 'intro' ) );
+		$settings   = $this->settings;
+		$tokens     = $this->tokens( $platform );
+		$posts      = Selection::ordered();
+		$subject    = Selection::subject();
+		$logo_url   = $settings->logo_url();
+		$hero_url   = $settings->hero_url();
+		$brand      = (string) $settings->get( 'brand_color' );
+		$accent     = (string) $settings->get( 'accent_color' );
+		$image_size = (string) $settings->get( 'image_size' );
+		$site_name  = (string) $settings->get( 'site_name' );
+		$subscribe  = (string) $settings->get( 'subscribe_url' );
+		// The edition's per-edition intro; {firstname} resolves to the platform's
+		// first-name merge tag.
+		$intro      = str_replace( '{firstname}', $tokens['firstname'], Selection::intro() );
 
 		ob_start();
 		require $template_file;

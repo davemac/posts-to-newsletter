@@ -795,12 +795,29 @@
 	height: auto;
 	border-bottom: 4px solid var( --ptn-brand, #c30 );
 }
+/* inline-editable intro line */
 .ptn-curation .ptn-pv__intro {
 	text-align: center;
 	font-size: 15px;
 	line-height: 1.5;
 	color: #333;
 	margin: 0 0 18px;
+	padding: 6px 10px;
+	border-radius: 8px;
+	cursor: text;
+	transition: background 0.13s, box-shadow 0.13s;
+}
+.ptn-curation .ptn-pv__intro:hover {
+	background: #f5f6f8;
+}
+.ptn-curation .ptn-pv__intro:focus {
+	outline: none;
+	background: #fff;
+	box-shadow: 0 0 0 2px var( --ptn-accent-ring );
+}
+.ptn-curation .ptn-pv__intro:empty::before {
+	content: attr( data-placeholder );
+	color: var( --ptn-ink-4 );
 }
 
 /* sortable 2-up article grid — each item is the email's own card (render_card) */
@@ -1225,6 +1242,37 @@
 }
 
 /* media frames */
+/* Branding card: logo + hero media sit on one row beside the text/colour fields. */
+.ptn-settings-page .brandrow {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 36px;
+	align-items: flex-start;
+	margin-bottom: 24px;
+}
+.ptn-settings-page .brandrow .media-row {
+	flex: 0 0 auto;
+	margin-bottom: 0;
+}
+.ptn-settings-page .brandrow__fields {
+	flex: 1 1 460px;
+	min-width: 0;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px 24px;
+	align-content: start;
+}
+@media ( max-width: 1080px ) {
+	.ptn-settings-page .brandrow__fields {
+		flex-basis: 100%;
+	}
+}
+@media ( max-width: 600px ) {
+	.ptn-settings-page .brandrow__fields {
+		grid-template-columns: 1fr;
+	}
+}
+
 .ptn-settings-page .media-row {
 	display: flex;
 	flex-wrap: wrap;
