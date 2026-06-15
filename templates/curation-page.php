@@ -26,7 +26,7 @@
  * @var string         $site_name        Publication name.
  * @var string         $subscribe_url    Subscribe URL.
  * @var string         $intro            Intro line ({firstname} resolved).
- * @var \PostsToNewsletter\Curation  $this           Curation (for render_item()/render_preview_card()).
+ * @var \PostsToNewsletter\Curation  $this           Curation (for render_item()/render_canvas_card()).
  */
 
 defined( 'ABSPATH' ) || exit;

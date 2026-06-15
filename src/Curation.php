@@ -172,14 +172,17 @@ class Curation {
 
 		// Persist the edition's content fields when supplied (each is independent,
 		// so a request that sends only ids leaves them as they were).
-		if ( null !== $request->get_param( 'subject' ) ) {
-			update_option( Selection::SUBJECT_OPTION, (string) $request->get_param( 'subject' ) );
+		$subject = $request->get_param( 'subject' );
+		if ( null !== $subject ) {
+			update_option( Selection::SUBJECT_OPTION, (string) $subject );
 		}
-		if ( null !== $request->get_param( 'preview_text' ) ) {
-			update_option( Selection::PREVIEW_OPTION, (string) $request->get_param( 'preview_text' ) );
+		$preview_text = $request->get_param( 'preview_text' );
+		if ( null !== $preview_text ) {
+			update_option( Selection::PREVIEW_OPTION, (string) $preview_text );
 		}
-		if ( null !== $request->get_param( 'template' ) ) {
-			update_option( Templates::OPTION, Templates::sanitize( (string) $request->get_param( 'template' ) ) );
+		$template = $request->get_param( 'template' );
+		if ( null !== $template ) {
+			update_option( Templates::OPTION, Templates::sanitize( (string) $template ) );
 		}
 
 		return new WP_REST_Response( array( 'saved' => true, 'count' => count( $ids ) ), 200 );
