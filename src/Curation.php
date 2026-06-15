@@ -100,11 +100,25 @@ class Curation {
 				'callback'            => array( $this, 'save_selection' ),
 				'permission_callback' => $can,
 				'args'                => array(
-					'ids' => array(
+					'ids'          => array(
 						'required' => true,
 						'type'     => 'array',
 						'maxItems' => Selection::MAX_SELECTION,
 						'items'    => array( 'type' => 'integer' ),
+					),
+					// The edition's content fields ride along on the same autosave.
+					// All optional: omitting one leaves its stored value untouched.
+					'subject'      => array(
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'preview_text' => array(
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'template'     => array(
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_key',
 					),
 				),
 			)
@@ -137,6 +151,18 @@ class Curation {
 	public function save_selection( WP_REST_Request $request ): WP_REST_Response {
 		$ids = Selection::sanitize( $request->get_param( 'ids' ) );
 		update_option( Selection::OPTION, $ids );
+
+		// Persist the edition's content fields when supplied (each is independent,
+		// so a request that sends only ids leaves them as they were).
+		if ( null !== $request->get_param( 'subject' ) ) {
+			update_option( Selection::SUBJECT_OPTION, (string) $request->get_param( 'subject' ) );
+		}
+		if ( null !== $request->get_param( 'preview_text' ) ) {
+			update_option( Selection::PREVIEW_OPTION, (string) $request->get_param( 'preview_text' ) );
+		}
+		if ( null !== $request->get_param( 'template' ) ) {
+			update_option( Templates::OPTION, Templates::sanitize( (string) $request->get_param( 'template' ) ) );
+		}
 
 		return new WP_REST_Response( array( 'saved' => true, 'count' => count( $ids ) ), 200 );
 	}
@@ -188,14 +214,18 @@ class Curation {
 	 * @return void
 	 */
 	public function render_admin_page(): void {
-		$selected_ids   = Selection::ids();
-		$selected_posts = Selection::posts( $selected_ids );
-		$recent_posts   = $this->query_recent();
-		$categories     = get_categories( array( 'orderby' => 'count', 'order' => 'DESC' ) );
-		$accent_color   = ( new Settings() )->get( 'accent_color' );
-		$preview_cm     = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/ptn-newsletter/' ) );
-		$preview_mc     = add_query_arg( array( Renderer::PLATFORM_VAR => 'mailchimp' ), home_url( '/ptn-newsletter/' ) );
-		$settings_url   = admin_url( 'admin.php?page=' . Settings::PAGE );
+		$selected_ids     = Selection::ids();
+		$selected_posts   = Selection::posts( $selected_ids );
+		$recent_posts     = $this->query_recent();
+		$categories       = get_categories( array( 'orderby' => 'count', 'order' => 'DESC' ) );
+		$accent_color     = ( new Settings() )->get( 'accent_color' );
+		$preview_cm       = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/ptn-newsletter/' ) );
+		$preview_mc       = add_query_arg( array( Renderer::PLATFORM_VAR => 'mailchimp' ), home_url( '/ptn-newsletter/' ) );
+		$settings_url     = admin_url( 'admin.php?page=' . Settings::PAGE );
+		$subject          = Selection::subject();
+		$preview_text     = Selection::preview_text();
+		$templates        = Templates::all();
+		$current_template = Templates::current();
 
 		require DIR . 'templates/curation-page.php';
 	}

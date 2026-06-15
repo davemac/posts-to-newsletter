@@ -15,8 +15,9 @@ defined( 'ABSPATH' ) || exit;
  */
 class Renderer {
 
-	public const QUERY_VAR   = 'ptn_newsletter';
+	public const QUERY_VAR    = 'ptn_newsletter';
 	public const PLATFORM_VAR = 'ptn_platform';
+	public const TEMPLATE_VAR = 'ptn_template';
 
 	private const PLATFORMS = array( 'campaignmonitor', 'mailchimp' );
 
@@ -54,6 +55,7 @@ class Renderer {
 	public function register_query_var( $vars ): array {
 		$vars[] = self::QUERY_VAR;
 		$vars[] = self::PLATFORM_VAR;
+		$vars[] = self::TEMPLATE_VAR;
 		return $vars;
 	}
 
@@ -91,7 +93,7 @@ class Renderer {
 		do_action( 'litespeed_disable_all', 'Posts to Newsletter raw email output' );
 
 		header( 'Content-Type: text/html; charset=utf-8' );
-		echo $this->render( $platform ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- composed, escaped HTML email.
+		echo $this->render( $platform, (string) get_query_var( self::TEMPLATE_VAR ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- composed, escaped HTML email.
 		exit;
 	}
 
@@ -108,24 +110,30 @@ class Renderer {
 	/**
 	 * Render the full email HTML for a platform.
 	 *
-	 * @param string $platform Target platform.
+	 * @param string $platform    Target platform.
+	 * @param string $template_id Template id to render; empty uses the saved choice.
 	 * @return string HTML.
 	 */
-	public function render( string $platform ): string {
-		$settings   = $this->settings;
-		$tokens     = $this->tokens( $platform );
-		$posts      = Selection::ordered();
-		$logo_url   = $settings->logo_url();
-		$hero_url   = $settings->hero_url();
-		$brand      = (string) $settings->get( 'brand_color' );
-		$accent     = (string) $settings->get( 'accent_color' );
-		$image_size = (string) $settings->get( 'image_size' );
-		$site_name  = (string) $settings->get( 'site_name' );
-		$subscribe  = (string) $settings->get( 'subscribe_url' );
-		$intro      = str_replace( '{firstname}', $tokens['firstname'], (string) $settings->get( 'intro' ) );
+	public function render( string $platform, string $template_id = '' ): string {
+		$template_id   = '' !== $template_id ? Templates::sanitize( $template_id ) : Templates::current();
+		$template_file = Templates::file( $template_id );
+
+		$settings     = $this->settings;
+		$tokens       = $this->tokens( $platform );
+		$posts        = Selection::ordered();
+		$subject      = Selection::subject();
+		$preview_text = Selection::preview_text();
+		$logo_url     = $settings->logo_url();
+		$hero_url     = $settings->hero_url();
+		$brand        = (string) $settings->get( 'brand_color' );
+		$accent       = (string) $settings->get( 'accent_color' );
+		$image_size   = (string) $settings->get( 'image_size' );
+		$site_name    = (string) $settings->get( 'site_name' );
+		$subscribe    = (string) $settings->get( 'subscribe_url' );
+		$intro        = str_replace( '{firstname}', $tokens['firstname'], (string) $settings->get( 'intro' ) );
 
 		ob_start();
-		require DIR . 'templates/email.php';
+		require $template_file;
 		return (string) ob_get_clean();
 	}
 

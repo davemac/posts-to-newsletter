@@ -65,7 +65,7 @@
    Curation screen
    ============================================================ */
 .ptn-curation {
-	max-width: 1180px;
+	max-width: 1460px;
 	font-family: var( --ptn-sans );
 	color: var( --ptn-ink );
 	font-size: 14px;
@@ -915,6 +915,284 @@
 }
 .ptn-curation .row--enter {
 	animation: ptn-rowin 0.18s ease;
+}
+
+/* ============================================================
+   Compose: three-pane layout (add | live preview | delivery)
+   ============================================================ */
+.ptn-curation .compose {
+	display: grid;
+	grid-template-columns: 320px minmax( 0, 1fr ) 340px;
+	gap: 16px;
+	align-items: start;
+}
+@media ( max-width: 1280px ) {
+	.ptn-curation .compose {
+		grid-template-columns: 300px minmax( 0, 1fr );
+	}
+	.ptn-curation .compose__delivery {
+		grid-column: 1 / -1;
+	}
+}
+@media ( max-width: 980px ) {
+	.ptn-curation .compose {
+		grid-template-columns: 1fr;
+	}
+}
+
+.ptn-curation .compose__add,
+.ptn-curation .compose__delivery {
+	min-width: 0;
+}
+
+/* ---------- left pane tabs (Add / In the edition) ---------- */
+.ptn-curation .ptn-tabs {
+	display: flex;
+	gap: 4px;
+	margin-bottom: 16px;
+	background: #eceef1;
+	padding: 4px;
+	border-radius: 10px;
+}
+.ptn-curation .ptn-tab {
+	flex: 1 1 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 7px;
+	border: 0;
+	background: none;
+	font: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	color: var( --ptn-ink-2 );
+	padding: 8px 10px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background 0.13s, color 0.13s, box-shadow 0.13s;
+}
+.ptn-curation .ptn-tab.is-on {
+	background: var( --ptn-surface );
+	color: var( --ptn-ink );
+	box-shadow: var( --ptn-shadow-sm );
+}
+.ptn-curation .ptn-tab .count {
+	background: #e0e2e6;
+}
+.ptn-curation .ptn-tab.is-on .count {
+	background: var( --ptn-brand-green );
+	color: #fff;
+}
+
+/* ---------- centre preview pane ---------- */
+.ptn-curation .compose__preview {
+	min-width: 0;
+}
+.ptn-curation .ptn-preview-bar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-bottom: 12px;
+}
+.ptn-curation .ptn-tpl {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 12.5px;
+	color: var( --ptn-ink-2 );
+}
+.ptn-curation .ptn-tpl > label {
+	font-weight: 600;
+}
+.ptn-curation .ptn-tpl__select {
+	height: 34px;
+	border: 1px solid var( --ptn-line );
+	border-radius: 9px;
+	background: var( --ptn-surface );
+	font: inherit;
+	font-size: 13px;
+	color: var( --ptn-ink );
+	padding: 0 32px 0 12px;
+	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+	background-image: url( "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23787c82' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>" );
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+}
+.ptn-curation .ptn-tpl__hint {
+	font-size: 11.5px;
+	color: var( --ptn-ink-4 );
+	font-style: italic;
+}
+.ptn-curation .ptn-viewport {
+	margin-left: auto;
+	display: inline-flex;
+	background: #eceef1;
+	border-radius: 9px;
+	padding: 3px;
+	gap: 3px;
+}
+.ptn-curation .ptn-viewport-toggle {
+	border: 0;
+	background: none;
+	font: inherit;
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var( --ptn-ink-2 );
+	padding: 5px 14px;
+	border-radius: 7px;
+	cursor: pointer;
+	transition: background 0.13s, color 0.13s, box-shadow 0.13s;
+}
+.ptn-curation .ptn-viewport-toggle.is-on {
+	background: var( --ptn-surface );
+	color: var( --ptn-ink );
+	box-shadow: var( --ptn-shadow-sm );
+}
+
+.ptn-curation .ptn-preview-stage {
+	background: var( --ptn-canvas );
+	border: 1px solid var( --ptn-line );
+	border-radius: var( --ptn-radius-lg );
+	padding: 20px;
+	display: flex;
+	justify-content: center;
+	height: calc( 100vh - 220px );
+	min-height: 560px;
+	overflow: auto;
+	transition: opacity 0.15s;
+}
+.ptn-curation .ptn-preview-stage.is-loading {
+	opacity: 0.55;
+}
+.ptn-curation .ptn-preview-frame-wrap {
+	width: 100%;
+	max-width: 640px;
+	transition: max-width 0.25s ease;
+}
+.ptn-curation .ptn-preview-stage[data-mode="mobile"] .ptn-preview-frame-wrap {
+	max-width: 390px;
+}
+.ptn-curation #ptn-preview-frame {
+	width: 100%;
+	height: 100%;
+	min-height: 520px;
+	border: 0;
+	background: #fff;
+	border-radius: 10px;
+	box-shadow: var( --ptn-shadow-md );
+	display: block;
+}
+
+/* ---------- right delivery pane ---------- */
+.ptn-curation .dpanel__title {
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var( --ptn-ink-2 );
+	margin: 0 0 16px;
+	padding: 0;
+}
+.ptn-curation .dfield {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-bottom: 16px;
+}
+.ptn-curation .dfield label {
+	font-size: 13px;
+	font-weight: 600;
+	color: var( --ptn-ink );
+}
+.ptn-curation .dinput {
+	width: 100%;
+	height: 40px;
+	margin: 0;
+	border: 1px solid var( --ptn-line );
+	border-radius: 10px;
+	background: var( --ptn-surface );
+	font: inherit;
+	font-size: 14px;
+	color: var( --ptn-ink );
+	padding: 0 12px;
+	box-shadow: var( --ptn-shadow-sm );
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ptn-curation .dinput::placeholder {
+	color: var( --ptn-ink-4 );
+}
+.ptn-curation .dinput:focus {
+	outline: none;
+	border-color: var( --ptn-accent );
+	box-shadow: 0 0 0 3px var( --ptn-accent-ring );
+}
+
+.ptn-curation .dupsell {
+	border: 1px dashed #c3c4c7;
+	background: #fbfbfc;
+	border-radius: var( --ptn-radius-sm );
+	padding: 14px 16px;
+	margin-bottom: 16px;
+}
+.ptn-curation .dupsell strong {
+	display: block;
+	font-size: 13.5px;
+	margin-bottom: 4px;
+}
+.ptn-curation .dupsell p {
+	margin: 0;
+	font-size: 12.5px;
+	color: var( --ptn-ink-3 );
+}
+
+.ptn-curation .dmanual {
+	border-top: 1px solid var( --ptn-line-2 );
+	padding-top: 16px;
+	margin-top: 4px;
+}
+.ptn-curation .dmanual h3 {
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var( --ptn-ink-3 );
+	margin: 0 0 4px;
+	padding: 0;
+}
+.ptn-curation .dmanual p {
+	margin: 0 0 12px;
+	font-size: 12px;
+	color: var( --ptn-ink-4 );
+}
+.ptn-curation .dmanual__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.ptn-curation .dmanual__list li {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.ptn-curation .dmanual__name {
+	font-size: 13px;
+	font-weight: 600;
+	color: var( --ptn-ink-2 );
+}
+.ptn-curation .dmanual__btns {
+	margin-left: auto;
+	display: inline-flex;
+	gap: 8px;
+}
+.ptn-curation .dmanual__btns .iconbtn {
+	width: 36px;
+	height: 36px;
 }
 
 /* ============================================================

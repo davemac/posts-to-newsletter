@@ -17,6 +17,12 @@
 	var $clearAll = $( '#ptn-clear' );
 	var $drophint = $( '#ptn-drophint' );
 	var $chips = $( '#ptn-chips' );
+	var $editionCount = $( '#ptn-edition-count' );
+	var $subject = $( '#ptn-subject' );
+	var $preview = $( '#ptn-preview' );
+	var $template = $( '#ptn-template' );
+	var $frame = $( '#ptn-preview-frame' );
+	var $stage = $( '.ptn-preview-stage' );
 	var currentCat = 'all';
 	var saveTimer = null;
 	var searchTimer = null;
@@ -40,10 +46,28 @@
 	function refreshState() {
 		var selectedCount = $selected.children( '.ptn-item' ).length;
 		$selectedCount.text( selectedCount );
+		$editionCount.text( selectedCount );
 		$availableCount.text( $available.children( '.ptn-item' ).not( '.is-filtered-out' ).length );
 		$clearAll.prop( 'hidden', 0 === selectedCount );
 		$drophint.prop( 'hidden', selectedCount > 0 );
 	}
+
+	// Reload the centre preview iframe from freshly-saved state. Called after the
+	// autosave resolves (never on the raw input event) so the endpoint never reads
+	// a stale option; the cache-buster defeats any browser/proxy caching.
+	function reloadPreview() {
+		if ( ! $frame.length ) {
+			return;
+		}
+		var base = $frame.attr( 'data-base' ) || $frame.attr( 'src' );
+		var sep = -1 === base.indexOf( '?' ) ? '?' : '&';
+		$stage.addClass( 'is-loading' );
+		$frame.attr( 'src', base + sep + '_=' + ( new Date() ).getTime() );
+	}
+
+	$frame.on( 'load', function () {
+		$stage.removeClass( 'is-loading' );
+	} );
 
 	// Client-side category filter: hide available rows whose data-cats list does
 	// not include the active chip's category id. No request — it works on the
@@ -82,17 +106,28 @@
 
 	function save() {
 		var ids = collectIds();
+		var payload = { ids: ids };
+		if ( $subject.length ) {
+			payload.subject = $subject.val();
+		}
+		if ( $preview.length ) {
+			payload.preview_text = $preview.val();
+		}
+		if ( $template.length ) {
+			payload.template = $template.val();
+		}
 		$chip.addClass( 'is-saving' );
 		$status.text( i18n.saving );
 		$.ajax( {
 			url: cfg.saveUrl,
 			method: 'POST',
 			contentType: 'application/json',
-			data: JSON.stringify( { ids: ids } ),
+			data: JSON.stringify( payload ),
 			beforeSend: function ( xhr ) { xhr.setRequestHeader( 'X-WP-Nonce', cfg.nonce ); }
 		} ).done( function ( res ) {
 			var count = res && typeof res.count !== 'undefined' ? res.count : ids.length;
 			$status.text( ( i18n.saved || 'Saved · %d selected' ).replace( '%d', count ) );
+			reloadPreview();
 		} ).fail( function () {
 			$status.text( i18n.saveFailed );
 		} ).always( function () {
@@ -230,5 +265,29 @@
 			$tmp.remove();
 			flash();
 		}
+	} );
+
+	// Subject, preview text and template all ride the same debounced autosave; the
+	// preview reloads once the save resolves.
+	$subject.on( 'input', debounceSave );
+	$preview.on( 'input', debounceSave );
+	$template.on( 'change', debounceSave );
+
+	// Left pane: switch between the "Add to edition" and "In the edition" tabs.
+	$( '.ptn-tab' ).on( 'click', function () {
+		var target = $( this ).attr( 'data-tab' );
+		$( '.ptn-tab' ).removeClass( 'is-on' ).attr( 'aria-selected', 'false' );
+		$( this ).addClass( 'is-on' ).attr( 'aria-selected', 'true' );
+		$( '.ptn-tabpanel' ).prop( 'hidden', true );
+		$( '#ptn-tabpanel-' + target ).prop( 'hidden', false );
+	} );
+
+	// Centre pane: Desktop/Mobile preview width is a wrapper class only — the email
+	// is already responsive, so narrowing the stage fires its own mobile breakpoint.
+	$( '.ptn-viewport-toggle' ).on( 'click', function () {
+		var mode = $( this ).attr( 'data-mode' );
+		$( '.ptn-viewport-toggle' ).removeClass( 'is-on' ).attr( 'aria-pressed', 'false' );
+		$( this ).addClass( 'is-on' ).attr( 'aria-pressed', 'true' );
+		$stage.attr( 'data-mode', mode );
 	} );
 } )( jQuery );
