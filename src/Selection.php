@@ -26,6 +26,20 @@ class Selection {
 	public const OPTION = 'ptn_newsletter_post_ids';
 
 	/**
+	 * Option storing the edition's subject line (per-edition content, not config).
+	 *
+	 * @var string
+	 */
+	public const SUBJECT_OPTION = 'ptn_subject';
+
+	/**
+	 * Option storing the edition's inbox preview/preheader text.
+	 *
+	 * @var string
+	 */
+	public const PREVIEW_OPTION = 'ptn_preview_text';
+
+	/**
 	 * Upper bound on how many posts a newsletter can contain. Caps the stored
 	 * selection and the size of the ordered-posts query.
 	 *
@@ -87,6 +101,44 @@ class Selection {
 	 */
 	public static function ordered(): array {
 		return self::posts( self::ids() );
+	}
+
+	/**
+	 * The edition subject line.
+	 *
+	 * Resolves the stored subject, falling back to the lead article's title so a
+	 * never-touched edition still has a sensible subject. Returns an empty string
+	 * when neither is available, leaving the site-name fallback to the caller (the
+	 * email template and the Pro push share this chain so they cannot diverge).
+	 *
+	 * @return string
+	 */
+	public static function subject(): string {
+		$stored = sanitize_text_field( (string) get_option( self::SUBJECT_OPTION, '' ) );
+		if ( '' !== $stored ) {
+			return $stored;
+		}
+
+		$ids = self::ids();
+		if ( ! empty( $ids ) ) {
+			$title = get_the_title( $ids[0] );
+			if ( '' !== $title ) {
+				// The subject is a plain-text field; get_the_title() returns HTML
+				// entities (e.g. &#8217; for a curly apostrophe), so decode them.
+				return html_entity_decode( $title, ENT_QUOTES, 'UTF-8' );
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * The edition inbox preview/preheader text.
+	 *
+	 * @return string
+	 */
+	public static function preview_text(): string {
+		return sanitize_text_field( (string) get_option( self::PREVIEW_OPTION, '' ) );
 	}
 
 	/**

@@ -56,7 +56,7 @@ class Curation {
 		wp_enqueue_script(
 			'ptn-admin',
 			URL . 'assets/js/admin.js',
-			array( 'jquery', 'jquery-ui-sortable' ),
+			array( 'jquery' ),
 			Plugin::asset_version( 'assets/js/admin.js' ),
 			true
 		);
@@ -67,6 +67,7 @@ class Curation {
 			array(
 				'saveUrl'   => esc_url_raw( rest_url( self::REST_NS . '/selection' ) ),
 				'searchUrl' => esc_url_raw( rest_url( self::REST_NS . '/search' ) ),
+				'cardUrl'   => esc_url_raw( rest_url( self::REST_NS . '/card' ) ),
 				'nonce'     => wp_create_nonce( 'wp_rest' ),
 				'i18n'      => array(
 					'saving'        => __( 'Saving…', 'posts-to-newsletter' ),
@@ -74,6 +75,7 @@ class Curation {
 					'saved'         => __( 'Saved · %d selected', 'posts-to-newsletter' ),
 					'saveFailed'    => __( 'Save failed — please try again', 'posts-to-newsletter' ),
 					'add'           => __( 'Add', 'posts-to-newsletter' ),
+					'added'         => __( 'Added', 'posts-to-newsletter' ),
 					'remove'        => __( 'Remove', 'posts-to-newsletter' ),
 					'noMatches'     => __( 'No matching articles.', 'posts-to-newsletter' ),
 					'noMatchesHint' => __( 'Try a different search or clear the filter.', 'posts-to-newsletter' ),
@@ -100,11 +102,25 @@ class Curation {
 				'callback'            => array( $this, 'save_selection' ),
 				'permission_callback' => $can,
 				'args'                => array(
-					'ids' => array(
+					'ids'          => array(
 						'required' => true,
 						'type'     => 'array',
 						'maxItems' => Selection::MAX_SELECTION,
 						'items'    => array( 'type' => 'integer' ),
+					),
+					// The edition's content fields ride along on the same autosave.
+					// All optional: omitting one leaves its stored value untouched.
+					'subject'      => array(
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'preview_text' => array(
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'template'     => array(
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_key',
 					),
 				),
 			)
@@ -126,6 +142,22 @@ class Curation {
 				),
 			)
 		);
+
+		register_rest_route(
+			self::REST_NS,
+			'/card',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'preview_card' ),
+				'permission_callback' => $can,
+				'args'                => array(
+					'id' => array(
+						'required' => true,
+						'type'     => 'integer',
+					),
+				),
+			)
+		);
 	}
 
 	/**
@@ -137,6 +169,21 @@ class Curation {
 	public function save_selection( WP_REST_Request $request ): WP_REST_Response {
 		$ids = Selection::sanitize( $request->get_param( 'ids' ) );
 		update_option( Selection::OPTION, $ids );
+
+		// Persist the edition's content fields when supplied (each is independent,
+		// so a request that sends only ids leaves them as they were).
+		$subject = $request->get_param( 'subject' );
+		if ( null !== $subject ) {
+			update_option( Selection::SUBJECT_OPTION, (string) $subject );
+		}
+		$preview_text = $request->get_param( 'preview_text' );
+		if ( null !== $preview_text ) {
+			update_option( Selection::PREVIEW_OPTION, (string) $preview_text );
+		}
+		$template = $request->get_param( 'template' );
+		if ( null !== $template ) {
+			update_option( Templates::OPTION, Templates::sanitize( (string) $template ) );
+		}
 
 		return new WP_REST_Response( array( 'saved' => true, 'count' => count( $ids ) ), 200 );
 	}
@@ -175,11 +222,29 @@ class Curation {
 		$items = array();
 		foreach ( $query->posts as $post_id ) {
 			ob_start();
-			$this->render_item( (int) $post_id, false );
+			$this->render_item( (int) $post_id );
 			$items[] = array( 'id' => (int) $post_id, 'html' => ob_get_clean() );
 		}
 
 		return new WP_REST_Response( $items, 200 );
+	}
+
+	/**
+	 * Return the live-canvas card markup for one article (used when an article is
+	 * added from the left pane).
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response
+	 */
+	public function preview_card( WP_REST_Request $request ): WP_REST_Response {
+		$id = absint( $request->get_param( 'id' ) );
+
+		ob_start();
+		if ( 0 !== $id && 'publish' === get_post_status( $id ) ) {
+			$this->render_canvas_card( $id );
+		}
+
+		return new WP_REST_Response( array( 'id' => $id, 'html' => ob_get_clean() ), 200 );
 	}
 
 	/**
@@ -188,80 +253,61 @@ class Curation {
 	 * @return void
 	 */
 	public function render_admin_page(): void {
-		$selected_ids   = Selection::ids();
-		$selected_posts = Selection::posts( $selected_ids );
-		$recent_posts   = $this->query_recent();
-		$categories     = get_categories( array( 'orderby' => 'count', 'order' => 'DESC' ) );
-		$accent_color   = ( new Settings() )->get( 'accent_color' );
-		$preview_cm     = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/ptn-newsletter/' ) );
-		$preview_mc     = add_query_arg( array( Renderer::PLATFORM_VAR => 'mailchimp' ), home_url( '/ptn-newsletter/' ) );
-		$settings_url   = admin_url( 'admin.php?page=' . Settings::PAGE );
+		$settings         = new Settings();
+		$selected_ids     = Selection::ids();
+		$selected_posts   = Selection::posts( $selected_ids );
+		$recent_posts     = $this->query_recent();
+		$categories       = get_categories( array( 'orderby' => 'count', 'order' => 'DESC' ) );
+		$accent_color     = (string) $settings->get( 'accent_color' );
+		$brand_color      = (string) $settings->get( 'brand_color' );
+		$preview_cm       = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/ptn-newsletter/' ) );
+		$preview_mc       = add_query_arg( array( Renderer::PLATFORM_VAR => 'mailchimp' ), home_url( '/ptn-newsletter/' ) );
+		$settings_url     = admin_url( 'admin.php?page=' . Settings::PAGE );
+		$subject          = Selection::subject();
+		$preview_text     = Selection::preview_text();
+		$templates        = Templates::all();
+		$current_template = Templates::current();
+		$logo_url         = $settings->logo_url();
+		$hero_url         = $settings->hero_url();
+		$site_name        = (string) $settings->get( 'site_name' );
+		$subscribe_url    = (string) $settings->get( 'subscribe_url' );
+		// The canvas is a visual preview, so resolve the {firstname} token to a
+		// neutral placeholder rather than a platform merge tag.
+		$intro            = str_replace( '{firstname}', __( 'there', 'posts-to-newsletter' ), (string) $settings->get( 'intro' ) );
 
 		require DIR . 'templates/curation-page.php';
 	}
 
 	/**
-	 * Render one article list item.
+	 * Render one article as a live-canvas card: the email card (Renderer) wrapped
+	 * with the drag/remove controls, so the canvas is the email two-up.
 	 *
-	 * The same markup serves both columns; CSS shows the drag handle and order
-	 * index only inside the selected tray, so an item keeps both pieces when the
-	 * JS moves it between columns without re-rendering.
-	 *
-	 * @param int  $post_id     Post ID.
-	 * @param bool $is_selected Whether it sits in the selected column.
+	 * @param int $post_id Post ID.
 	 * @return void
 	 */
-	public function render_item( int $post_id, bool $is_selected ): void {
+	public function render_canvas_card( int $post_id ): void {
+		$settings   = new Settings();
+		$renderer   = new Renderer( $settings );
+		$image_size = (string) $settings->get( 'image_size' );
+		$accent     = (string) $settings->get( 'accent_color' );
+
+		require DIR . 'templates/canvas-card.php';
+	}
+
+	/**
+	 * Render one available article row by including its template part.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return void
+	 */
+	public function render_item( int $post_id ): void {
 		$thumb    = has_post_thumbnail( $post_id ) ? get_the_post_thumbnail( $post_id, array( 96, 69 ) ) : '';
 		$byline   = Selection::byline( $post_id );
 		$cats     = get_the_category( $post_id );
 		$category = ! empty( $cats ) ? $cats[0] : null;
 		$cat_ids  = ! empty( $cats ) ? array_map( 'intval', wp_list_pluck( $cats, 'term_id' ) ) : array();
 
-		echo '<li class="ptn-item row" data-id="' . esc_attr( (string) $post_id ) . '" data-cats="' . esc_attr( implode( ',', $cat_ids ) ) . '">';
-
-		// Order index (filled by a CSS counter inside the tray) and drag handle.
-		echo '<span class="row__index" aria-hidden="true"></span>';
-		echo '<span class="ptn-handle handle" aria-hidden="true">';
-		echo self::icon( 'grip' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup.
-		echo '</span>';
-
-		// Thumbnail, or a striped placeholder when the post has no featured image.
-		if ( '' !== $thumb ) {
-			echo '<span class="thumb">' . wp_kses_post( $thumb ) . '</span>';
-		} else {
-			echo '<span class="thumb thumb--ph">';
-			echo self::icon( 'image' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup.
-			echo '</span>';
-		}
-
-		// Title + meta pills: date, author (accent-tinted) and the first category.
-		echo '<span class="meta">';
-		echo '<span class="meta__title">' . esc_html( get_the_title( $post_id ) ) . '</span>';
-		echo '<span class="meta__sub">';
-		if ( '' !== $byline ) {
-			echo '<span class="authorpill">' . esc_html( $byline ) . '</span>';
-		}
-		echo '<span class="datepill">' . esc_html( get_the_date( '', $post_id ) ) . '</span>';
-		if ( null !== $category ) {
-			echo '<span class="catpill">' . esc_html( $category->name ) . '</span>';
-		}
-		echo '</span>'; // .meta__sub
-		echo '</span>'; // .meta
-
-		// Add / Remove control.
-		if ( $is_selected ) {
-			echo '<button type="button" class="ptn-remove removebtn" aria-label="' . esc_attr__( 'Remove', 'posts-to-newsletter' ) . '">';
-			echo self::icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup.
-			echo '</button>';
-		} else {
-			echo '<button type="button" class="ptn-add addbtn">';
-			echo self::icon( 'plus' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup.
-			echo '<span>' . esc_html__( 'Add', 'posts-to-newsletter' ) . '</span>';
-			echo '</button>';
-		}
-
-		echo '</li>';
+		require DIR . 'templates/article-item.php';
 	}
 
 	/**

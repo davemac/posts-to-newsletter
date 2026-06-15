@@ -41,7 +41,7 @@
 
 	/* Row density (default: comfortable). Overridden by the .density-* modifiers. */
 	--ptn-row-pad-y: 11px;
-	--ptn-thumb: 64px;
+	--ptn-thumb: 54px;
 
 	--ptn-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
@@ -65,7 +65,7 @@
    Curation screen
    ============================================================ */
 .ptn-curation {
-	max-width: 1180px;
+	max-width: 1460px;
 	font-family: var( --ptn-sans );
 	color: var( --ptn-ink );
 	font-size: 14px;
@@ -184,135 +184,9 @@
 	height: 15px;
 }
 
-/* ---------- distribution / platform cards ---------- */
-.ptn-curation .dist {
-	margin-bottom: 26px;
-}
-.ptn-curation .dist__head {
-	display: flex;
-	align-items: baseline;
-	gap: 10px;
-	margin: 0 0 12px;
-}
-.ptn-curation .dist__head h2 {
-	font-size: 12px;
-	font-weight: 700;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	color: var( --ptn-ink-3 );
-	margin: 0;
-	padding: 0;
-}
-.ptn-curation .dist__head .sub {
-	font-size: 12.5px;
-	color: var( --ptn-ink-4 );
-}
-
-.ptn-curation .dist__grid {
-	display: grid;
-	/* Two equal columns. A single card sits in the left column at half width
-	   rather than stretching the full row (which auto-fit would do once the
-	   empty track collapsed); two cards sit side by side. */
-	grid-template-columns: repeat( 2, minmax( 0, 1fr ) );
-	gap: 16px;
-}
-@media ( max-width: 782px ) {
-	.ptn-curation .dist__grid {
-		grid-template-columns: 1fr;
-	}
-}
-
-.ptn-curation .platform {
-	background: var( --ptn-surface );
-	border: 1px solid var( --ptn-line );
-	border-radius: var( --ptn-radius-lg );
-	padding: 20px 22px;
-	box-shadow: var( --ptn-shadow-sm );
-	display: flex;
-	flex-direction: column;
-	gap: 18px;
-	transition: box-shadow 0.18s, border-color 0.18s;
-}
-.ptn-curation .platform:hover {
-	box-shadow: var( --ptn-shadow-md );
-}
-
-.ptn-curation .platform__top {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-}
-.ptn-curation .platform__logo {
-	width: 46px;
-	height: 46px;
-	border-radius: 12px;
-	display: grid;
-	place-items: center;
-	font-weight: 800;
-	font-size: 19px;
-	color: #fff;
-	flex: none;
-	letter-spacing: -0.02em;
-}
-.ptn-curation .platform__logo--mc {
-	background: #f3c742;
-	color: #1d2327;
-}
-.ptn-curation .platform__logo--cm {
-	background: #101d6c;
-	color: #fff;
-}
-.ptn-curation .platform__id {
-	min-width: 0;
-}
-.ptn-curation .platform__name {
-	font-weight: 700;
-	font-size: 16px;
-	line-height: 1.15;
-}
-.ptn-curation .platform__meta {
-	font-size: 12.5px;
-	color: var( --ptn-ink-3 );
-	margin-top: 3px;
-}
-
-.ptn-curation .badge {
-	display: inline-flex;
-	align-items: center;
-	gap: 5px;
-	margin-left: auto;
-	padding: 4px 10px;
-	border-radius: 999px;
-	font-size: 11.5px;
-	font-weight: 700;
-	background: #f0f1f3;
-	color: var( --ptn-ink-2 );
-}
-.ptn-curation .badge .dot {
-	width: 6px;
-	height: 6px;
-	border-radius: 50%;
-	background: currentColor;
-}
-.ptn-curation .badge--ok {
-	background: var( --ptn-ok-soft );
-	color: var( --ptn-ok );
-}
-.ptn-curation .badge--err {
-	background: var( --ptn-danger-soft );
-	color: var( --ptn-danger );
-}
-
-/* Actions row holds the push button + the Preview/Copy icon buttons; the
-   pro add-on's push-result and last-pushed lines wrap onto their own rows
-   below (via flex-basis + order) to form the dashed footer. */
-.ptn-curation .platform__actions {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 9px;
-}
-
+/* ---------- shared buttons ---------- */
+/* .pushbtn is reused by the Pro add-on's "Push drafts" button; .iconbtn by the
+   Delivery panel's manual-import preview/copy controls. */
 .ptn-curation .pushbtn {
 	display: inline-flex;
 	align-items: center;
@@ -388,43 +262,7 @@
 	background: var( --ptn-ok-soft );
 }
 
-/* Footer look for the pro add-on's lines (defined here so the dashed top
-   border + spacing live with the rest of the card; the add-on supplies the
-   markup). */
-.ptn-curation .platform__foot {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	font-size: 12px;
-	color: var( --ptn-ink-3 );
-	border-top: 1px dashed var( --ptn-line );
-	padding-top: 11px;
-	min-height: 20px;
-}
-.ptn-curation .platform__foot .tick {
-	color: var( --ptn-ok );
-	width: 14px;
-	height: 14px;
-}
-
-/* ---------- curation columns ---------- */
-.ptn-curation .curate {
-	display: grid;
-	/* Match the distribution grid above (same template + gap) so the two lower
-	   panels line up exactly under the two platform cards. */
-	grid-template-columns: repeat( 2, minmax( 0, 1fr ) );
-	gap: 16px;
-	align-items: start;
-}
-@media ( max-width: 1080px ) {
-	.ptn-curation .curate {
-		grid-template-columns: 1fr;
-	}
-	.ptn-curation .col--out {
-		position: static !important;
-	}
-}
-
+/* ---------- column panel (left add pane) ---------- */
 .ptn-curation .col {
 	min-width: 0;
 	background: var( --ptn-surface );
@@ -432,10 +270,6 @@
 	border-radius: var( --ptn-radius-lg );
 	box-shadow: var( --ptn-shadow-sm );
 	padding: 20px 22px;
-}
-.ptn-curation .col--out {
-	position: sticky;
-	top: 46px;
 }
 
 .ptn-curation .col__head {
@@ -465,25 +299,6 @@
 	color: var( --ptn-ink-2 );
 	font-size: 12px;
 	font-weight: 700;
-}
-.ptn-curation .col--out .count {
-	background: var( --ptn-brand-green );
-	color: #fff;
-}
-.ptn-curation .col__head .spacer {
-	margin-left: auto;
-}
-.ptn-curation .clearbtn {
-	border: 0;
-	background: none;
-	cursor: pointer;
-	font: inherit;
-	font-size: 12.5px;
-	font-weight: 600;
-	color: var( --ptn-ink-3 );
-}
-.ptn-curation .clearbtn:hover {
-	color: var( --ptn-danger );
 }
 
 /* ---------- search ---------- */
@@ -606,16 +421,6 @@
 	display: none;
 }
 
-/* selected list = stacked cards inside the column panel (no separate tray fill) */
-.ptn-curation .tray {
-	min-height: 160px;
-}
-.ptn-curation .tray .list {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-}
-
 /* scroll region for the available list; small right pad keeps the scrollbar off
    the card edges and a little side breathing room stops hover shadows clipping. */
 .ptn-curation .scroller {
@@ -652,55 +457,6 @@
 .ptn-curation .row:hover {
 	border-color: #d7dade;
 	box-shadow: var( --ptn-shadow-md );
-}
-.ptn-curation .tray .row.is-dragging {
-	box-shadow: 0 14px 30px -8px rgba( 16, 24, 40, 0.28 );
-	opacity: 0.97;
-}
-
-/* order index in the selected list, driven by a CSS counter so re-ordering and
-   add/remove stay numbered without any JS bookkeeping. */
-.ptn-curation .tray .list {
-	counter-reset: ptn-order;
-}
-.ptn-curation .tray .row {
-	counter-increment: ptn-order;
-}
-.ptn-curation .row__index {
-	flex: none;
-	width: 22px;
-	text-align: center;
-	font-size: 13px;
-	font-weight: 700;
-	color: var( --ptn-brand-green );
-	font-variant-numeric: tabular-nums;
-}
-.ptn-curation .tray .row__index::before {
-	content: counter( ptn-order );
-}
-
-/* drag handle */
-.ptn-curation .handle {
-	flex: none;
-	width: 20px;
-	display: grid;
-	place-items: center;
-	color: var( --ptn-ink-4 );
-	cursor: grab;
-}
-.ptn-curation .handle:active {
-	cursor: grabbing;
-}
-.ptn-curation .handle .ico {
-	width: 16px;
-	height: 16px;
-}
-
-/* The handle + order index render in every row so an item keeps them when moved
-   between columns; only the selected tray reveals them. */
-.ptn-curation #ptn-available .handle,
-.ptn-curation #ptn-available .row__index {
-	display: none;
 }
 
 /* thumb */
@@ -751,105 +507,87 @@
 	-webkit-box-orient: vertical;
 	text-wrap: pretty;
 }
+/* Meta on a single row: author + date + category. The author pill is the only
+   flexible item, so it ellipsis-truncates when a name is long while the date and
+   category kicker stay intact on the same line. */
 .ptn-curation .meta__sub {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	align-items: center;
-	gap: 6px 8px;
+	gap: 6px;
 	font-size: 12px;
 	color: var( --ptn-ink-3 );
+	min-width: 0;
 }
 
-/* Meta — date + author render as pills (date grey; author tinted from the brand
-   accent the curation wrapper sets from ptn_settings, so it tracks the site's
-   branding without depending on the theme's stylesheet). The category renders as
-   a plain uppercase accent kicker (no pill), matching the email renderer. */
+/* Date + author render as pills (date grey; author tinted from the brand accent
+   the curation wrapper sets from ptn_settings). The category renders as a plain
+   uppercase accent kicker (no pill), matching the email renderer. */
 .ptn-curation .datepill,
 .ptn-curation .authorpill {
-	display: inline-flex;
-	align-items: center;
-	height: 19px;
-	padding: 0 9px;
+	height: 18px;
+	padding: 0 8px;
 	border-radius: 999px;
-	font-size: 11px;
+	font-size: 10.5px;
 	font-weight: 500;
 	letter-spacing: 0.01em;
 	white-space: nowrap;
-	flex: none;
 }
 .ptn-curation .datepill {
+	display: inline-flex;
+	align-items: center;
+	flex: none;
 	color: var( --ptn-ink-2 );
 	background: #f0f1f3;
 }
 .ptn-curation .authorpill {
+	flex: 0 1 auto;
+	min-width: 0;
+	max-width: 100%;
+	display: inline-block;
+	line-height: 18px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	color: var( --ptn-author-color, var( --ptn-danger ) );
 	background: color-mix( in srgb, var( --ptn-author-color, var( --ptn-danger ) ) 12%, #fff );
 }
 .ptn-curation .catpill {
-	display: inline-flex;
-	align-items: center;
-	font-size: 10.5px;
+	flex: none;
+	font-size: 10px;
 	font-weight: 700;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
 	color: var( --ptn-author-color, var( --ptn-danger ) );
 	white-space: nowrap;
-	flex: none;
 }
 
-/* row action buttons */
+/* compact icon-only Add control (matches the mockup; keeps the title roomy) */
 .ptn-curation .addbtn {
 	flex: none;
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
+	align-self: flex-start;
+	width: 34px;
 	height: 34px;
-	padding: 0 14px 0 12px;
-	border-radius: 8px;
-	border: 1px solid transparent;
+	display: grid;
+	place-items: center;
+	padding: 0;
+	border-radius: 50%;
+	border: 0;
 	background: var( --ptn-brand-green-soft );
 	color: var( --ptn-brand-green-strong );
-	font: inherit;
-	font-size: 13px;
-	font-weight: 600;
 	cursor: pointer;
 	transition: background 0.13s, color 0.13s;
 }
 .ptn-curation .addbtn .ico {
-	width: 14px;
-	height: 14px;
+	width: 17px;
+	height: 17px;
 }
 .ptn-curation .addbtn:hover {
-	background: color-mix( in srgb, var( --ptn-brand-green ) 16%, #fff );
-	color: var( --ptn-brand-green-strong );
+	background: color-mix( in srgb, var( --ptn-brand-green ) 18%, #fff );
 }
-.ptn-curation .addbtn.is-added {
-	border-color: var( --ptn-ok );
-	color: var( --ptn-ok );
+.ptn-curation .ptn-item.is-added .addbtn {
 	background: var( --ptn-ok-soft );
-}
-
-.ptn-curation .removebtn {
-	flex: none;
-	width: 30px;
-	height: 30px;
-	display: grid;
-	place-items: center;
-	border-radius: 8px;
-	border: 1px solid transparent;
-	background: none;
-	color: var( --ptn-ink-4 );
-	cursor: pointer;
-	transition: all 0.13s;
-}
-.ptn-curation .removebtn .ico {
-	width: 16px;
-	height: 16px;
-}
-.ptn-curation .removebtn:hover {
-	background: var( --ptn-danger-soft );
-	color: var( --ptn-danger );
-	border-color: color-mix( in srgb, var( --ptn-danger ) 20%, transparent );
+	color: var( --ptn-ok );
+	cursor: default;
 }
 
 /* density modifiers */
@@ -887,27 +625,6 @@
 	font-size: 12.5px;
 }
 
-.ptn-curation .tray__drophint {
-	border: 1.5px dashed #c9ccd2;
-	border-radius: var( --ptn-radius-sm );
-	padding: 26px 18px;
-	text-align: center;
-	color: var( --ptn-ink-4 );
-	font-size: 13px;
-}
-
-/* jQuery UI sortable placeholder, styled as the design's drop line */
-.ptn-curation .ptn-placeholder {
-	height: 3px;
-	min-height: 3px;
-	margin: -3px 4px 6px;
-	background: var( --ptn-accent );
-	border: 0;
-	border-radius: 3px;
-	box-shadow: 0 0 0 3px var( --ptn-accent-ring );
-	visibility: visible;
-}
-
 /* fade-in for newly added rows */
 @keyframes ptn-rowin {
 	from { opacity: 0; transform: translateY( -4px ); }
@@ -915,6 +632,406 @@
 }
 .ptn-curation .row--enter {
 	animation: ptn-rowin 0.18s ease;
+}
+
+/* ============================================================
+   Compose: three-pane layout (add | live preview | delivery)
+   ============================================================ */
+.ptn-curation .compose {
+	display: grid;
+	grid-template-columns: 410px minmax( 0, 1fr ) 330px;
+	gap: 10px;
+	align-items: start;
+}
+@media ( max-width: 1280px ) {
+	.ptn-curation .compose {
+		grid-template-columns: 340px minmax( 0, 1fr );
+	}
+	.ptn-curation .compose__delivery {
+		grid-column: 1 / -1;
+	}
+}
+@media ( max-width: 980px ) {
+	.ptn-curation .compose {
+		grid-template-columns: 1fr;
+	}
+}
+
+.ptn-curation .compose__add,
+.ptn-curation .compose__delivery {
+	min-width: 0;
+}
+
+/* "Clear all" link in the preview bar */
+.ptn-curation .ptn-clearlink {
+	border: 0;
+	background: none;
+	cursor: pointer;
+	font: inherit;
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var( --ptn-ink-3 );
+}
+.ptn-curation .ptn-clearlink:hover {
+	color: var( --ptn-danger );
+}
+
+/* ---------- centre preview pane ---------- */
+.ptn-curation .compose__preview {
+	min-width: 0;
+}
+.ptn-curation .ptn-preview-bar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-bottom: 12px;
+}
+.ptn-curation .ptn-tpl {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 12.5px;
+	color: var( --ptn-ink-2 );
+}
+.ptn-curation .ptn-tpl > label {
+	font-weight: 600;
+}
+.ptn-curation .ptn-tpl__select {
+	height: 34px;
+	border: 1px solid var( --ptn-line );
+	border-radius: 9px;
+	background: var( --ptn-surface );
+	font: inherit;
+	font-size: 13px;
+	color: var( --ptn-ink );
+	padding: 0 32px 0 12px;
+	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+	background-image: url( "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23787c82' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>" );
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+}
+.ptn-curation .ptn-tpl__hint {
+	font-size: 11.5px;
+	color: var( --ptn-ink-4 );
+	font-style: italic;
+}
+.ptn-curation .ptn-viewport {
+	margin-left: auto;
+	display: inline-flex;
+	background: #eceef1;
+	border-radius: 9px;
+	padding: 3px;
+	gap: 3px;
+}
+.ptn-curation .ptn-viewport-toggle {
+	border: 0;
+	background: none;
+	font: inherit;
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var( --ptn-ink-2 );
+	padding: 5px 14px;
+	border-radius: 7px;
+	cursor: pointer;
+	transition: background 0.13s, color 0.13s, box-shadow 0.13s;
+}
+.ptn-curation .ptn-viewport-toggle.is-on {
+	background: var( --ptn-surface );
+	color: var( --ptn-ink );
+	box-shadow: var( --ptn-shadow-sm );
+}
+
+/* ---------- live canvas (the editable email) ---------- */
+.ptn-curation .ptn-pv-stage {
+	background: var( --ptn-canvas );
+	border: 1px solid var( --ptn-line );
+	border-radius: var( --ptn-radius-lg );
+	padding: 24px 20px;
+	height: calc( 100vh - 220px );
+	min-height: 560px;
+	overflow: auto;
+}
+
+/* the white "email" sheet */
+.ptn-curation .ptn-pv {
+	width: 100%;
+	max-width: 600px;
+	margin: 0 auto;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: var( --ptn-shadow-md );
+	padding: 28px 28px 32px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #111;
+	transition: max-width 0.25s ease;
+}
+.ptn-curation .ptn-pv[data-mode="mobile"] {
+	max-width: 380px;
+}
+
+.ptn-curation .ptn-pv__masthead {
+	text-align: center;
+	margin-bottom: 16px;
+}
+.ptn-curation .ptn-pv__masthead img {
+	max-width: 220px;
+	max-height: 56px;
+	height: auto;
+}
+.ptn-curation .ptn-pv__masthead--text {
+	font-size: 26px;
+	font-weight: 800;
+	letter-spacing: -0.01em;
+}
+.ptn-curation .ptn-pv__hero {
+	margin-bottom: 18px;
+}
+.ptn-curation .ptn-pv__hero img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-bottom: 4px solid var( --ptn-brand, #c30 );
+}
+.ptn-curation .ptn-pv__intro {
+	text-align: center;
+	font-size: 15px;
+	line-height: 1.5;
+	color: #333;
+	margin: 0 0 18px;
+}
+
+/* sortable 2-up article grid — each item is the email's own card (render_card) */
+.ptn-curation .ptn-pv__grid {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 26px 20px;
+	align-items: start;
+}
+.ptn-curation .ptn-pv[data-mode="mobile"] .ptn-pv__grid {
+	grid-template-columns: 1fr;
+}
+
+/* wrapper around one email card — the whole card is the drag target */
+.ptn-curation .ptn-pv-card {
+	position: relative;
+	cursor: grab;
+}
+.ptn-curation .ptn-pv-card.is-dragging {
+	cursor: grabbing;
+	opacity: 0.55;
+	/* let elementFromPoint see the card beneath while reordering */
+	pointer-events: none;
+}
+/* In the editor the cards reorder rather than navigate, so neutralise the email
+   card's own links (and their native image drag) — drag works from anywhere. */
+.ptn-curation .ptn-pv-card a {
+	pointer-events: none;
+}
+
+/* drag-affordance grip + remove, revealed on card hover */
+.ptn-curation .ptn-pv-card__handle {
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	width: 24px;
+	height: 24px;
+	display: grid;
+	place-items: center;
+	color: var( --ptn-ink-3 );
+	background: rgba( 255, 255, 255, 0.92 );
+	border-radius: 6px;
+	box-shadow: var( --ptn-shadow-sm );
+	opacity: 0;
+	transition: opacity 0.13s;
+	pointer-events: none;
+	z-index: 2;
+}
+.ptn-curation .ptn-pv-card:hover .ptn-pv-card__handle {
+	opacity: 1;
+}
+.ptn-curation .ptn-pv-remove {
+	position: absolute;
+	top: -9px;
+	right: -9px;
+	width: 26px;
+	height: 26px;
+	display: grid;
+	place-items: center;
+	border: 0;
+	border-radius: 50%;
+	background: #fff;
+	color: var( --ptn-ink-4 );
+	box-shadow: var( --ptn-shadow-md );
+	cursor: pointer;
+	opacity: 0;
+	transition: opacity 0.13s, color 0.13s, background 0.13s;
+	z-index: 2;
+}
+.ptn-curation .ptn-pv-card:hover .ptn-pv-remove {
+	opacity: 1;
+}
+.ptn-curation .ptn-pv-remove:hover {
+	background: var( --ptn-danger-soft );
+	color: var( --ptn-danger );
+}
+
+.ptn-curation .ptn-pv__empty {
+	border: 1.5px dashed #d4d7dd;
+	border-radius: 10px;
+	padding: 30px 18px;
+	text-align: center;
+	color: var( --ptn-ink-4 );
+	font-size: 13.5px;
+}
+
+/* subscribe + footer chrome */
+.ptn-curation .ptn-pv__subscribe {
+	text-align: center;
+	margin-top: 24px;
+}
+.ptn-curation .ptn-pv__subbtn {
+	display: inline-block;
+	background: var( --ptn-brand, #c30 );
+	color: #fff;
+	font-size: 14px;
+	font-weight: 700;
+	text-decoration: none;
+	padding: 12px 28px;
+	border-radius: 4px;
+}
+.ptn-curation .ptn-pv__home {
+	display: block;
+	margin-top: 12px;
+	font-size: 13px;
+	color: var( --ptn-brand, #c30 );
+	text-decoration: none;
+}
+.ptn-curation .ptn-pv__footer {
+	margin-top: 24px;
+	padding-top: 16px;
+	border-top: 1px solid #eee;
+	text-align: center;
+	font-size: 12px;
+	line-height: 1.6;
+	color: #888;
+}
+.ptn-curation .ptn-pv__muted {
+	color: #aaa;
+}
+
+/* ---------- right delivery pane ---------- */
+.ptn-curation .dpanel__title {
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var( --ptn-ink-2 );
+	margin: 0 0 16px;
+	padding: 0;
+}
+.ptn-curation .dfield {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-bottom: 16px;
+}
+.ptn-curation .dfield label {
+	font-size: 13px;
+	font-weight: 600;
+	color: var( --ptn-ink );
+}
+.ptn-curation .dinput {
+	width: 100%;
+	height: 40px;
+	margin: 0;
+	border: 1px solid var( --ptn-line );
+	border-radius: 10px;
+	background: var( --ptn-surface );
+	font: inherit;
+	font-size: 14px;
+	color: var( --ptn-ink );
+	padding: 0 12px;
+	box-shadow: var( --ptn-shadow-sm );
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ptn-curation .dinput::placeholder {
+	color: var( --ptn-ink-4 );
+}
+.ptn-curation .dinput:focus {
+	outline: none;
+	border-color: var( --ptn-accent );
+	box-shadow: 0 0 0 3px var( --ptn-accent-ring );
+}
+
+.ptn-curation .dupsell {
+	border: 1px dashed #c3c4c7;
+	background: #fbfbfc;
+	border-radius: var( --ptn-radius-sm );
+	padding: 14px 16px;
+	margin-bottom: 16px;
+}
+.ptn-curation .dupsell strong {
+	display: block;
+	font-size: 13.5px;
+	margin-bottom: 4px;
+}
+.ptn-curation .dupsell p {
+	margin: 0;
+	font-size: 12.5px;
+	color: var( --ptn-ink-3 );
+}
+
+.ptn-curation .dmanual {
+	border-top: 1px solid var( --ptn-line-2 );
+	padding-top: 16px;
+	margin-top: 4px;
+}
+.ptn-curation .dmanual h3 {
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var( --ptn-ink-3 );
+	margin: 0 0 4px;
+	padding: 0;
+}
+.ptn-curation .dmanual p {
+	margin: 0 0 12px;
+	font-size: 12px;
+	color: var( --ptn-ink-4 );
+}
+.ptn-curation .dmanual__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.ptn-curation .dmanual__list li {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.ptn-curation .dmanual__name {
+	font-size: 13px;
+	font-weight: 600;
+	color: var( --ptn-ink-2 );
+}
+.ptn-curation .dmanual__btns {
+	margin-left: auto;
+	display: inline-flex;
+	gap: 8px;
+}
+.ptn-curation .dmanual__btns .iconbtn {
+	width: 36px;
+	height: 36px;
 }
 
 /* ============================================================

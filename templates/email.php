@@ -15,6 +15,8 @@
  * @var string              $site_name  Publication name.
  * @var string              $subscribe  Subscribe URL.
  * @var string              $intro      Intro line (personalisation already applied).
+ * @var string              $subject    Edition subject line (may be empty).
+ * @var string              $preview_text Edition inbox preview text (may be empty).
  * @var \PostsToNewsletter\Renderer       $this       Renderer (for render_card()).
  */
 
@@ -28,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title><?php echo esc_html( $site_name ); ?></title>
+	<title><?php echo esc_html( '' !== $subject ? $subject : $site_name ); ?></title>
 	<style type="text/css">
 		@media only screen and (max-width: 620px) {
 			.ptn-col { display: block !important; width: 100% !important; padding: 0 0 24px 0 !important; }
@@ -38,7 +40,14 @@ defined( 'ABSPATH' ) || exit;
 </head>
 <body style="margin:0; padding:0; background-color:#f4f4f4;">
 
-	<div style="display:none; max-height:0; overflow:hidden;">The latest news from <?php echo esc_html( $site_name ); ?>. <?php echo $tokens['preheader']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+	<div style="display:none; max-height:0; overflow:hidden;"><?php
+	if ( '' !== $preview_text ) {
+		echo esc_html( $preview_text );
+	} else {
+		/* translators: %s: site/publication name. */
+		printf( esc_html__( 'The latest news from %s.', 'posts-to-newsletter' ), esc_html( $site_name ) );
+	}
+	?> <?php echo $tokens['preheader']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- platform merge-tag markup. ?></div>
 
 	<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
 		<tr>
