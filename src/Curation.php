@@ -219,7 +219,7 @@ class Curation {
 		$items = array();
 		foreach ( $query->posts as $post_id ) {
 			ob_start();
-			$this->render_item( (int) $post_id, false );
+			$this->render_item( (int) $post_id );
 			$items[] = array( 'id' => (int) $post_id, 'html' => ob_get_clean() );
 		}
 
@@ -292,67 +292,19 @@ class Curation {
 	}
 
 	/**
-	 * Render one article list item.
+	 * Render one available article row by including its template part.
 	 *
-	 * The same markup serves both columns; CSS shows the drag handle and order
-	 * index only inside the selected tray, so an item keeps both pieces when the
-	 * JS moves it between columns without re-rendering.
-	 *
-	 * @param int  $post_id     Post ID.
-	 * @param bool $is_selected Whether it sits in the selected column.
+	 * @param int $post_id Post ID.
 	 * @return void
 	 */
-	public function render_item( int $post_id, bool $is_selected ): void {
+	public function render_item( int $post_id ): void {
 		$thumb    = has_post_thumbnail( $post_id ) ? get_the_post_thumbnail( $post_id, array( 96, 69 ) ) : '';
 		$byline   = Selection::byline( $post_id );
 		$cats     = get_the_category( $post_id );
 		$category = ! empty( $cats ) ? $cats[0] : null;
 		$cat_ids  = ! empty( $cats ) ? array_map( 'intval', wp_list_pluck( $cats, 'term_id' ) ) : array();
 
-		echo '<li class="ptn-item row" data-id="' . esc_attr( (string) $post_id ) . '" data-cats="' . esc_attr( implode( ',', $cat_ids ) ) . '">';
-
-		// Order index (filled by a CSS counter inside the tray) and drag handle.
-		echo '<span class="row__index" aria-hidden="true"></span>';
-		echo '<span class="ptn-handle handle" aria-hidden="true">';
-		echo self::icon( 'grip' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup.
-		echo '</span>';
-
-		// Thumbnail, or a striped placeholder when the post has no featured image.
-		if ( '' !== $thumb ) {
-			echo '<span class="thumb">' . wp_kses_post( $thumb ) . '</span>';
-		} else {
-			echo '<span class="thumb thumb--ph">';
-			echo self::icon( 'image' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup.
-			echo '</span>';
-		}
-
-		// Title + meta pills: date, author (accent-tinted) and the first category.
-		echo '<span class="meta">';
-		echo '<span class="meta__title">' . esc_html( get_the_title( $post_id ) ) . '</span>';
-		echo '<span class="meta__sub">';
-		if ( '' !== $byline ) {
-			echo '<span class="authorpill">' . esc_html( $byline ) . '</span>';
-		}
-		echo '<span class="datepill">' . esc_html( get_the_date( '', $post_id ) ) . '</span>';
-		if ( null !== $category ) {
-			echo '<span class="catpill">' . esc_html( $category->name ) . '</span>';
-		}
-		echo '</span>'; // .meta__sub
-		echo '</span>'; // .meta
-
-		// Add / Remove control.
-		if ( $is_selected ) {
-			echo '<button type="button" class="ptn-remove removebtn" aria-label="' . esc_attr__( 'Remove', 'posts-to-newsletter' ) . '">';
-			echo self::icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup.
-			echo '</button>';
-		} else {
-			echo '<button type="button" class="ptn-add addbtn">';
-			echo self::icon( 'plus' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup.
-			echo '<span>' . esc_html__( 'Add', 'posts-to-newsletter' ) . '</span>';
-			echo '</button>';
-		}
-
-		echo '</li>';
+		require DIR . 'templates/article-item.php';
 	}
 
 	/**

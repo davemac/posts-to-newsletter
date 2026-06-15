@@ -100,7 +100,7 @@ $ptn_selected_count = count( $selected_posts );
 				<ul id="ptn-available" class="list list--avail">
 					<?php
 					foreach ( $recent_posts as $post_id ) {
-						$this->render_item( (int) $post_id, false );
+						$this->render_item( (int) $post_id );
 					}
 					?>
 				</ul>

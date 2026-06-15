@@ -604,30 +604,6 @@
 	box-shadow: var( --ptn-shadow-md );
 }
 
-/* drag handle */
-.ptn-curation .handle {
-	flex: none;
-	width: 20px;
-	display: grid;
-	place-items: center;
-	color: var( --ptn-ink-4 );
-	cursor: grab;
-}
-.ptn-curation .handle:active {
-	cursor: grabbing;
-}
-.ptn-curation .handle .ico {
-	width: 16px;
-	height: 16px;
-}
-
-/* The handle + order index render in every row so an item keeps them when moved
-   between columns; only the selected tray reveals them. */
-.ptn-curation #ptn-available .handle,
-.ptn-curation #ptn-available .row__index {
-	display: none;
-}
-
 /* thumb */
 .ptn-curation .thumb {
 	flex: none;
@@ -722,59 +698,33 @@
 	flex: none;
 }
 
-/* row action buttons */
+/* compact icon-only Add control (matches the mockup; keeps the title roomy) */
 .ptn-curation .addbtn {
 	flex: none;
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
+	align-self: flex-start;
+	width: 34px;
 	height: 34px;
-	padding: 0 14px 0 12px;
-	border-radius: 8px;
-	border: 1px solid transparent;
+	display: grid;
+	place-items: center;
+	padding: 0;
+	border-radius: 50%;
+	border: 0;
 	background: var( --ptn-brand-green-soft );
 	color: var( --ptn-brand-green-strong );
-	font: inherit;
-	font-size: 13px;
-	font-weight: 600;
 	cursor: pointer;
 	transition: background 0.13s, color 0.13s;
 }
 .ptn-curation .addbtn .ico {
-	width: 14px;
-	height: 14px;
+	width: 17px;
+	height: 17px;
 }
 .ptn-curation .addbtn:hover {
-	background: color-mix( in srgb, var( --ptn-brand-green ) 16%, #fff );
-	color: var( --ptn-brand-green-strong );
+	background: color-mix( in srgb, var( --ptn-brand-green ) 18%, #fff );
 }
-.ptn-curation .addbtn.is-added {
-	border-color: var( --ptn-ok );
-	color: var( --ptn-ok );
+.ptn-curation .ptn-item.is-added .addbtn {
 	background: var( --ptn-ok-soft );
-}
-
-.ptn-curation .removebtn {
-	flex: none;
-	width: 30px;
-	height: 30px;
-	display: grid;
-	place-items: center;
-	border-radius: 8px;
-	border: 1px solid transparent;
-	background: none;
-	color: var( --ptn-ink-4 );
-	cursor: pointer;
-	transition: all 0.13s;
-}
-.ptn-curation .removebtn .ico {
-	width: 16px;
-	height: 16px;
-}
-.ptn-curation .removebtn:hover {
-	background: var( --ptn-danger-soft );
-	color: var( --ptn-danger );
-	border-color: color-mix( in srgb, var( --ptn-danger ) 20%, transparent );
+	color: var( --ptn-ok );
+	cursor: default;
 }
 
 /* density modifiers */
@@ -826,13 +776,13 @@
    ============================================================ */
 .ptn-curation .compose {
 	display: grid;
-	grid-template-columns: 320px minmax( 0, 1fr ) 340px;
-	gap: 16px;
+	grid-template-columns: 410px minmax( 0, 1fr ) 330px;
+	gap: 10px;
 	align-items: start;
 }
 @media ( max-width: 1280px ) {
 	.ptn-curation .compose {
-		grid-template-columns: 300px minmax( 0, 1fr );
+		grid-template-columns: 340px minmax( 0, 1fr );
 	}
 	.ptn-curation .compose__delivery {
 		grid-column: 1 / -1;

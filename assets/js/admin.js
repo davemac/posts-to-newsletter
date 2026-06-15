@@ -58,12 +58,12 @@
 	// cannot be added twice; removing it from the canvas restores the Add button.
 	function markAdded( $row ) {
 		$row.addClass( 'is-added' );
-		$row.find( '.ptn-add' ).prop( 'disabled', true ).html( ICONS.check ).append( $( '<span></span>' ).text( i18n.added || 'Added' ) );
+		$row.find( '.ptn-add' ).prop( 'disabled', true ).attr( 'aria-label', i18n.added || 'Added' ).html( ICONS.check );
 	}
 
 	function unmarkAdded( $row ) {
 		$row.removeClass( 'is-added' );
-		$row.find( '.ptn-add' ).prop( 'disabled', false ).html( ICONS.plus ).append( $( '<span></span>' ).text( i18n.add || 'Add' ) );
+		$row.find( '.ptn-add' ).prop( 'disabled', false ).attr( 'aria-label', i18n.add || 'Add' ).html( ICONS.plus );
 	}
 
 	function syncAddedStates() {
