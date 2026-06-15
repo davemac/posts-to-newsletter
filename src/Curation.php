@@ -102,7 +102,7 @@ class Curation {
 				'callback'            => array( $this, 'save_selection' ),
 				'permission_callback' => $can,
 				'args'                => array(
-					'ids'          => array(
+					'ids'      => array(
 						'required' => true,
 						'type'     => 'array',
 						'maxItems' => Selection::MAX_SELECTION,
@@ -110,15 +110,15 @@ class Curation {
 					),
 					// The edition's content fields ride along on the same autosave.
 					// All optional: omitting one leaves its stored value untouched.
-					'subject'      => array(
+					'subject'  => array(
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'preview_text' => array(
+					'intro'    => array(
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'template'     => array(
+					'template' => array(
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_key',
 					),
@@ -176,9 +176,9 @@ class Curation {
 		if ( null !== $subject ) {
 			update_option( Selection::SUBJECT_OPTION, (string) $subject );
 		}
-		$preview_text = $request->get_param( 'preview_text' );
-		if ( null !== $preview_text ) {
-			update_option( Selection::PREVIEW_OPTION, (string) $preview_text );
+		$intro = $request->get_param( 'intro' );
+		if ( null !== $intro ) {
+			update_option( Selection::INTRO_OPTION, (string) $intro );
 		}
 		$template = $request->get_param( 'template' );
 		if ( null !== $template ) {
@@ -264,16 +264,16 @@ class Curation {
 		$preview_mc       = add_query_arg( array( Renderer::PLATFORM_VAR => 'mailchimp' ), home_url( '/ptn-newsletter/' ) );
 		$settings_url     = admin_url( 'admin.php?page=' . Settings::PAGE );
 		$subject          = Selection::subject();
-		$preview_text     = Selection::preview_text();
 		$templates        = Templates::all();
 		$current_template = Templates::current();
 		$logo_url         = $settings->logo_url();
 		$hero_url         = $settings->hero_url();
 		$site_name        = (string) $settings->get( 'site_name' );
 		$subscribe_url    = (string) $settings->get( 'subscribe_url' );
-		// The canvas is a visual preview, so resolve the {firstname} token to a
-		// neutral placeholder rather than a platform merge tag.
-		$intro            = str_replace( '{firstname}', __( 'there', 'posts-to-newsletter' ), (string) $settings->get( 'intro' ) );
+		// The intro is inline-editable in the canvas (per-edition), passed raw with
+		// the {firstname} token intact — the editor sees and edits the literal token
+		// and the email resolves it on render.
+		$intro            = Selection::intro();
 
 		require DIR . 'templates/curation-page.php';
 	}

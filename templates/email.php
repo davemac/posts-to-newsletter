@@ -16,7 +16,6 @@
  * @var string              $subscribe  Subscribe URL.
  * @var string              $intro      Intro line (personalisation already applied).
  * @var string              $subject    Edition subject line (may be empty).
- * @var string              $preview_text Edition inbox preview text (may be empty).
  * @var \PostsToNewsletter\Renderer       $this       Renderer (for render_card()).
  */
 
@@ -41,12 +40,8 @@ defined( 'ABSPATH' ) || exit;
 <body style="margin:0; padding:0; background-color:#f4f4f4;">
 
 	<div style="display:none; max-height:0; overflow:hidden;"><?php
-	if ( '' !== $preview_text ) {
-		echo esc_html( $preview_text );
-	} else {
 		/* translators: %s: site/publication name. */
 		printf( esc_html__( 'The latest news from %s.', 'posts-to-newsletter' ), esc_html( $site_name ) );
-	}
 	?> <?php echo $tokens['preheader']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- platform merge-tag markup. ?></div>
 
 	<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">

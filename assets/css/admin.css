@@ -795,12 +795,29 @@
 	height: auto;
 	border-bottom: 4px solid var( --ptn-brand, #c30 );
 }
+/* inline-editable intro line */
 .ptn-curation .ptn-pv__intro {
 	text-align: center;
 	font-size: 15px;
 	line-height: 1.5;
 	color: #333;
 	margin: 0 0 18px;
+	padding: 6px 10px;
+	border-radius: 8px;
+	cursor: text;
+	transition: background 0.13s, box-shadow 0.13s;
+}
+.ptn-curation .ptn-pv__intro:hover {
+	background: #f5f6f8;
+}
+.ptn-curation .ptn-pv__intro:focus {
+	outline: none;
+	background: #fff;
+	box-shadow: 0 0 0 2px var( --ptn-accent-ring );
+}
+.ptn-curation .ptn-pv__intro:empty::before {
+	content: attr( data-placeholder );
+	color: var( --ptn-ink-4 );
 }
 
 /* sortable 2-up article grid — each item is the email's own card (render_card) */
@@ -935,18 +952,21 @@
 	margin: 0 0 16px;
 	padding: 0;
 }
-.ptn-curation .dfield {
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
-	margin-bottom: 16px;
+/* Subject line — sits below the template controls, constrained to the email's
+   600px width (and centred) so it lines up with the canvas; styled like the
+   standard form fields so long subjects aren't cut off. */
+.ptn-curation .ptn-subjectbar {
+	max-width: 600px;
+	margin: 0 auto 16px;
 }
-.ptn-curation .dfield label {
+.ptn-curation .ptn-subjectbar label {
+	display: block;
 	font-size: 13px;
 	font-weight: 600;
 	color: var( --ptn-ink );
+	margin-bottom: 6px;
 }
-.ptn-curation .dinput {
+.ptn-curation .ptn-subject-input {
 	width: 100%;
 	height: 40px;
 	margin: 0;
@@ -960,10 +980,10 @@
 	box-shadow: var( --ptn-shadow-sm );
 	transition: border-color 0.15s, box-shadow 0.15s;
 }
-.ptn-curation .dinput::placeholder {
+.ptn-curation .ptn-subject-input::placeholder {
 	color: var( --ptn-ink-4 );
 }
-.ptn-curation .dinput:focus {
+.ptn-curation .ptn-subject-input:focus {
 	outline: none;
 	border-color: var( --ptn-accent );
 	box-shadow: 0 0 0 3px var( --ptn-accent-ring );
@@ -1180,8 +1200,7 @@
 }
 
 .ptn-settings-page .input,
-.ptn-settings-page .select,
-.ptn-settings-page .textarea {
+.ptn-settings-page .select {
 	width: 100%;
 	max-width: 100%;
 	font: inherit;
@@ -1195,20 +1214,11 @@
 	margin: 0;
 	transition: border-color 0.15s, box-shadow 0.15s;
 }
-.ptn-settings-page .textarea {
-	height: auto;
-	min-height: 64px;
-	padding: 9px 12px;
-	resize: vertical;
-	line-height: 1.5;
-}
-.ptn-settings-page .input::placeholder,
-.ptn-settings-page .textarea::placeholder {
+.ptn-settings-page .input::placeholder {
 	color: var( --ptn-ink-4 );
 }
 .ptn-settings-page .input:focus,
-.ptn-settings-page .select:focus,
-.ptn-settings-page .textarea:focus {
+.ptn-settings-page .select:focus {
 	outline: none;
 	border-color: var( --ptn-accent );
 	box-shadow: 0 0 0 3px var( --ptn-accent-ring );
@@ -1225,6 +1235,37 @@
 }
 
 /* media frames */
+/* Branding card: logo + hero media sit on one row beside the text/colour fields. */
+.ptn-settings-page .brandrow {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 36px;
+	align-items: flex-start;
+	margin-bottom: 24px;
+}
+.ptn-settings-page .brandrow .media-row {
+	flex: 0 0 auto;
+	margin-bottom: 0;
+}
+.ptn-settings-page .brandrow__fields {
+	flex: 1 1 460px;
+	min-width: 0;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px 24px;
+	align-content: start;
+}
+@media ( max-width: 1080px ) {
+	.ptn-settings-page .brandrow__fields {
+		flex-basis: 100%;
+	}
+}
+@media ( max-width: 600px ) {
+	.ptn-settings-page .brandrow__fields {
+		grid-template-columns: 1fr;
+	}
+}
+
 .ptn-settings-page .media-row {
 	display: flex;
 	flex-wrap: wrap;

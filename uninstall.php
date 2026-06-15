@@ -12,5 +12,5 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 delete_option( 'ptn_settings' );
 delete_option( 'ptn_newsletter_post_ids' );
 delete_option( 'ptn_subject' );
-delete_option( 'ptn_preview_text' );
+delete_option( 'ptn_intro' );
 delete_option( 'ptn_template' );

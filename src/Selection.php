@@ -33,11 +33,12 @@ class Selection {
 	public const SUBJECT_OPTION = 'ptn_subject';
 
 	/**
-	 * Option storing the edition's inbox preview/preheader text.
+	 * Option storing the edition's intro line (per-edition override of the
+	 * Settings default; may contain the {firstname} token).
 	 *
 	 * @var string
 	 */
-	public const PREVIEW_OPTION = 'ptn_preview_text';
+	public const INTRO_OPTION = 'ptn_intro';
 
 	/**
 	 * Upper bound on how many posts a newsletter can contain. Caps the stored
@@ -133,12 +134,14 @@ class Selection {
 	}
 
 	/**
-	 * The edition inbox preview/preheader text.
+	 * The edition's per-edition intro override, or an empty string when unset
+	 * (the caller then falls back to the Settings default intro). May contain the
+	 * {firstname} token, which the caller resolves.
 	 *
 	 * @return string
 	 */
-	public static function preview_text(): string {
-		return sanitize_text_field( (string) get_option( self::PREVIEW_OPTION, '' ) );
+	public static function intro(): string {
+		return sanitize_text_field( (string) get_option( self::INTRO_OPTION, '' ) );
 	}
 
 	/**

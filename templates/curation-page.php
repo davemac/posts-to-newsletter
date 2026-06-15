@@ -18,14 +18,13 @@
  * @var string         $accent_color     Brand accent colour (drives the author pills).
  * @var string         $brand_color      Brand colour (hero border, subscribe button).
  * @var string         $subject          Edition subject line.
- * @var string         $preview_text     Edition inbox preview text.
  * @var array<string,array{label:string,file:string}> $templates Registered templates.
  * @var string         $current_template Chosen template id.
  * @var string         $logo_url         Masthead logo URL (may be empty).
  * @var string         $hero_url         Hero image URL (may be empty).
  * @var string         $site_name        Publication name.
  * @var string         $subscribe_url    Subscribe URL.
- * @var string         $intro            Intro line ({firstname} resolved).
+ * @var string         $intro            Intro line, raw (inline-editable; {firstname} token intact).
  * @var \PostsToNewsletter\Curation  $this           Curation (for render_item()/render_canvas_card()).
  */
 
@@ -128,6 +127,11 @@ $ptn_selected_count = count( $selected_posts );
 				</div>
 			</div>
 
+			<div class="ptn-subjectbar">
+				<label for="ptn-subject"><?php esc_html_e( 'Subject line', 'posts-to-newsletter' ); ?></label>
+				<input type="text" id="ptn-subject" class="ptn-subject-input" maxlength="150" value="<?php echo esc_attr( $subject ); ?>" placeholder="<?php esc_attr_e( 'Subject line — defaults to the lead story', 'posts-to-newsletter' ); ?>" />
+			</div>
+
 			<div class="ptn-pv-stage">
 				<div class="ptn-pv" data-mode="desktop">
 					<?php if ( '' !== $logo_url ) : ?>
@@ -140,9 +144,7 @@ $ptn_selected_count = count( $selected_posts );
 						<div class="ptn-pv__hero"><img src="<?php echo esc_url( $hero_url ); ?>" alt="" /></div>
 					<?php endif; ?>
 
-					<?php if ( '' !== trim( $intro ) ) : ?>
-						<p class="ptn-pv__intro"><?php echo esc_html( $intro ); ?></p>
-					<?php endif; ?>
+					<p class="ptn-pv__intro" id="ptn-intro" contenteditable="true" role="textbox" aria-label="<?php esc_attr_e( 'Intro greeting', 'posts-to-newsletter' ); ?>" data-placeholder="<?php esc_attr_e( 'Add an intro line…', 'posts-to-newsletter' ); ?>"><?php echo esc_html( $intro ); ?></p>
 
 					<ul id="ptn-selected" class="ptn-pv__grid ptn-sortable">
 						<?php
@@ -192,19 +194,9 @@ $ptn_selected_count = count( $selected_posts );
 		<aside class="compose__delivery col">
 			<h2 class="dpanel__title"><?php esc_html_e( 'Delivery', 'posts-to-newsletter' ); ?></h2>
 
-			<div class="dfield">
-				<label for="ptn-subject"><?php esc_html_e( 'Subject line', 'posts-to-newsletter' ); ?></label>
-				<input type="text" id="ptn-subject" class="dinput" maxlength="150" value="<?php echo esc_attr( $subject ); ?>" placeholder="<?php esc_attr_e( 'Defaults to the lead story', 'posts-to-newsletter' ); ?>" />
-			</div>
-
-			<div class="dfield">
-				<label for="ptn-preview"><?php esc_html_e( 'Preview text', 'posts-to-newsletter' ); ?></label>
-				<input type="text" id="ptn-preview" class="dinput" maxlength="150" value="<?php echo esc_attr( $preview_text ); ?>" placeholder="<?php esc_attr_e( 'Short inbox preview line', 'posts-to-newsletter' ); ?>" />
-			</div>
-
 			<?php
 			/**
-			 * Fires inside the Delivery panel, below the subject + preview fields.
+			 * Fires at the top of the Delivery panel.
 			 *
 			 * Add-ons render the platform send-to controls and the push button here.
 			 * When nothing is hooked, the core shows an upgrade upsell (below) and the
@@ -227,10 +219,10 @@ $ptn_selected_count = count( $selected_posts );
 					<li>
 						<span class="dmanual__name"><?php esc_html_e( 'Campaign Monitor', 'posts-to-newsletter' ); ?></span>
 						<span class="dmanual__btns">
-							<a class="iconbtn" href="<?php echo esc_url( $preview_cm ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'Open preview', 'posts-to-newsletter' ); ?>">
+							<a class="iconbtn" href="<?php echo esc_url( $preview_cm ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'Open preview', 'posts-to-newsletter' ); ?>" title="<?php esc_attr_e( 'Open preview in a new tab', 'posts-to-newsletter' ); ?>">
 								<?php echo $this->icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
 							</a>
-							<button type="button" class="iconbtn ptn-copy-url" data-url="<?php echo esc_url( $preview_cm ); ?>" aria-label="<?php esc_attr_e( 'Copy import URL', 'posts-to-newsletter' ); ?>">
+							<button type="button" class="iconbtn ptn-copy-url" data-url="<?php echo esc_url( $preview_cm ); ?>" aria-label="<?php esc_attr_e( 'Copy import URL', 'posts-to-newsletter' ); ?>" title="<?php esc_attr_e( 'Copy import URL', 'posts-to-newsletter' ); ?>">
 								<?php echo $this->icon( 'copy' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
 							</button>
 						</span>
@@ -238,10 +230,10 @@ $ptn_selected_count = count( $selected_posts );
 					<li>
 						<span class="dmanual__name"><?php esc_html_e( 'Mailchimp', 'posts-to-newsletter' ); ?></span>
 						<span class="dmanual__btns">
-							<a class="iconbtn" href="<?php echo esc_url( $preview_mc ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'Open preview', 'posts-to-newsletter' ); ?>">
+							<a class="iconbtn" href="<?php echo esc_url( $preview_mc ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'Open preview', 'posts-to-newsletter' ); ?>" title="<?php esc_attr_e( 'Open preview in a new tab', 'posts-to-newsletter' ); ?>">
 								<?php echo $this->icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
 							</a>
-							<button type="button" class="iconbtn ptn-copy-url" data-url="<?php echo esc_url( $preview_mc ); ?>" aria-label="<?php esc_attr_e( 'Copy import URL', 'posts-to-newsletter' ); ?>">
+							<button type="button" class="iconbtn ptn-copy-url" data-url="<?php echo esc_url( $preview_mc ); ?>" aria-label="<?php esc_attr_e( 'Copy import URL', 'posts-to-newsletter' ); ?>" title="<?php esc_attr_e( 'Copy import URL', 'posts-to-newsletter' ); ?>">
 								<?php echo $this->icon( 'copy' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
 							</button>
 						</span>
