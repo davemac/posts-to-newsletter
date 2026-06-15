@@ -962,34 +962,43 @@
 	grid-template-columns: 1fr;
 }
 
-/* wrapper around one email card, carrying the drag/remove affordances */
+/* wrapper around one email card — the whole card is the drag target */
 .ptn-curation .ptn-pv-card {
 	position: relative;
+	cursor: grab;
+}
+.ptn-curation .ptn-pv-card.is-dragging {
+	cursor: grabbing;
+	opacity: 0.55;
+	/* let elementFromPoint see the card beneath while reordering */
+	pointer-events: none;
+}
+/* In the editor the cards reorder rather than navigate, so neutralise the email
+   card's own links (and their native image drag) — drag works from anywhere. */
+.ptn-curation .ptn-pv-card a {
+	pointer-events: none;
 }
 
-/* drag handle + remove, revealed on card hover */
+/* drag-affordance grip + remove, revealed on card hover */
 .ptn-curation .ptn-pv-card__handle {
 	position: absolute;
-	top: 0;
-	left: -13px;
+	top: 8px;
+	left: 8px;
 	width: 24px;
 	height: 24px;
 	display: grid;
 	place-items: center;
 	color: var( --ptn-ink-3 );
-	background: #fff;
+	background: rgba( 255, 255, 255, 0.92 );
 	border-radius: 6px;
 	box-shadow: var( --ptn-shadow-sm );
-	cursor: grab;
 	opacity: 0;
 	transition: opacity 0.13s;
+	pointer-events: none;
 	z-index: 2;
 }
 .ptn-curation .ptn-pv-card:hover .ptn-pv-card__handle {
 	opacity: 1;
-}
-.ptn-curation .ptn-pv-card__handle:active {
-	cursor: grabbing;
 }
 .ptn-curation .ptn-pv-remove {
 	position: absolute;
@@ -1015,14 +1024,6 @@
 .ptn-curation .ptn-pv-remove:hover {
 	background: var( --ptn-danger-soft );
 	color: var( --ptn-danger );
-}
-
-/* sortable drop placeholder (occupies a grid cell) */
-.ptn-curation .ptn-pv-placeholder {
-	border: 2px dashed var( --ptn-accent );
-	border-radius: 8px;
-	background: var( --ptn-accent-soft );
-	min-height: 200px;
 }
 
 .ptn-curation .ptn-pv__empty {

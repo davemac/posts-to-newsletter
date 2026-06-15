@@ -56,7 +56,7 @@ class Curation {
 		wp_enqueue_script(
 			'ptn-admin',
 			URL . 'assets/js/admin.js',
-			array( 'jquery', 'jquery-ui-sortable' ),
+			array( 'jquery' ),
 			Plugin::asset_version( 'assets/js/admin.js' ),
 			true
 		);

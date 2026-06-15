@@ -195,15 +195,73 @@
 		debounceSave();
 	} );
 
-	// Drag to reorder the two-up grid of email cards.
-	$selected.sortable( {
-		items: '> .ptn-pv-card',
-		handle: '.ptn-handle',
-		placeholder: 'ptn-pv-placeholder',
-		forcePlaceholderSize: true,
-		tolerance: 'pointer',
-		update: debounceSave
-	} );
+	// Native pointer-based drag-to-reorder (no jQuery UI). Drag a card from
+	// anywhere; it reorders live across the two-column grid and autosaves on drop.
+	( function () {
+		var list = $selected[ 0 ];
+		if ( ! list ) {
+			return;
+		}
+		var dragging = null;
+		var startX = 0;
+		var startY = 0;
+		var active = false;
+
+		list.addEventListener( 'pointerdown', function ( e ) {
+			if ( 0 !== e.button ) {
+				return;
+			}
+			var card = e.target.closest( '.ptn-pv-card' );
+			// Ignore the remove button so its own click still fires.
+			if ( ! card || e.target.closest( '.ptn-pv-remove' ) ) {
+				return;
+			}
+			dragging = card;
+			startX = e.clientX;
+			startY = e.clientY;
+			active = false;
+			try { list.setPointerCapture( e.pointerId ); } catch ( err ) {}
+		} );
+
+		list.addEventListener( 'pointermove', function ( e ) {
+			if ( ! dragging ) {
+				return;
+			}
+			// Only start once the pointer moves past a small threshold.
+			if ( ! active ) {
+				if ( Math.abs( e.clientX - startX ) + Math.abs( e.clientY - startY ) < 6 ) {
+					return;
+				}
+				active = true;
+				dragging.classList.add( 'is-dragging' );
+			}
+			// The dragged card is pointer-events:none while active, so this finds the
+			// card beneath the pointer; insert before/after it by horizontal midpoint.
+			var under = document.elementFromPoint( e.clientX, e.clientY );
+			var over = under && under.closest ? under.closest( '.ptn-pv-card' ) : null;
+			if ( over && over !== dragging && over.parentNode === list ) {
+				var r = over.getBoundingClientRect();
+				var before = e.clientX < r.left + r.width / 2;
+				list.insertBefore( dragging, before ? over : over.nextSibling );
+			}
+		} );
+
+		function endDrag( e ) {
+			if ( ! dragging ) {
+				return;
+			}
+			var wasActive = active;
+			dragging.classList.remove( 'is-dragging' );
+			try { list.releasePointerCapture( e.pointerId ); } catch ( err ) {}
+			dragging = null;
+			active = false;
+			if ( wasActive ) {
+				debounceSave();
+			}
+		}
+		list.addEventListener( 'pointerup', endDrag );
+		list.addEventListener( 'pointercancel', endDrag );
+	} )();
 
 	function emptyState() {
 		return $( '<li class="ptn-empty empty"></li>' )
