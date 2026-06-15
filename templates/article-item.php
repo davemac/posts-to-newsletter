@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php if ( '' !== $byline ) : ?>
 				<span class="authorpill"><?php echo esc_html( $byline ); ?></span>
 			<?php endif; ?>
-			<span class="datepill"><?php echo esc_html( get_the_date( '', $post_id ) ); ?></span>
+			<span class="datepill"><?php echo esc_html( get_the_date( 'M j', $post_id ) ); ?></span>
 			<?php if ( null !== $category ) : ?>
 				<span class="catpill"><?php echo esc_html( $category->name ); ?></span>
 			<?php endif; ?>

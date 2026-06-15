@@ -41,7 +41,7 @@
 
 	/* Row density (default: comfortable). Overridden by the .density-* modifiers. */
 	--ptn-row-pad-y: 11px;
-	--ptn-thumb: 64px;
+	--ptn-thumb: 54px;
 
 	--ptn-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
@@ -652,50 +652,58 @@
 	-webkit-box-orient: vertical;
 	text-wrap: pretty;
 }
+/* Meta on a single row: author + date + category. The author pill is the only
+   flexible item, so it ellipsis-truncates when a name is long while the date and
+   category kicker stay intact on the same line. */
 .ptn-curation .meta__sub {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	align-items: center;
-	gap: 6px 8px;
+	gap: 6px;
 	font-size: 12px;
 	color: var( --ptn-ink-3 );
+	min-width: 0;
 }
 
-/* Meta — date + author render as pills (date grey; author tinted from the brand
-   accent the curation wrapper sets from ptn_settings, so it tracks the site's
-   branding without depending on the theme's stylesheet). The category renders as
-   a plain uppercase accent kicker (no pill), matching the email renderer. */
+/* Date + author render as pills (date grey; author tinted from the brand accent
+   the curation wrapper sets from ptn_settings). The category renders as a plain
+   uppercase accent kicker (no pill), matching the email renderer. */
 .ptn-curation .datepill,
 .ptn-curation .authorpill {
-	display: inline-flex;
-	align-items: center;
-	height: 19px;
-	padding: 0 9px;
+	height: 18px;
+	padding: 0 8px;
 	border-radius: 999px;
-	font-size: 11px;
+	font-size: 10.5px;
 	font-weight: 500;
 	letter-spacing: 0.01em;
 	white-space: nowrap;
-	flex: none;
 }
 .ptn-curation .datepill {
+	display: inline-flex;
+	align-items: center;
+	flex: none;
 	color: var( --ptn-ink-2 );
 	background: #f0f1f3;
 }
 .ptn-curation .authorpill {
+	flex: 0 1 auto;
+	min-width: 0;
+	max-width: 100%;
+	display: inline-block;
+	line-height: 18px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	color: var( --ptn-author-color, var( --ptn-danger ) );
 	background: color-mix( in srgb, var( --ptn-author-color, var( --ptn-danger ) ) 12%, #fff );
 }
 .ptn-curation .catpill {
-	display: inline-flex;
-	align-items: center;
-	font-size: 10.5px;
+	flex: none;
+	font-size: 10px;
 	font-weight: 700;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
 	color: var( --ptn-author-color, var( --ptn-danger ) );
 	white-space: nowrap;
-	flex: none;
 }
 
 /* compact icon-only Add control (matches the mockup; keeps the title roomy) */
