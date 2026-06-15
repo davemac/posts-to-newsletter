@@ -196,7 +196,7 @@ $ptn_selected_count = count( $selected_posts );
 
 			<?php
 			/**
-			 * Fires inside the Delivery panel, below the subject + preview fields.
+			 * Fires at the top of the Delivery panel.
 			 *
 			 * Add-ons render the platform send-to controls and the push button here.
 			 * When nothing is hooked, the core shows an upgrade upsell (below) and the

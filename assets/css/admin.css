@@ -1200,8 +1200,7 @@
 }
 
 .ptn-settings-page .input,
-.ptn-settings-page .select,
-.ptn-settings-page .textarea {
+.ptn-settings-page .select {
 	width: 100%;
 	max-width: 100%;
 	font: inherit;
@@ -1215,20 +1214,11 @@
 	margin: 0;
 	transition: border-color 0.15s, box-shadow 0.15s;
 }
-.ptn-settings-page .textarea {
-	height: auto;
-	min-height: 64px;
-	padding: 9px 12px;
-	resize: vertical;
-	line-height: 1.5;
-}
-.ptn-settings-page .input::placeholder,
-.ptn-settings-page .textarea::placeholder {
+.ptn-settings-page .input::placeholder {
 	color: var( --ptn-ink-4 );
 }
 .ptn-settings-page .input:focus,
-.ptn-settings-page .select:focus,
-.ptn-settings-page .textarea:focus {
+.ptn-settings-page .select:focus {
 	outline: none;
 	border-color: var( --ptn-accent );
 	box-shadow: 0 0 0 3px var( --ptn-accent-ring );

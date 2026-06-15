@@ -102,7 +102,7 @@ class Curation {
 				'callback'            => array( $this, 'save_selection' ),
 				'permission_callback' => $can,
 				'args'                => array(
-					'ids'          => array(
+					'ids'      => array(
 						'required' => true,
 						'type'     => 'array',
 						'maxItems' => Selection::MAX_SELECTION,
