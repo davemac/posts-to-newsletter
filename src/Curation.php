@@ -67,6 +67,7 @@ class Curation {
 			array(
 				'saveUrl'   => esc_url_raw( rest_url( self::REST_NS . '/selection' ) ),
 				'searchUrl' => esc_url_raw( rest_url( self::REST_NS . '/search' ) ),
+				'cardUrl'   => esc_url_raw( rest_url( self::REST_NS . '/card' ) ),
 				'nonce'     => wp_create_nonce( 'wp_rest' ),
 				'i18n'      => array(
 					'saving'        => __( 'Saving…', 'posts-to-newsletter' ),
@@ -74,6 +75,7 @@ class Curation {
 					'saved'         => __( 'Saved · %d selected', 'posts-to-newsletter' ),
 					'saveFailed'    => __( 'Save failed — please try again', 'posts-to-newsletter' ),
 					'add'           => __( 'Add', 'posts-to-newsletter' ),
+					'added'         => __( 'Added', 'posts-to-newsletter' ),
 					'remove'        => __( 'Remove', 'posts-to-newsletter' ),
 					'noMatches'     => __( 'No matching articles.', 'posts-to-newsletter' ),
 					'noMatchesHint' => __( 'Try a different search or clear the filter.', 'posts-to-newsletter' ),
@@ -136,6 +138,22 @@ class Curation {
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_text_field',
 						'default'           => '',
+					),
+				),
+			)
+		);
+
+		register_rest_route(
+			self::REST_NS,
+			'/card',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'preview_card' ),
+				'permission_callback' => $can,
+				'args'                => array(
+					'id' => array(
+						'required' => true,
+						'type'     => 'integer',
 					),
 				),
 			)
@@ -209,16 +227,36 @@ class Curation {
 	}
 
 	/**
+	 * Return the live-canvas card markup for one article (used when an article is
+	 * added from the left pane).
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response
+	 */
+	public function preview_card( WP_REST_Request $request ): WP_REST_Response {
+		$id = absint( $request->get_param( 'id' ) );
+
+		ob_start();
+		if ( 0 !== $id && 'publish' === get_post_status( $id ) ) {
+			$this->render_preview_card( $id );
+		}
+
+		return new WP_REST_Response( array( 'id' => $id, 'html' => ob_get_clean() ), 200 );
+	}
+
+	/**
 	 * Render the curation admin page.
 	 *
 	 * @return void
 	 */
 	public function render_admin_page(): void {
+		$settings         = new Settings();
 		$selected_ids     = Selection::ids();
 		$selected_posts   = Selection::posts( $selected_ids );
 		$recent_posts     = $this->query_recent();
 		$categories       = get_categories( array( 'orderby' => 'count', 'order' => 'DESC' ) );
-		$accent_color     = ( new Settings() )->get( 'accent_color' );
+		$accent_color     = (string) $settings->get( 'accent_color' );
+		$brand_color      = (string) $settings->get( 'brand_color' );
 		$preview_cm       = add_query_arg( array( Renderer::PLATFORM_VAR => 'campaignmonitor' ), home_url( '/ptn-newsletter/' ) );
 		$preview_mc       = add_query_arg( array( Renderer::PLATFORM_VAR => 'mailchimp' ), home_url( '/ptn-newsletter/' ) );
 		$settings_url     = admin_url( 'admin.php?page=' . Settings::PAGE );
@@ -226,8 +264,32 @@ class Curation {
 		$preview_text     = Selection::preview_text();
 		$templates        = Templates::all();
 		$current_template = Templates::current();
+		$logo_url         = $settings->logo_url();
+		$hero_url         = $settings->hero_url();
+		$site_name        = (string) $settings->get( 'site_name' );
+		$subscribe_url    = (string) $settings->get( 'subscribe_url' );
+		// The canvas is a visual preview, so resolve the {firstname} token to a
+		// neutral placeholder rather than a platform merge tag.
+		$intro            = str_replace( '{firstname}', __( 'there', 'posts-to-newsletter' ), (string) $settings->get( 'intro' ) );
 
 		require DIR . 'templates/curation-page.php';
+	}
+
+	/**
+	 * Render one article as a live-canvas card by including its template part.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return void
+	 */
+	public function render_preview_card( int $post_id ): void {
+		$thumb_id = get_post_thumbnail_id( $post_id );
+		$image    = 0 !== $thumb_id ? (string) wp_get_attachment_image_url( $thumb_id, 'large' ) : '';
+		$byline   = Selection::byline( $post_id );
+		$cats     = get_the_category( $post_id );
+		$category = ! empty( $cats ) ? $cats[0]->name : '';
+		$excerpt  = wp_trim_words( get_the_excerpt( $post_id ), 26, '…' );
+
+		require DIR . 'templates/preview-card.php';
 	}
 
 	/**

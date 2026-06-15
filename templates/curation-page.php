@@ -2,8 +2,9 @@
 /**
  * Compose Edition admin page.
  *
- * A three-pane composer: pick/order articles on the left, a live email preview
- * in the centre, and the delivery controls on the right.
+ * A three-pane composer: pick articles on the left, a live editable canvas in
+ * the centre (drag to reorder, remove inline), and delivery on the right. The
+ * canvas is the editor — there is no separate running-order list.
  *
  * @package PostsToNewsletter
  *
@@ -15,27 +16,32 @@
  * @var string         $preview_mc       Mailchimp preview URL.
  * @var string         $settings_url     Settings page URL.
  * @var string         $accent_color     Brand accent colour (drives the author pills).
+ * @var string         $brand_color      Brand colour (hero border, subscribe button).
  * @var string         $subject          Edition subject line.
  * @var string         $preview_text     Edition inbox preview text.
  * @var array<string,array{label:string,file:string}> $templates Registered templates.
  * @var string         $current_template Chosen template id.
- * @var \PostsToNewsletter\Curation  $this           Curation (for render_item()).
+ * @var string         $logo_url         Masthead logo URL (may be empty).
+ * @var string         $hero_url         Hero image URL (may be empty).
+ * @var string         $site_name        Publication name.
+ * @var string         $subscribe_url    Subscribe URL.
+ * @var string         $intro            Intro line ({firstname} resolved).
+ * @var \PostsToNewsletter\Curation  $this           Curation (for render_item()/render_preview_card()).
  */
 
 defined( 'ABSPATH' ) || exit;
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- View partial: required within Curation::render_admin_page(), so these variables are method-scoped, not global.
 
-$ptn_selected_count  = count( $selected_posts );
-$ptn_available_count = count( array_diff( $recent_posts, $selected_ids ) );
+$ptn_selected_count = count( $selected_posts );
 ?>
-<div class="wrap ptn-curation" style="--ptn-author-color: <?php echo esc_attr( $accent_color ); ?>">
+<div class="wrap ptn-curation" style="--ptn-author-color: <?php echo esc_attr( $accent_color ); ?>; --ptn-brand: <?php echo esc_attr( $brand_color ); ?>">
 
 	<header class="pagehead">
 		<img class="ptn-pagelogo" src="<?php echo esc_url( \PostsToNewsletter\URL . 'assets/img/p2n-logo.png' ); ?>" alt="" width="40" height="40" />
 		<div class="pagehead__main">
 			<h1><?php esc_html_e( 'Compose Edition', 'posts-to-newsletter' ); ?></h1>
-			<p><?php esc_html_e( 'Curate the running order on the left — the live preview shows exactly what subscribers receive. Changes save automatically.', 'posts-to-newsletter' ); ?></p>
+			<p><?php esc_html_e( 'Add articles on the left, then drag to reorder right in the preview. Changes save automatically.', 'posts-to-newsletter' ); ?></p>
 		</div>
 		<div class="pagehead__aside">
 			<span class="savechip">
@@ -64,82 +70,44 @@ $ptn_available_count = count( array_diff( $recent_posts, $selected_ids ) );
 
 	<div class="compose">
 
-		<?php // ---------- Left: add / in-edition ---------- ?>
+		<?php // ---------- Left: add to edition ---------- ?>
 		<aside class="compose__add col">
-			<div class="ptn-tabs" role="tablist">
-				<button type="button" class="ptn-tab is-on" data-tab="add" role="tab" aria-selected="true" aria-controls="ptn-tabpanel-add">
-					<?php esc_html_e( 'Add to edition', 'posts-to-newsletter' ); ?>
-				</button>
-				<button type="button" class="ptn-tab" data-tab="edition" role="tab" aria-selected="false" aria-controls="ptn-tabpanel-edition">
-					<?php esc_html_e( 'In the edition', 'posts-to-newsletter' ); ?>
-					<span class="count" id="ptn-edition-count"><?php echo (int) $ptn_selected_count; ?></span>
+			<div class="col__head">
+				<h2><?php esc_html_e( 'Add to edition', 'posts-to-newsletter' ); ?></h2>
+				<span class="count" id="ptn-available-count"><?php echo (int) count( $recent_posts ); ?></span>
+			</div>
+
+			<div class="search">
+				<?php echo $this->icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
+				<input type="search" id="ptn-search" placeholder="<?php esc_attr_e( 'Search all articles…', 'posts-to-newsletter' ); ?>" autocomplete="off" />
+				<button type="button" class="search__clear" id="ptn-search-clear" aria-label="<?php esc_attr_e( 'Clear search', 'posts-to-newsletter' ); ?>" hidden>
+					<?php echo $this->icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
 				</button>
 			</div>
 
-			<div class="ptn-tabpanel" id="ptn-tabpanel-add" role="tabpanel">
-				<div class="search">
-					<?php echo $this->icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
-					<input type="search" id="ptn-search" placeholder="<?php esc_attr_e( 'Search all articles…', 'posts-to-newsletter' ); ?>" autocomplete="off" />
-					<button type="button" class="search__clear" id="ptn-search-clear" aria-label="<?php esc_attr_e( 'Clear search', 'posts-to-newsletter' ); ?>" hidden>
-						<?php echo $this->icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
-					</button>
+			<?php if ( ! empty( $categories ) ) : ?>
+				<div class="chips" id="ptn-chips" role="group" aria-label="<?php esc_attr_e( 'Filter by category', 'posts-to-newsletter' ); ?>">
+					<button type="button" class="chip is-on" data-cat="all" aria-pressed="true"><?php esc_html_e( 'All categories', 'posts-to-newsletter' ); ?></button>
+					<?php foreach ( $categories as $ptn_cat ) : ?>
+						<button type="button" class="chip" data-cat="<?php echo (int) $ptn_cat->term_id; ?>" aria-pressed="false">
+							<?php echo esc_html( $ptn_cat->name ); ?>
+						</button>
+					<?php endforeach; ?>
 				</div>
+			<?php endif; ?>
 
-				<?php if ( ! empty( $categories ) ) : ?>
-					<div class="chips" id="ptn-chips" role="group" aria-label="<?php esc_attr_e( 'Filter by category', 'posts-to-newsletter' ); ?>">
-						<button type="button" class="chip is-on" data-cat="all" aria-pressed="true"><?php esc_html_e( 'All categories', 'posts-to-newsletter' ); ?></button>
-						<?php foreach ( $categories as $ptn_cat ) : ?>
-							<button type="button" class="chip" data-cat="<?php echo (int) $ptn_cat->term_id; ?>" aria-pressed="false">
-								<?php echo esc_html( $ptn_cat->name ); ?>
-							</button>
-						<?php endforeach; ?>
-					</div>
-				<?php endif; ?>
-
-				<div class="scroller">
-					<ul id="ptn-available" class="list list--avail">
-						<?php
-						foreach ( $recent_posts as $post_id ) {
-							if ( in_array( $post_id, $selected_ids, true ) ) {
-								continue;
-							}
-							$this->render_item( (int) $post_id, false );
-						}
-						?>
-					</ul>
-				</div>
-			</div>
-
-			<div class="ptn-tabpanel" id="ptn-tabpanel-edition" role="tabpanel" hidden>
-				<div class="col__head">
-					<h2><?php esc_html_e( 'Running order', 'posts-to-newsletter' ); ?></h2>
-					<span class="count" id="ptn-selected-count"><?php echo (int) $ptn_selected_count; ?></span>
-					<span class="spacer"></span>
-					<button type="button" class="clearbtn" id="ptn-clear"<?php echo 0 === $ptn_selected_count ? ' hidden' : ''; ?>><?php esc_html_e( 'Clear all', 'posts-to-newsletter' ); ?></button>
-				</div>
-
-				<div class="tray">
-					<ul id="ptn-selected" class="ptn-sortable list">
-						<?php
-						foreach ( $selected_posts as $post_id ) {
-							$this->render_item( (int) $post_id, true );
-						}
-						?>
-					</ul>
-					<div class="tray__drophint" id="ptn-drophint"<?php echo $ptn_selected_count > 0 ? ' hidden' : ''; ?>>
-						<?php
-						printf(
-							/* translators: %s: the bolded word "Add". */
-							esc_html__( 'Nothing added yet — switch to %s and build your edition.', 'posts-to-newsletter' ),
-							'<strong>' . esc_html__( 'Add to edition', 'posts-to-newsletter' ) . '</strong>'
-						);
-						?>
-					</div>
-				</div>
+			<div class="scroller">
+				<ul id="ptn-available" class="list list--avail">
+					<?php
+					foreach ( $recent_posts as $post_id ) {
+						$this->render_item( (int) $post_id, false );
+					}
+					?>
+				</ul>
 			</div>
 		</aside>
 
-		<?php // ---------- Centre: live preview ---------- ?>
+		<?php // ---------- Centre: live editable canvas ---------- ?>
 		<section class="compose__preview">
 			<div class="ptn-preview-bar">
 				<div class="ptn-tpl">
@@ -153,14 +121,69 @@ $ptn_available_count = count( array_diff( $recent_posts, $selected_ids ) );
 						<span class="ptn-tpl__hint"><?php esc_html_e( 'More templates with Pro', 'posts-to-newsletter' ); ?></span>
 					<?php endif; ?>
 				</div>
+				<button type="button" class="ptn-clearlink" id="ptn-clear"<?php echo 0 === $ptn_selected_count ? ' hidden' : ''; ?>><?php esc_html_e( 'Clear all', 'posts-to-newsletter' ); ?></button>
 				<div class="ptn-viewport" role="group" aria-label="<?php esc_attr_e( 'Preview width', 'posts-to-newsletter' ); ?>">
 					<button type="button" class="ptn-viewport-toggle is-on" data-mode="desktop" aria-pressed="true"><?php esc_html_e( 'Desktop', 'posts-to-newsletter' ); ?></button>
 					<button type="button" class="ptn-viewport-toggle" data-mode="mobile" aria-pressed="false"><?php esc_html_e( 'Mobile', 'posts-to-newsletter' ); ?></button>
 				</div>
 			</div>
-			<div class="ptn-preview-stage" data-mode="desktop">
-				<div class="ptn-preview-frame-wrap">
-					<iframe id="ptn-preview-frame" title="<?php esc_attr_e( 'Newsletter preview', 'posts-to-newsletter' ); ?>" src="<?php echo esc_url( $preview_cm ); ?>" data-base="<?php echo esc_url( $preview_cm ); ?>"></iframe>
+
+			<div class="ptn-pv-stage">
+				<div class="ptn-pv" data-mode="desktop">
+					<?php if ( '' !== $logo_url ) : ?>
+						<div class="ptn-pv__masthead"><img src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( $site_name ); ?>" /></div>
+					<?php else : ?>
+						<div class="ptn-pv__masthead ptn-pv__masthead--text"><?php echo esc_html( $site_name ); ?></div>
+					<?php endif; ?>
+
+					<?php if ( '' !== $hero_url ) : ?>
+						<div class="ptn-pv__hero"><img src="<?php echo esc_url( $hero_url ); ?>" alt="" /></div>
+					<?php endif; ?>
+
+					<?php if ( '' !== trim( $intro ) ) : ?>
+						<p class="ptn-pv__intro"><?php echo esc_html( $intro ); ?></p>
+					<?php endif; ?>
+
+					<ul id="ptn-selected" class="ptn-pv__list ptn-sortable">
+						<?php
+						foreach ( $selected_posts as $post_id ) {
+							$this->render_preview_card( (int) $post_id );
+						}
+						?>
+					</ul>
+
+					<div class="ptn-pv__empty" id="ptn-drophint"<?php echo $ptn_selected_count > 0 ? ' hidden' : ''; ?>>
+						<?php
+						printf(
+							/* translators: %s: the bolded word "Add". */
+							esc_html__( 'Nothing added yet — click %s on an article to build your edition.', 'posts-to-newsletter' ),
+							'<strong>' . esc_html__( 'Add', 'posts-to-newsletter' ) . '</strong>'
+						);
+						?>
+					</div>
+
+					<div class="ptn-pv__subscribe">
+						<a href="<?php echo esc_url( $subscribe_url ); ?>" class="ptn-pv__subbtn">
+							<?php
+							/* translators: %s: site/publication name. */
+							printf( esc_html__( 'Subscribe to %s', 'posts-to-newsletter' ), esc_html( $site_name ) );
+							?>
+						</a>
+						<a class="ptn-pv__home" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+							<?php
+							/* translators: %s: site domain. */
+							printf( esc_html__( 'Read more at %s', 'posts-to-newsletter' ), esc_html( wp_parse_url( home_url(), PHP_URL_HOST ) ) );
+							?> &rarr;
+						</a>
+					</div>
+
+					<div class="ptn-pv__footer">
+						<?php
+						/* translators: %s: site/publication name. */
+						printf( esc_html__( 'You are receiving this email because you subscribed to %s.', 'posts-to-newsletter' ), esc_html( $site_name ) );
+						?>
+						<br /><span class="ptn-pv__muted"><?php esc_html_e( 'Unsubscribe · Update your preferences · View in browser', 'posts-to-newsletter' ); ?></span>
+					</div>
 				</div>
 			</div>
 		</section>

@@ -407,24 +407,7 @@
 	height: 14px;
 }
 
-/* ---------- curation columns ---------- */
-.ptn-curation .curate {
-	display: grid;
-	/* Match the distribution grid above (same template + gap) so the two lower
-	   panels line up exactly under the two platform cards. */
-	grid-template-columns: repeat( 2, minmax( 0, 1fr ) );
-	gap: 16px;
-	align-items: start;
-}
-@media ( max-width: 1080px ) {
-	.ptn-curation .curate {
-		grid-template-columns: 1fr;
-	}
-	.ptn-curation .col--out {
-		position: static !important;
-	}
-}
-
+/* ---------- column panel (left add pane) ---------- */
 .ptn-curation .col {
 	min-width: 0;
 	background: var( --ptn-surface );
@@ -432,10 +415,6 @@
 	border-radius: var( --ptn-radius-lg );
 	box-shadow: var( --ptn-shadow-sm );
 	padding: 20px 22px;
-}
-.ptn-curation .col--out {
-	position: sticky;
-	top: 46px;
 }
 
 .ptn-curation .col__head {
@@ -465,25 +444,6 @@
 	color: var( --ptn-ink-2 );
 	font-size: 12px;
 	font-weight: 700;
-}
-.ptn-curation .col--out .count {
-	background: var( --ptn-brand-green );
-	color: #fff;
-}
-.ptn-curation .col__head .spacer {
-	margin-left: auto;
-}
-.ptn-curation .clearbtn {
-	border: 0;
-	background: none;
-	cursor: pointer;
-	font: inherit;
-	font-size: 12.5px;
-	font-weight: 600;
-	color: var( --ptn-ink-3 );
-}
-.ptn-curation .clearbtn:hover {
-	color: var( --ptn-danger );
 }
 
 /* ---------- search ---------- */
@@ -606,16 +566,6 @@
 	display: none;
 }
 
-/* selected list = stacked cards inside the column panel (no separate tray fill) */
-.ptn-curation .tray {
-	min-height: 160px;
-}
-.ptn-curation .tray .list {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-}
-
 /* scroll region for the available list; small right pad keeps the scrollbar off
    the card edges and a little side breathing room stops hover shadows clipping. */
 .ptn-curation .scroller {
@@ -652,31 +602,6 @@
 .ptn-curation .row:hover {
 	border-color: #d7dade;
 	box-shadow: var( --ptn-shadow-md );
-}
-.ptn-curation .tray .row.is-dragging {
-	box-shadow: 0 14px 30px -8px rgba( 16, 24, 40, 0.28 );
-	opacity: 0.97;
-}
-
-/* order index in the selected list, driven by a CSS counter so re-ordering and
-   add/remove stay numbered without any JS bookkeeping. */
-.ptn-curation .tray .list {
-	counter-reset: ptn-order;
-}
-.ptn-curation .tray .row {
-	counter-increment: ptn-order;
-}
-.ptn-curation .row__index {
-	flex: none;
-	width: 22px;
-	text-align: center;
-	font-size: 13px;
-	font-weight: 700;
-	color: var( --ptn-brand-green );
-	font-variant-numeric: tabular-nums;
-}
-.ptn-curation .tray .row__index::before {
-	content: counter( ptn-order );
 }
 
 /* drag handle */
@@ -887,27 +812,6 @@
 	font-size: 12.5px;
 }
 
-.ptn-curation .tray__drophint {
-	border: 1.5px dashed #c9ccd2;
-	border-radius: var( --ptn-radius-sm );
-	padding: 26px 18px;
-	text-align: center;
-	color: var( --ptn-ink-4 );
-	font-size: 13px;
-}
-
-/* jQuery UI sortable placeholder, styled as the design's drop line */
-.ptn-curation .ptn-placeholder {
-	height: 3px;
-	min-height: 3px;
-	margin: -3px 4px 6px;
-	background: var( --ptn-accent );
-	border: 0;
-	border-radius: 3px;
-	box-shadow: 0 0 0 3px var( --ptn-accent-ring );
-	visibility: visible;
-}
-
 /* fade-in for newly added rows */
 @keyframes ptn-rowin {
 	from { opacity: 0; transform: translateY( -4px ); }
@@ -945,43 +849,18 @@
 	min-width: 0;
 }
 
-/* ---------- left pane tabs (Add / In the edition) ---------- */
-.ptn-curation .ptn-tabs {
-	display: flex;
-	gap: 4px;
-	margin-bottom: 16px;
-	background: #eceef1;
-	padding: 4px;
-	border-radius: 10px;
-}
-.ptn-curation .ptn-tab {
-	flex: 1 1 0;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	gap: 7px;
+/* "Clear all" link in the preview bar */
+.ptn-curation .ptn-clearlink {
 	border: 0;
 	background: none;
-	font: inherit;
-	font-size: 13px;
-	font-weight: 600;
-	color: var( --ptn-ink-2 );
-	padding: 8px 10px;
-	border-radius: 8px;
 	cursor: pointer;
-	transition: background 0.13s, color 0.13s, box-shadow 0.13s;
+	font: inherit;
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var( --ptn-ink-3 );
 }
-.ptn-curation .ptn-tab.is-on {
-	background: var( --ptn-surface );
-	color: var( --ptn-ink );
-	box-shadow: var( --ptn-shadow-sm );
-}
-.ptn-curation .ptn-tab .count {
-	background: #e0e2e6;
-}
-.ptn-curation .ptn-tab.is-on .count {
-	background: var( --ptn-brand-green );
-	color: #fff;
+.ptn-curation .ptn-clearlink:hover {
+	color: var( --ptn-danger );
 }
 
 /* ---------- centre preview pane ---------- */
@@ -1052,38 +931,256 @@
 	box-shadow: var( --ptn-shadow-sm );
 }
 
-.ptn-curation .ptn-preview-stage {
+/* ---------- live canvas (the editable email) ---------- */
+.ptn-curation .ptn-pv-stage {
 	background: var( --ptn-canvas );
 	border: 1px solid var( --ptn-line );
 	border-radius: var( --ptn-radius-lg );
-	padding: 20px;
-	display: flex;
-	justify-content: center;
+	padding: 24px 20px;
 	height: calc( 100vh - 220px );
 	min-height: 560px;
 	overflow: auto;
-	transition: opacity 0.15s;
 }
-.ptn-curation .ptn-preview-stage.is-loading {
-	opacity: 0.55;
-}
-.ptn-curation .ptn-preview-frame-wrap {
+
+/* the white "email" sheet */
+.ptn-curation .ptn-pv {
 	width: 100%;
-	max-width: 640px;
+	max-width: 600px;
+	margin: 0 auto;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: var( --ptn-shadow-md );
+	padding: 28px 28px 32px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #111;
 	transition: max-width 0.25s ease;
 }
-.ptn-curation .ptn-preview-stage[data-mode="mobile"] .ptn-preview-frame-wrap {
-	max-width: 390px;
+.ptn-curation .ptn-pv[data-mode="mobile"] {
+	max-width: 380px;
 }
-.ptn-curation #ptn-preview-frame {
+
+.ptn-curation .ptn-pv__masthead {
+	text-align: center;
+	margin-bottom: 16px;
+}
+.ptn-curation .ptn-pv__masthead img {
+	max-width: 220px;
+	max-height: 56px;
+	height: auto;
+}
+.ptn-curation .ptn-pv__masthead--text {
+	font-size: 26px;
+	font-weight: 800;
+	letter-spacing: -0.01em;
+}
+.ptn-curation .ptn-pv__hero {
+	margin-bottom: 18px;
+}
+.ptn-curation .ptn-pv__hero img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-bottom: 4px solid var( --ptn-brand, #c30 );
+}
+.ptn-curation .ptn-pv__intro {
+	text-align: center;
+	font-size: 15px;
+	line-height: 1.5;
+	color: #333;
+	margin: 0 0 18px;
+}
+
+/* sortable article list */
+.ptn-curation .ptn-pv__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+/* compact "more in this edition" row (the default for every card) */
+.ptn-curation .ptn-pv-card {
+	position: relative;
+	display: flex;
+	gap: 14px;
+	align-items: flex-start;
+	padding: 14px 0;
+	border-top: 1px solid #eee;
+}
+.ptn-curation .ptn-pv-card__img {
+	flex: none;
+	width: 92px;
+	height: 66px;
+	border-radius: 6px;
+	overflow: hidden;
+	background: #eceef1;
+	display: block;
+}
+.ptn-curation .ptn-pv-card__img img {
 	width: 100%;
 	height: 100%;
-	min-height: 520px;
-	border: 0;
-	background: #fff;
-	border-radius: 10px;
-	box-shadow: var( --ptn-shadow-md );
+	object-fit: cover;
 	display: block;
+}
+.ptn-curation .ptn-pv-card__img--ph {
+	display: grid;
+	place-items: center;
+	background: repeating-linear-gradient( 135deg, #eceef1 0 7px, #e6e8ec 7px 14px );
+	color: var( --ptn-ink-4 );
+}
+.ptn-curation .ptn-pv-card__body {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+.ptn-curation .ptn-pv-card__cat {
+	display: block;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: var( --ptn-author-color, #c30 );
+	margin-bottom: 3px;
+}
+.ptn-curation .ptn-pv-card__title {
+	margin: 0 0 4px;
+	font-size: 16px;
+	line-height: 1.25;
+	font-weight: 700;
+	color: #111;
+}
+.ptn-curation .ptn-pv-card__excerpt {
+	margin: 0 0 8px;
+	font-size: 13.5px;
+	line-height: 1.5;
+	color: #333;
+	display: none; /* lead only */
+}
+.ptn-curation .ptn-pv-card__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 8px;
+	align-items: center;
+}
+
+/* lead story = the first card: stacked, big image, excerpt shown */
+.ptn-curation .ptn-pv-card:first-child {
+	display: block;
+	padding-top: 0;
+	border-top: 0;
+}
+.ptn-curation .ptn-pv-card:first-child .ptn-pv-card__img {
+	width: 100%;
+	height: auto;
+	aspect-ratio: 16 / 9;
+	margin-bottom: 12px;
+	border-radius: 8px;
+}
+.ptn-curation .ptn-pv-card:first-child .ptn-pv-card__title {
+	font-size: 22px;
+	line-height: 1.2;
+}
+.ptn-curation .ptn-pv-card:first-child .ptn-pv-card__excerpt {
+	display: block;
+}
+
+/* drag handle + remove, revealed on card hover */
+.ptn-curation .ptn-pv-card__handle {
+	position: absolute;
+	top: 14px;
+	left: -12px;
+	width: 22px;
+	height: 22px;
+	display: grid;
+	place-items: center;
+	color: var( --ptn-ink-3 );
+	background: #fff;
+	border-radius: 6px;
+	box-shadow: var( --ptn-shadow-sm );
+	cursor: grab;
+	opacity: 0;
+	transition: opacity 0.13s;
+}
+.ptn-curation .ptn-pv-card:hover .ptn-pv-card__handle {
+	opacity: 1;
+}
+.ptn-curation .ptn-pv-card__handle:active {
+	cursor: grabbing;
+}
+.ptn-curation .ptn-pv-remove {
+	position: absolute;
+	top: 12px;
+	right: 0;
+	width: 26px;
+	height: 26px;
+	display: grid;
+	place-items: center;
+	border: 0;
+	border-radius: 6px;
+	background: #fff;
+	color: var( --ptn-ink-4 );
+	box-shadow: var( --ptn-shadow-sm );
+	cursor: pointer;
+	opacity: 0;
+	transition: opacity 0.13s, color 0.13s, background 0.13s;
+}
+.ptn-curation .ptn-pv-card:hover .ptn-pv-remove {
+	opacity: 1;
+}
+.ptn-curation .ptn-pv-remove:hover {
+	background: var( --ptn-danger-soft );
+	color: var( --ptn-danger );
+}
+
+/* sortable drop placeholder */
+.ptn-curation .ptn-pv-placeholder {
+	border: 2px dashed var( --ptn-accent );
+	border-radius: 8px;
+	background: var( --ptn-accent-soft );
+	margin: 8px 0;
+	height: 72px;
+}
+
+.ptn-curation .ptn-pv__empty {
+	border: 1.5px dashed #d4d7dd;
+	border-radius: 10px;
+	padding: 30px 18px;
+	text-align: center;
+	color: var( --ptn-ink-4 );
+	font-size: 13.5px;
+}
+
+/* subscribe + footer chrome */
+.ptn-curation .ptn-pv__subscribe {
+	text-align: center;
+	margin-top: 24px;
+}
+.ptn-curation .ptn-pv__subbtn {
+	display: inline-block;
+	background: var( --ptn-brand, #c30 );
+	color: #fff;
+	font-size: 14px;
+	font-weight: 700;
+	text-decoration: none;
+	padding: 12px 28px;
+	border-radius: 4px;
+}
+.ptn-curation .ptn-pv__home {
+	display: block;
+	margin-top: 12px;
+	font-size: 13px;
+	color: var( --ptn-brand, #c30 );
+	text-decoration: none;
+}
+.ptn-curation .ptn-pv__footer {
+	margin-top: 24px;
+	padding-top: 16px;
+	border-top: 1px solid #eee;
+	text-align: center;
+	font-size: 12px;
+	line-height: 1.6;
+	color: #888;
+}
+.ptn-curation .ptn-pv__muted {
+	color: #aaa;
 }
 
 /* ---------- right delivery pane ---------- */

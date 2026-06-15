@@ -1,5 +1,8 @@
 /**
- * Posts to Newsletter — curation admin: drag-and-drop ordering, search, auto-save.
+ * Posts to Newsletter — Compose Edition admin.
+ *
+ * The centre canvas (#ptn-selected) is the editor: add articles from the left,
+ * drag the cards to reorder and remove them inline. Everything autosaves.
  */
 ( function ( $ ) {
 	'use strict';
@@ -13,16 +16,12 @@
 	var $search = $( '#ptn-search' );
 	var $searchClear = $( '#ptn-search-clear' );
 	var $availableCount = $( '#ptn-available-count' );
-	var $selectedCount = $( '#ptn-selected-count' );
 	var $clearAll = $( '#ptn-clear' );
 	var $drophint = $( '#ptn-drophint' );
 	var $chips = $( '#ptn-chips' );
-	var $editionCount = $( '#ptn-edition-count' );
 	var $subject = $( '#ptn-subject' );
 	var $preview = $( '#ptn-preview' );
 	var $template = $( '#ptn-template' );
-	var $frame = $( '#ptn-preview-frame' );
-	var $stage = $( '.ptn-preview-stage' );
 	var currentCat = 'all';
 	var saveTimer = null;
 	var searchTimer = null;
@@ -35,43 +34,54 @@
 		search: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>'
 	};
 
+	// The selected order is read from the canvas cards (the source of truth).
 	function collectIds() {
-		return $selected.find( '.ptn-item' ).map( function () {
+		return $selected.find( '.ptn-pv-card' ).map( function () {
 			return parseInt( $( this ).attr( 'data-id' ), 10 );
 		} ).get();
 	}
 
-	// Keep the column counts, save chip, Clear all button and empty drop hint in
-	// sync with the current selection.
+	function selectedMap() {
+		var map = {};
+		$selected.find( '.ptn-pv-card' ).each( function () { map[ $( this ).attr( 'data-id' ) ] = true; } );
+		return map;
+	}
+
 	function refreshState() {
-		var selectedCount = $selected.children( '.ptn-item' ).length;
-		$selectedCount.text( selectedCount );
-		$editionCount.text( selectedCount );
+		var selectedCount = $selected.children( '.ptn-pv-card' ).length;
 		$availableCount.text( $available.children( '.ptn-item' ).not( '.is-filtered-out' ).length );
 		$clearAll.prop( 'hidden', 0 === selectedCount );
 		$drophint.prop( 'hidden', selectedCount > 0 );
 	}
 
-	// Reload the centre preview iframe from freshly-saved state. Called after the
-	// autosave resolves (never on the raw input event) so the endpoint never reads
-	// a stale option; the cache-buster defeats any browser/proxy caching.
-	function reloadPreview() {
-		if ( ! $frame.length ) {
-			return;
-		}
-		var base = $frame.attr( 'data-base' ) || $frame.attr( 'src' );
-		var sep = -1 === base.indexOf( '?' ) ? '?' : '&';
-		$stage.addClass( 'is-loading' );
-		$frame.attr( 'src', base + sep + '_=' + ( new Date() ).getTime() );
+	// An available row whose article is in the edition shows an "Added" state so it
+	// cannot be added twice; removing it from the canvas restores the Add button.
+	function markAdded( $row ) {
+		$row.addClass( 'is-added' );
+		$row.find( '.ptn-add' ).prop( 'disabled', true ).html( ICONS.check ).append( $( '<span></span>' ).text( i18n.added || 'Added' ) );
 	}
 
-	$frame.on( 'load', function () {
-		$stage.removeClass( 'is-loading' );
-	} );
+	function unmarkAdded( $row ) {
+		$row.removeClass( 'is-added' );
+		$row.find( '.ptn-add' ).prop( 'disabled', false ).html( ICONS.plus ).append( $( '<span></span>' ).text( i18n.add || 'Add' ) );
+	}
+
+	function syncAddedStates() {
+		var chosen = selectedMap();
+		$available.children( '.ptn-item' ).each( function () {
+			var $row = $( this );
+			var isAdded = !! chosen[ $row.attr( 'data-id' ) ];
+			if ( isAdded && ! $row.hasClass( 'is-added' ) ) {
+				markAdded( $row );
+			} else if ( ! isAdded && $row.hasClass( 'is-added' ) ) {
+				unmarkAdded( $row );
+			}
+		} );
+	}
 
 	// Client-side category filter: hide available rows whose data-cats list does
-	// not include the active chip's category id. No request — it works on the
-	// rows already loaded (and is re-applied after a search re-render or a move).
+	// not include the active chip's category id. No request — it works on the rows
+	// already loaded (and is re-applied after a search re-render).
 	function applyCategoryFilter() {
 		var $rows = $available.children( '.ptn-item' );
 		if ( 'all' === currentCat ) {
@@ -83,7 +93,6 @@
 			} );
 		}
 
-		// Show the empty state when a filter hides every available row.
 		$available.find( '.ptn-filter-empty' ).remove();
 		if ( 'all' !== currentCat && $rows.length && ! $rows.not( '.is-filtered-out' ).length ) {
 			$available.append( emptyState().addClass( 'ptn-filter-empty' ) );
@@ -127,7 +136,6 @@
 		} ).done( function ( res ) {
 			var count = res && typeof res.count !== 'undefined' ? res.count : ids.length;
 			$status.text( ( i18n.saved || 'Saved · %d selected' ).replace( '%d', count ) );
-			reloadPreview();
 		} ).fail( function () {
 			$status.text( i18n.saveFailed );
 		} ).always( function () {
@@ -140,57 +148,60 @@
 		saveTimer = window.setTimeout( save, 400 );
 	}
 
-	function addButton() {
-		return $( '<button type="button" class="ptn-add addbtn"></button>' )
-			.html( ICONS.plus )
-			.append( $( '<span></span>' ).text( i18n.add ) );
-	}
-
-	function removeButton() {
-		return $( '<button type="button" class="ptn-remove removebtn"></button>' )
-			.attr( 'aria-label', i18n.remove )
-			.html( ICONS.x );
-	}
-
+	// Add: fetch the article's canvas card and append it to the edition. The Add
+	// button flips to "Added" immediately; a failed fetch reverts it.
 	$available.on( 'click', '.ptn-add', function () {
-		var $item = $( this ).closest( '.ptn-item' );
-		$( this ).replaceWith( removeButton() );
-		$selected.append( $item );
-		applyCategoryFilter();
-		debounceSave();
+		var $row = $( this ).closest( '.ptn-item' );
+		if ( $row.hasClass( 'is-added' ) ) {
+			return;
+		}
+		var id = $row.attr( 'data-id' );
+		markAdded( $row );
+
+		$.ajax( {
+			url: cfg.cardUrl + '?id=' + encodeURIComponent( id ),
+			method: 'GET',
+			beforeSend: function ( xhr ) { xhr.setRequestHeader( 'X-WP-Nonce', cfg.nonce ); }
+		} ).done( function ( res ) {
+			if ( res && res.html ) {
+				$selected.append( res.html );
+				refreshState();
+				debounceSave();
+			} else {
+				unmarkAdded( $row );
+			}
+		} ).fail( function () {
+			unmarkAdded( $row );
+		} );
 	} );
 
-	$selected.on( 'click', '.ptn-remove', function () {
-		var $item = $( this ).closest( '.ptn-item' );
-		$( this ).replaceWith( addButton() );
-		$available.prepend( $item );
-		applyCategoryFilter();
+	// Remove a card from the canvas; restore the matching Add button.
+	$selected.on( 'click', '.ptn-pv-remove', function () {
+		var $card = $( this ).closest( '.ptn-pv-card' );
+		var id = $card.attr( 'data-id' );
+		$card.remove();
+		var $row = $available.children( '[data-id="' + id + '"]' );
+		if ( $row.length ) {
+			unmarkAdded( $row );
+		}
+		refreshState();
 		debounceSave();
 	} );
 
 	$clearAll.on( 'click', function () {
-		$selected.children( '.ptn-item' ).each( function () {
-			var $item = $( this );
-			$item.find( '.ptn-remove' ).replaceWith( addButton() );
-			$available.prepend( $item );
-		} );
-		applyCategoryFilter();
+		$selected.empty();
+		syncAddedStates();
+		refreshState();
 		debounceSave();
 	} );
 
+	// Drag to reorder — the first card becomes the lead story via CSS :first-child.
 	$selected.sortable( {
 		handle: '.ptn-handle',
-		placeholder: 'ptn-placeholder',
+		placeholder: 'ptn-pv-placeholder',
 		forcePlaceholderSize: true,
 		update: debounceSave
 	} );
-
-	// Search.
-	function selectedMap() {
-		var map = {};
-		$selected.find( '.ptn-item' ).each( function () { map[ $( this ).attr( 'data-id' ) ] = true; } );
-		return map;
-	}
 
 	function emptyState() {
 		return $( '<li class="ptn-empty empty"></li>' )
@@ -205,7 +216,6 @@
 			method: 'GET',
 			beforeSend: function ( xhr ) { xhr.setRequestHeader( 'X-WP-Nonce', cfg.nonce ); }
 		} ).done( function ( items ) {
-			var chosen = selectedMap();
 			$available.empty();
 			if ( ! items.length ) {
 				$available.append( emptyState() );
@@ -213,10 +223,9 @@
 				return;
 			}
 			items.forEach( function ( item ) {
-				if ( ! chosen[ String( item.id ) ] ) {
-					$available.append( item.html );
-				}
+				$available.append( item.html );
 			} );
+			syncAddedStates();
 			applyCategoryFilter();
 		} );
 	}
@@ -236,8 +245,7 @@
 		$search.trigger( 'focus' );
 	} );
 
-	// Copy the platform's preview/import URL to the clipboard, with a brief
-	// icon swap to a green check.
+	// Copy a platform's import URL to the clipboard, with a brief check-icon swap.
 	$( document ).on( 'click', '.ptn-copy-url', function () {
 		var $btn = $( this );
 		var url = $btn.attr( 'data-url' ) || '';
@@ -267,27 +275,20 @@
 		}
 	} );
 
-	// Subject, preview text and template all ride the same debounced autosave; the
-	// preview reloads once the save resolves.
+	// Subject, preview text and template all ride the same debounced autosave.
 	$subject.on( 'input', debounceSave );
 	$preview.on( 'input', debounceSave );
 	$template.on( 'change', debounceSave );
 
-	// Left pane: switch between the "Add to edition" and "In the edition" tabs.
-	$( '.ptn-tab' ).on( 'click', function () {
-		var target = $( this ).attr( 'data-tab' );
-		$( '.ptn-tab' ).removeClass( 'is-on' ).attr( 'aria-selected', 'false' );
-		$( this ).addClass( 'is-on' ).attr( 'aria-selected', 'true' );
-		$( '.ptn-tabpanel' ).prop( 'hidden', true );
-		$( '#ptn-tabpanel-' + target ).prop( 'hidden', false );
-	} );
-
-	// Centre pane: Desktop/Mobile preview width is a wrapper class only — the email
-	// is already responsive, so narrowing the stage fires its own mobile breakpoint.
+	// Desktop/Mobile preview width is a class on the canvas; the cards are already
+	// responsive, so narrowing it fires their own compact breakpoint.
 	$( '.ptn-viewport-toggle' ).on( 'click', function () {
 		var mode = $( this ).attr( 'data-mode' );
 		$( '.ptn-viewport-toggle' ).removeClass( 'is-on' ).attr( 'aria-pressed', 'false' );
 		$( this ).addClass( 'is-on' ).attr( 'aria-pressed', 'true' );
-		$stage.attr( 'data-mode', mode );
+		$( '.ptn-pv' ).attr( 'data-mode', mode );
 	} );
+
+	// Reflect the server-rendered selection in the Add buttons on first load.
+	syncAddedStates();
 } )( jQuery );
