@@ -39,8 +39,8 @@ $ptn_selected_count = count( $selected_posts );
 	<header class="pagehead">
 		<img class="ptn-pagelogo" src="<?php echo esc_url( \PostsToNewsletter\URL . 'assets/img/p2n-logo.png' ); ?>" alt="" width="40" height="40" />
 		<div class="pagehead__main">
-			<h1><?php esc_html_e( 'Compose Edition', 'posts-to-newsletter' ); ?></h1>
-			<p><?php esc_html_e( 'Add articles on the left, then drag to reorder right in the preview. Changes save automatically.', 'posts-to-newsletter' ); ?></p>
+			<h1><?php esc_html_e( 'Posts to Newsletter: Compose New Edition', 'posts-to-newsletter' ); ?></h1>
+			<p><?php esc_html_e( 'Add articles from the left column to the preview in the middle column. Changes save automatically.', 'posts-to-newsletter' ); ?></p>
 		</div>
 		<div class="pagehead__aside">
 			<span class="savechip">
@@ -117,10 +117,9 @@ $ptn_selected_count = count( $selected_posts );
 						<?php endforeach; ?>
 					</select>
 					<?php if ( count( $templates ) < 2 ) : ?>
-						<span class="ptn-tpl__hint"><?php esc_html_e( 'More templates with Pro', 'posts-to-newsletter' ); ?></span>
+						<a class="ptn-tpl__pro" href="<?php echo esc_url( 'https://dmcweb.com.au/p2npro' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Get more templates with Pro', 'posts-to-newsletter' ); ?></a>
 					<?php endif; ?>
 				</div>
-				<button type="button" class="ptn-clearlink" id="ptn-clear"<?php echo 0 === $ptn_selected_count ? ' hidden' : ''; ?>><?php esc_html_e( 'Clear all', 'posts-to-newsletter' ); ?></button>
 				<div class="ptn-viewport" role="group" aria-label="<?php esc_attr_e( 'Preview width', 'posts-to-newsletter' ); ?>">
 					<button type="button" class="ptn-viewport-toggle is-on" data-mode="desktop" aria-pressed="true"><?php esc_html_e( 'Desktop', 'posts-to-newsletter' ); ?></button>
 					<button type="button" class="ptn-viewport-toggle" data-mode="mobile" aria-pressed="false"><?php esc_html_e( 'Mobile', 'posts-to-newsletter' ); ?></button>
@@ -130,6 +129,10 @@ $ptn_selected_count = count( $selected_posts );
 			<div class="ptn-subjectbar">
 				<label for="ptn-subject"><?php esc_html_e( 'Subject line', 'posts-to-newsletter' ); ?></label>
 				<input type="text" id="ptn-subject" class="ptn-subject-input" maxlength="150" value="<?php echo esc_attr( $subject ); ?>" placeholder="<?php esc_attr_e( 'Subject line — defaults to the lead story', 'posts-to-newsletter' ); ?>" />
+			</div>
+
+			<div class="ptn-canvas-actions">
+				<button type="button" class="ptn-clearbtn" id="ptn-clear"<?php echo 0 === $ptn_selected_count ? ' hidden' : ''; ?>><?php esc_html_e( 'Clear posts', 'posts-to-newsletter' ); ?></button>
 			</div>
 
 			<div class="ptn-pv-stage">

@@ -662,30 +662,54 @@
 	min-width: 0;
 }
 
-/* "Clear all" link in the preview bar */
-.ptn-curation .ptn-clearlink {
-	border: 0;
-	background: none;
+/* "Clear posts" outline button in its own action strip above the canvas, aligned
+   to the 600px email column. The button (#ptn-clear) is hidden by admin.js until
+   articles have been added. */
+.ptn-curation .ptn-canvas-actions {
+	max-width: 600px;
+	margin: 0 auto 12px;
+	display: flex;
+	justify-content: flex-end;
+}
+.ptn-curation .ptn-clearbtn {
+	border: 1px solid var( --ptn-accent );
+	background: var( --ptn-surface );
+	color: var( --ptn-accent );
 	cursor: pointer;
 	font: inherit;
-	font-size: 12.5px;
+	font-size: 13px;
 	font-weight: 600;
-	color: var( --ptn-ink-3 );
+	padding: 6px 16px;
+	border-radius: 8px;
+	box-shadow: var( --ptn-shadow-sm );
+	transition: background 0.13s, box-shadow 0.13s;
 }
-.ptn-curation .ptn-clearlink:hover {
-	color: var( --ptn-danger );
+.ptn-curation .ptn-clearbtn:hover {
+	background: var( --ptn-accent-soft );
+}
+.ptn-curation .ptn-clearbtn:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px var( --ptn-accent-ring );
 }
 
 /* ---------- centre preview pane ---------- */
 .ptn-curation .compose__preview {
 	min-width: 0;
 }
+/* The template/viewport row is a control surface, so it gets the same white
+   card treatment as the Delivery and Add panels to read as "controls". */
 .ptn-curation .ptn-preview-bar {
 	display: flex;
 	align-items: center;
 	gap: 12px;
 	flex-wrap: wrap;
-	margin-bottom: 12px;
+	max-width: 600px;
+	margin: 0 auto 12px;
+	padding: 9px 14px;
+	background: var( --ptn-surface );
+	border: 1px solid var( --ptn-line );
+	border-radius: var( --ptn-radius-lg );
+	box-shadow: var( --ptn-shadow-sm );
 }
 .ptn-curation .ptn-tpl {
 	display: flex;
@@ -713,10 +737,14 @@
 	background-repeat: no-repeat;
 	background-position: right 10px center;
 }
-.ptn-curation .ptn-tpl__hint {
-	font-size: 11.5px;
-	color: var( --ptn-ink-4 );
-	font-style: italic;
+.ptn-curation .ptn-tpl__pro {
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var( --ptn-accent );
+	text-decoration: none;
+}
+.ptn-curation .ptn-tpl__pro:hover {
+	text-decoration: underline;
 }
 .ptn-curation .ptn-viewport {
 	margin-left: auto;
@@ -745,11 +773,13 @@
 }
 
 /* ---------- live canvas (the editable email) ---------- */
+/* Transparent stage so the email sheet sits seamlessly on the page. Padding is
+   kept only so the sheet's drop shadow has room and isn't clipped by overflow. */
 .ptn-curation .ptn-pv-stage {
-	background: var( --ptn-canvas );
-	border: 1px solid var( --ptn-line );
-	border-radius: var( --ptn-radius-lg );
-	padding: 24px 20px;
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	padding: 0 20px 8px;
 	height: calc( 100vh - 220px );
 	min-height: 560px;
 	overflow: auto;
@@ -793,7 +823,6 @@
 	display: block;
 	width: 100%;
 	height: auto;
-	border-bottom: 4px solid var( --ptn-brand, #c30 );
 }
 /* inline-editable intro line */
 .ptn-curation .ptn-pv__intro {
@@ -952,41 +981,47 @@
 	margin: 0 0 16px;
 	padding: 0;
 }
-/* Subject line — sits below the template controls, constrained to the email's
-   600px width (and centred) so it lines up with the canvas; styled like the
-   standard form fields so long subjects aren't cut off. */
+/* Subject line — not a control, just inline-editable text. Constrained to the
+   email's 600px width (and centred) so it lines up with the canvas, with a small
+   caption above it and the same hover/focus affordance as the editable intro. */
 .ptn-curation .ptn-subjectbar {
 	max-width: 600px;
 	margin: 0 auto 16px;
 }
 .ptn-curation .ptn-subjectbar label {
 	display: block;
-	font-size: 13px;
-	font-weight: 600;
-	color: var( --ptn-ink );
-	margin-bottom: 6px;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var( --ptn-ink-3 );
+	margin: 0 0 2px 10px;
 }
 .ptn-curation .ptn-subject-input {
 	width: 100%;
-	height: 40px;
 	margin: 0;
-	border: 1px solid var( --ptn-line );
-	border-radius: 10px;
-	background: var( --ptn-surface );
+	border: 0;
+	background: transparent;
 	font: inherit;
-	font-size: 14px;
+	font-size: 18px;
+	font-weight: 600;
 	color: var( --ptn-ink );
-	padding: 0 12px;
-	box-shadow: var( --ptn-shadow-sm );
-	transition: border-color 0.15s, box-shadow 0.15s;
+	padding: 4px 10px;
+	border-radius: 8px;
+	cursor: text;
+	transition: background 0.13s, box-shadow 0.13s;
 }
 .ptn-curation .ptn-subject-input::placeholder {
 	color: var( --ptn-ink-4 );
+	font-weight: 400;
+}
+.ptn-curation .ptn-subject-input:hover {
+	background: #f6f7f8;
 }
 .ptn-curation .ptn-subject-input:focus {
 	outline: none;
-	border-color: var( --ptn-accent );
-	box-shadow: 0 0 0 3px var( --ptn-accent-ring );
+	background: var( --ptn-surface );
+	box-shadow: 0 0 0 2px var( --ptn-accent-ring );
 }
 
 .ptn-curation .dupsell {

@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
 	<?php if ( false !== $image ) : ?>
-		<tr><td style="padding-bottom:10px;"><a href="<?php echo esc_url( $permalink ); ?>"><img src="<?php echo esc_url( $image[0] ); ?>" width="270" alt="" style="display:block; width:100%; max-width:270px; height:auto;" /></a></td></tr>
+		<tr><td style="padding-bottom:10px;"><a href="<?php echo esc_url( $permalink ); ?>"><img src="<?php echo esc_url( $image[0] ); ?>" width="270" alt="" style="display:block; width:100%; max-width:100%; height:auto;" /></a></td></tr>
 	<?php endif; ?>
 	<?php if ( '' !== $category ) : ?>
 		<tr><td style="font-family:Arial,Helvetica,sans-serif; font-size:12px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:<?php echo esc_attr( $accent ); ?>; padding-bottom:4px;"><?php echo esc_html( $category ); ?></td></tr>
