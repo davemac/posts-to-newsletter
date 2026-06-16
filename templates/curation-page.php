@@ -117,10 +117,9 @@ $ptn_selected_count = count( $selected_posts );
 						<?php endforeach; ?>
 					</select>
 					<?php if ( count( $templates ) < 2 ) : ?>
-						<span class="ptn-tpl__hint"><?php esc_html_e( 'More templates with Pro', 'posts-to-newsletter' ); ?></span>
+						<a class="ptn-tpl__pro" href="<?php echo esc_url( 'https://dmcweb.com.au/p2npro' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Get more templates with Pro', 'posts-to-newsletter' ); ?></a>
 					<?php endif; ?>
 				</div>
-				<button type="button" class="ptn-clearlink" id="ptn-clear"<?php echo 0 === $ptn_selected_count ? ' hidden' : ''; ?>><?php esc_html_e( 'Clear all', 'posts-to-newsletter' ); ?></button>
 				<div class="ptn-viewport" role="group" aria-label="<?php esc_attr_e( 'Preview width', 'posts-to-newsletter' ); ?>">
 					<button type="button" class="ptn-viewport-toggle is-on" data-mode="desktop" aria-pressed="true"><?php esc_html_e( 'Desktop', 'posts-to-newsletter' ); ?></button>
 					<button type="button" class="ptn-viewport-toggle" data-mode="mobile" aria-pressed="false"><?php esc_html_e( 'Mobile', 'posts-to-newsletter' ); ?></button>
@@ -130,6 +129,10 @@ $ptn_selected_count = count( $selected_posts );
 			<div class="ptn-subjectbar">
 				<label for="ptn-subject"><?php esc_html_e( 'Subject line', 'posts-to-newsletter' ); ?></label>
 				<input type="text" id="ptn-subject" class="ptn-subject-input" maxlength="150" value="<?php echo esc_attr( $subject ); ?>" placeholder="<?php esc_attr_e( 'Subject line — defaults to the lead story', 'posts-to-newsletter' ); ?>" />
+			</div>
+
+			<div class="ptn-canvas-actions">
+				<button type="button" class="ptn-clearbtn" id="ptn-clear"<?php echo 0 === $ptn_selected_count ? ' hidden' : ''; ?>><?php esc_html_e( 'Clear posts', 'posts-to-newsletter' ); ?></button>
 			</div>
 
 			<div class="ptn-pv-stage">
