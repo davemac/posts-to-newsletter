@@ -28,6 +28,7 @@ No framework. The main file registers a small SPL autoloader for the
 | `Curation` | Drag-and-drop curation screen + selection/search REST routes |
 | `Selection` | Shared helpers: stored IDs, ordered posts, byline (Co-Authors Plus aware) |
 | `Renderer` | Platform-aware email HTML + the public render endpoint |
+| `Templates` | Registry of selectable email templates (free core ships one; add-ons register more) |
 
 There is **no JavaScript/CSS build step** — `assets/` are hand-written static files,
 cache-busted from their `filemtime`.
@@ -41,9 +42,11 @@ The core stays free of any email-platform integration. Add-ons extend it through
 | `posts_to_newsletter_settings_defaults` | filter | Register extra default keys in `ptn_settings` |
 | `posts_to_newsletter_settings_save` | filter | Sanitise and merge extra submitted fields |
 | `posts_to_newsletter_settings_cards` | action | Render extra cards inside the settings form |
-| `posts_to_newsletter_platforms` | filter | Filter the curation screen's platform card list (keyed by platform); remove a platform an editor cannot use (e.g. unconfigured) so its card does not render |
-| `posts_to_newsletter_platform_actions` | action | Fires once per platform card on the curation screen, passed the platform key (`mailchimp`\|`campaignmonitor`); render that platform's buttons here |
+| `posts_to_newsletter_templates` | filter | Register extra email templates, keyed by id (`label` + absolute `file`) |
+| `posts_to_newsletter_platform_tokens` | filter | Add or override a platform's merge-tag tokens (`firstname` / `footer` / `preheader`) |
+| `posts_to_newsletter_render_allowed` | filter | Gate the public render endpoint (return `false` to restrict access; default `true`) |
 | `posts_to_newsletter_curation_actions` | action | Render general (non-platform) buttons in the curation action bar |
+| `posts_to_newsletter_delivery_actions` | action | Render delivery controls (e.g. the push button) at the top of the curation Delivery panel |
 
 ## Coding standards
 

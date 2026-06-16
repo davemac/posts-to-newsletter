@@ -18,14 +18,14 @@ Branding defaults from your WordPress site (title and custom logo) and everythin
 
 = What it does =
 
-* **Curation screen** - search all your posts, click to include, drag to reorder. Changes save automatically.
+* **Curation screen** - search all your posts, click to include, drag to reorder, with a live preview that updates as you go. Set the edition's subject line, write an intro greeting (with `{firstname}` personalisation), and choose an email template. Changes save automatically.
 * **Branded email** - a responsive, two-column article layout with hero image, logo, category labels, author bylines and a subscribe button. Colours and branding are configurable.
 * **Platform-ready preview** - the newsletter renders at a public URL in **Mailchimp** or **Campaign Monitor** flavour. Your intro personalisation and the unsubscribe / preferences / web-version / address tags are written in each platform's own merge-tag syntax, so you can import the HTML and the tags just work.
 * **Co-Authors Plus aware** - bylines respect Co-Authors Plus when it's active.
 
 = One-click push (premium add-on) =
 
-The free plugin produces newsletter HTML you import into your platform manually. The premium add-on **Posts to Newsletter Pro** adds **Push to Mailchimp** and **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform in one click. It never sends — a human always reviews and sends inside the platform.
+The free plugin produces newsletter HTML you import into your platform manually. The premium add-on **Posts to Newsletter Pro** adds **Push to Mailchimp** and **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform in one click. It never sends — a human always reviews and sends inside the platform. Pro also adds more email templates to choose from on the curation screen.
 
 = Compatibility note =
 
@@ -71,7 +71,7 @@ Any published post. Search by keyword or pick from your most recent posts.
 
 = Can I change the newsletter design? =
 
-Branding (logo, hero image, colours, sender details, intro text and article image size) is configurable on the settings page.
+Yes. Branding (logo, hero image, colours, sender details and article image size) is set on the settings page. The subject line, intro greeting and email template are set per edition on the curation screen — the free plugin ships one template, and Posts to Newsletter Pro adds more.
 
 = Is it tied to one site or theme? =
 
