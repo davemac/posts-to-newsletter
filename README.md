@@ -6,7 +6,7 @@ This is the free core. One-click push of the newsletter as a draft to **Mailchim
 
 ## Features (free)
 
-- **Curation screen** - search all posts, click to include, drag to set the order (auto-saves).
+- **Curation screen** - search all posts, click to include, drag to set the order (auto-saves). Set the edition's subject line, write an inline intro greeting (`{firstname}`-aware), and pick an email template, with a live preview of the edition.
 - **Branded email** - responsive two-column article grid with hero, logo, category labels, author bylines, date/author pills and a Subscribe button. Colours and branding are configurable.
 - **Settings page** - branding & content, sender details, and article image size.
 - **Public render endpoint** - the newsletter is rendered at a URL you can preview and copy into your email platform. The HTML is **platform-aware**: `{firstname}` and the unsubscribe / preferences / web-version / address tags are written in each platform's own syntax.
@@ -14,7 +14,7 @@ This is the free core. One-click push of the newsletter as a draft to **Mailchim
 
 ## Premium: one-click push
 
-[Posts to Newsletter Pro](https://github.com/davemac/posts-to-newsletter-pro) adds **Push to Mailchimp** / **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform (it never sends). Without it, use the platform-ready preview URLs below to import manually.
+[Posts to Newsletter Pro](https://github.com/davemac/posts-to-newsletter-pro) adds **Push to Mailchimp** / **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform (it never sends), plus additional email templates. Without it, use the platform-ready preview URLs below to import manually.
 
 ## Requirements
 
@@ -41,14 +41,18 @@ Must be publicly reachable if a platform fetches it server-side.
 
 ## Extending
 
-The core carries no email-platform integration. Add-ons attach via four hooks:
+The core carries no email-platform integration. Add-ons attach via these hooks:
 
 | Hook | Type | Purpose |
 |------|------|---------|
 | `posts_to_newsletter_settings_defaults` | filter | Register extra default settings keys |
 | `posts_to_newsletter_settings_save` | filter | Sanitise and merge extra submitted fields |
 | `posts_to_newsletter_settings_cards` | action | Render extra cards in the settings form |
+| `posts_to_newsletter_templates` | filter | Register extra email templates (id → label + file) |
+| `posts_to_newsletter_platform_tokens` | filter | Add or override a platform's merge-tag tokens (firstname / footer / preheader) |
+| `posts_to_newsletter_render_allowed` | filter | Gate the public render endpoint (return false to restrict access) |
 | `posts_to_newsletter_curation_actions` | action | Render extra buttons in the curation action bar |
+| `posts_to_newsletter_delivery_actions` | action | Render delivery controls (e.g. the push button) in the curation Delivery panel |
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full architecture and coding standards.
 
@@ -56,7 +60,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full architecture and coding stan
 
 - No build step - plain PHP, vanilla jQuery (bundled with WP), and hand-written CSS.
 - Lightweight SPL autoloader: `PostsToNewsletter\` → `src/`.
-- HTTP via `wp_remote_*` (no third-party SDKs).
+- No external HTTP requests - the free core renders locally only (platform push lives in the Pro add-on).
 
 ## Credits
 
