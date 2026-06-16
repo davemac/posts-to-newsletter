@@ -39,8 +39,8 @@ $ptn_selected_count = count( $selected_posts );
 	<header class="pagehead">
 		<img class="ptn-pagelogo" src="<?php echo esc_url( \PostsToNewsletter\URL . 'assets/img/p2n-logo.png' ); ?>" alt="" width="40" height="40" />
 		<div class="pagehead__main">
-			<h1><?php esc_html_e( 'Compose Edition', 'posts-to-newsletter' ); ?></h1>
-			<p><?php esc_html_e( 'Add articles on the left, then drag to reorder right in the preview. Changes save automatically.', 'posts-to-newsletter' ); ?></p>
+			<h1><?php esc_html_e( 'Posts to Newsletter: Compose New Edition', 'posts-to-newsletter' ); ?></h1>
+			<p><?php esc_html_e( 'Add articles from the left column to the preview in the middle column. Changes save automatically.', 'posts-to-newsletter' ); ?></p>
 		</div>
 		<div class="pagehead__aside">
 			<span class="savechip">
