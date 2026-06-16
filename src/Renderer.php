@@ -90,7 +90,7 @@ class Renderer {
 		// not to optimise it — its image Lazy Load injects a JavaScript loader (and it
 		// varies output by user-agent), which Campaign Monitor rejects on import. No-op
 		// when LiteSpeed is not active.
-		do_action( 'litespeed_disable_all', 'Posts to Newsletter raw email output' );
+		do_action( 'litespeed_disable_all', 'Posts to Newsletter raw email output' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- third-party (LiteSpeed) action, intentionally fired.
 
 		header( 'Content-Type: text/html; charset=utf-8' );
 		echo $this->render( $platform, (string) get_query_var( self::TEMPLATE_VAR ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- composed, escaped HTML email.
@@ -222,7 +222,7 @@ class Renderer {
 	/**
 	 * Produce a light tint (≈10% on white) of a hex colour for the author pill.
 	 *
-	 * @param string $hex Hex colour like #e32441.
+	 * @param string $hex Hex colour like #3c8504.
 	 * @return string Hex tint.
 	 */
 	private function tint( string $hex ): string {

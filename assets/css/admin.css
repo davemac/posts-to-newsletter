@@ -943,7 +943,7 @@
 }
 .ptn-curation .ptn-pv__subbtn {
 	display: inline-block;
-	background: var( --ptn-brand, #c30 );
+	background: var( --ptn-brand, #3c8504 );
 	color: #fff;
 	font-size: 14px;
 	font-weight: 700;
@@ -955,7 +955,7 @@
 	display: block;
 	margin-top: 12px;
 	font-size: 13px;
-	color: var( --ptn-brand, #c30 );
+	color: var( --ptn-brand, #3c8504 );
 	text-decoration: none;
 }
 .ptn-curation .ptn-pv__footer {

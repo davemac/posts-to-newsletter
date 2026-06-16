@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Posts to Newsletter
  * Plugin URI:        https://dmcweb.com.au
- * Description:       Turn your posts into a branded newsletter. Hand-pick and order them, then push a ready-to-send draft to Mailchimp or Campaign Monitor with one click.
+ * Description:       Hand-pick and order your posts into a branded HTML email, then preview a platform-ready newsletter to import into Mailchimp or Campaign Monitor.
  * Version:           1.0.0
  * Requires at least: 6.0
  * Requires PHP:      8.0

@@ -3,6 +3,8 @@
 /.gitignore
 /.distignore
 /.github
+/.wordpress-org
+/.claude
 /README.md
 /CLAUDE.md
 /node_modules
