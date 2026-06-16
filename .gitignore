@@ -14,3 +14,4 @@ Thumbs.db
 
 # Local-only dev context (sensitive: client/prod/creds) - never publish
 /CLAUDE.md
+/.claude/

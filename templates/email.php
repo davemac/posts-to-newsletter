@@ -57,7 +57,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<?php if ( '' !== $hero_url ) : ?>
 					<tr>
-						<td style="padding:8px 20px 0 20px;"><img src="<?php echo esc_url( $hero_url ); ?>" width="560" alt="" style="display:block; width:100%; max-width:560px; height:auto; border-bottom:4px solid <?php echo esc_attr( $brand ); ?>;" /></td>
+						<td style="padding:8px 20px 0 20px;"><img src="<?php echo esc_url( $hero_url ); ?>" width="560" alt="" style="display:block; width:100%; max-width:560px; height:auto; border:0;" /></td>
 					</tr>
 					<?php endif; ?>
 
