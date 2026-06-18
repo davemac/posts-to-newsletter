@@ -1,4 +1,4 @@
-# Posts to Newsletter
+# DMC Posts to Newsletter Builder
 
 A WordPress plugin that turns your published posts into a branded HTML email. Hand-pick and order posts, then preview the newsletter at a public URL ready to **import into your email platform**. Reusable on any site: branding defaults from the WordPress site (title, custom logo) and everything is overridable on the settings page.
 

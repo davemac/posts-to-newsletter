@@ -1,4 +1,4 @@
-=== Posts to Newsletter ===
+=== DMC Posts to Newsletter Builder ===
 Contributors: davemac
 Tags: newsletter, email newsletter, post digest, email campaign, mailchimp
 Requires at least: 6.0
@@ -12,7 +12,7 @@ Hand-pick and order posts into a branded HTML email, then preview a platform-rea
 
 == Description ==
 
-**Posts to Newsletter** turns your published posts into a branded email newsletter. Search your posts, click to include them, drag to set the order, then preview the finished newsletter at a public URL — ready to copy into your email platform.
+**DMC Posts to Newsletter Builder** turns your published posts into a branded email newsletter. Search your posts, click to include them, drag to set the order, then preview the finished newsletter at a public URL — ready to copy into your email platform.
 
 Branding defaults from your WordPress site (title and custom logo) and everything is overridable on the settings page, so it works on any site out of the box.
 
@@ -29,7 +29,7 @@ The free plugin produces newsletter HTML you import into your platform manually.
 
 = Compatibility note =
 
-Posts to Newsletter is an independent plugin and is not affiliated with, or endorsed by, Mailchimp or Campaign Monitor; those names are used only to describe the newsletter formats it can produce.
+DMC Posts to Newsletter Builder is an independent plugin and is not affiliated with, or endorsed by, Mailchimp or Campaign Monitor; those names are used only to describe the newsletter formats it can produce.
 
 = Privacy =
 
@@ -41,7 +41,7 @@ Built and maintained by DMC Web (https://dmcweb.com.au).
 
 == Installation ==
 
-1. Upload the `posts-to-newsletter` folder to `/wp-content/plugins/`, or install it through **Plugins → Add New**.
+1. Upload the `dmc-posts-to-newsletter-builder` folder to `/wp-content/plugins/`, or install it through **Plugins → Add New**.
 2. Activate the plugin through the **Plugins** menu.
 3. Go to **Newsletter → Settings** and set your branding, sender details and article image size.
 4. Open **Newsletter**, add and order your articles, then copy a preview URL to import into your email platform.

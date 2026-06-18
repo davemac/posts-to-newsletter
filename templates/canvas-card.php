@@ -20,6 +20,6 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <li class="ptn-pv-card" data-id="<?php echo esc_attr( (string) $post_id ); ?>">
 	<span class="ptn-handle ptn-pv-card__handle" aria-hidden="true"><?php echo $this->icon( 'grip' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?></span>
-	<button type="button" class="ptn-pv-remove" aria-label="<?php esc_attr_e( 'Remove', 'posts-to-newsletter' ); ?>"><?php echo $this->icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?></button>
+	<button type="button" class="ptn-pv-remove" aria-label="<?php esc_attr_e( 'Remove', 'dmc-posts-to-newsletter-builder' ); ?>"><?php echo $this->icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?></button>
 	<div class="ptn-pv-card__inner"><?php $renderer->render_card( $post_id, $image_size, $accent ); ?></div>
 </li>

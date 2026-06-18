@@ -154,8 +154,8 @@ class Settings {
 	public function register_settings_page(): void {
 		add_submenu_page(
 			self::PARENT,
-			__( 'Newsletter Settings', 'posts-to-newsletter' ),
-			__( 'Settings', 'posts-to-newsletter' ),
+			__( 'Posts to Newsletter Builder Settings', 'dmc-posts-to-newsletter-builder' ),
+			__( 'Settings', 'dmc-posts-to-newsletter-builder' ),
 			self::CAPABILITY,
 			self::PAGE,
 			array( $this, 'render_settings_page' )
@@ -186,9 +186,9 @@ class Settings {
 			'ptnSettings',
 			array(
 				'i18n' => array(
-					'chooseImage' => __( 'Choose image', 'posts-to-newsletter' ),
-					'useImage'    => __( 'Use this image', 'posts-to-newsletter' ),
-					'unsaved'     => __( 'Unsaved changes', 'posts-to-newsletter' ),
+					'chooseImage' => __( 'Choose image', 'dmc-posts-to-newsletter-builder' ),
+					'useImage'    => __( 'Use this image', 'dmc-posts-to-newsletter-builder' ),
+					'unsaved'     => __( 'Unsaved changes', 'dmc-posts-to-newsletter-builder' ),
 				),
 			)
 		);
@@ -207,12 +207,12 @@ class Settings {
 	 */
 	public function handle_save(): void {
 		if ( ! current_user_can( self::CAPABILITY ) ) {
-			wp_die( esc_html__( 'You do not have permission to do this.', 'posts-to-newsletter' ) );
+			wp_die( esc_html__( 'You do not have permission to do this.', 'dmc-posts-to-newsletter-builder' ) );
 		}
 
 		check_admin_referer( self::SAVE_ACTION );
 
-		$in       = wp_unslash( $_POST );
+		$in       = map_deep( wp_unslash( $_POST ), 'sanitize_text_field' );
 		$existing = $this->all();
 
 		$clean = array(
@@ -235,7 +235,7 @@ class Settings {
 		 * their own submitted fields into the shared ptn_settings option.
 		 *
 		 * @param array<string, mixed> $clean    Sanitised settings to store.
-		 * @param array<string, mixed> $in       Unslashed raw $_POST input.
+		 * @param array<string, mixed> $in       Unslashed, text-sanitised $_POST input.
 		 * @param array<string, mixed> $existing Previously stored settings.
 		 */
 		$clean = apply_filters( 'posts_to_newsletter_settings_save', $clean, $in, $existing );

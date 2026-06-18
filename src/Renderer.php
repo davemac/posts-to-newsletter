@@ -174,11 +174,11 @@ class Renderer {
 		$grey      = 'color:#888888;';
 
 		/* translators: %s: site/publication name. */
-		$received    = sprintf( esc_html__( 'You are receiving this email because you subscribed to %s.', 'posts-to-newsletter' ), esc_html( $site_name ) );
-		$unsubscribe = esc_html__( 'Unsubscribe', 'posts-to-newsletter' );
-		$preferences = esc_html__( 'Update your preferences', 'posts-to-newsletter' );
-		$web_version = esc_html__( 'View in browser', 'posts-to-newsletter' );
-		$preheader   = esc_html__( 'View this email in your browser.', 'posts-to-newsletter' );
+		$received    = sprintf( esc_html__( 'You are receiving this email because you subscribed to %s.', 'dmc-posts-to-newsletter-builder' ), esc_html( $site_name ) );
+		$unsubscribe = esc_html__( 'Unsubscribe', 'dmc-posts-to-newsletter-builder' );
+		$preferences = esc_html__( 'Update your preferences', 'dmc-posts-to-newsletter-builder' );
+		$web_version = esc_html__( 'View in browser', 'dmc-posts-to-newsletter-builder' );
+		$preheader   = esc_html__( 'View this email in your browser.', 'dmc-posts-to-newsletter-builder' );
 
 		if ( 'mailchimp' === $platform ) {
 			$footer  = $received . '<br />';

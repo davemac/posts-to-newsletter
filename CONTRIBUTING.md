@@ -1,4 +1,4 @@
-# Contributing to Posts to Newsletter
+# Contributing to DMC Posts to Newsletter Builder
 
 Thanks for your interest in improving the plugin. This document covers the
 architecture, coding standards, and how to test changes.
@@ -63,7 +63,7 @@ The core stays free of any email-platform integration. Add-ons extend it through
 Run [Plugin Check](https://wordpress.org/plugins/plugin-check/) before submitting:
 
 ```bash
-wp plugin check posts-to-newsletter --severity=5
+wp plugin check dmc-posts-to-newsletter-builder --severity=5
 ```
 
 Smoke-test the public render endpoint (run `wp rewrite flush` after changing it):

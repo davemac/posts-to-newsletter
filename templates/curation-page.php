@@ -39,8 +39,8 @@ $ptn_selected_count = count( $selected_posts );
 	<header class="pagehead">
 		<img class="ptn-pagelogo" src="<?php echo esc_url( \PostsToNewsletter\URL . 'assets/img/p2n-logo.png' ); ?>" alt="" width="40" height="40" />
 		<div class="pagehead__main">
-			<h1><?php esc_html_e( 'Posts to Newsletter: Compose New Edition', 'posts-to-newsletter' ); ?></h1>
-			<p><?php esc_html_e( 'Add articles from the left column to the preview in the middle column. Changes save automatically.', 'posts-to-newsletter' ); ?></p>
+			<h1><?php esc_html_e( 'Posts to Newsletter Builder', 'dmc-posts-to-newsletter-builder' ); ?></h1>
+			<p><?php esc_html_e( 'Add articles from the left column to the preview in the middle column. Changes save automatically.', 'dmc-posts-to-newsletter-builder' ); ?></p>
 		</div>
 		<div class="pagehead__aside">
 			<span class="savechip">
@@ -48,7 +48,7 @@ $ptn_selected_count = count( $selected_posts );
 				<span class="ptn-status" aria-live="polite">
 					<?php
 					/* translators: %d: number of selected articles. */
-					printf( esc_html__( 'Saved · %d selected', 'posts-to-newsletter' ), (int) $ptn_selected_count );
+					printf( esc_html__( 'Saved · %d selected', 'dmc-posts-to-newsletter-builder' ), (int) $ptn_selected_count );
 					?>
 				</span>
 			</span>
@@ -62,7 +62,7 @@ $ptn_selected_count = count( $selected_posts );
 			?>
 			<a class="ghostbtn ptn-settings-link" href="<?php echo esc_url( $settings_url ); ?>">
 				<?php echo $this->icon( 'gear' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
-				<span><?php esc_html_e( 'Settings', 'posts-to-newsletter' ); ?></span>
+				<span><?php esc_html_e( 'Settings', 'dmc-posts-to-newsletter-builder' ); ?></span>
 			</a>
 		</div>
 	</header>
@@ -72,21 +72,21 @@ $ptn_selected_count = count( $selected_posts );
 		<?php // ---------- Left: add to edition ---------- ?>
 		<aside class="compose__add col">
 			<div class="col__head">
-				<h2><?php esc_html_e( 'Add to edition', 'posts-to-newsletter' ); ?></h2>
+				<h2><?php esc_html_e( 'Add to edition', 'dmc-posts-to-newsletter-builder' ); ?></h2>
 				<span class="count" id="ptn-available-count"><?php echo (int) count( $recent_posts ); ?></span>
 			</div>
 
 			<div class="search">
 				<?php echo $this->icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
-				<input type="search" id="ptn-search" placeholder="<?php esc_attr_e( 'Search all articles…', 'posts-to-newsletter' ); ?>" autocomplete="off" />
-				<button type="button" class="search__clear" id="ptn-search-clear" aria-label="<?php esc_attr_e( 'Clear search', 'posts-to-newsletter' ); ?>" hidden>
+				<input type="search" id="ptn-search" placeholder="<?php esc_attr_e( 'Search all articles…', 'dmc-posts-to-newsletter-builder' ); ?>" autocomplete="off" />
+				<button type="button" class="search__clear" id="ptn-search-clear" aria-label="<?php esc_attr_e( 'Clear search', 'dmc-posts-to-newsletter-builder' ); ?>" hidden>
 					<?php echo $this->icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
 				</button>
 			</div>
 
 			<?php if ( ! empty( $categories ) ) : ?>
-				<div class="chips" id="ptn-chips" role="group" aria-label="<?php esc_attr_e( 'Filter by category', 'posts-to-newsletter' ); ?>">
-					<button type="button" class="chip is-on" data-cat="all" aria-pressed="true"><?php esc_html_e( 'All categories', 'posts-to-newsletter' ); ?></button>
+				<div class="chips" id="ptn-chips" role="group" aria-label="<?php esc_attr_e( 'Filter by category', 'dmc-posts-to-newsletter-builder' ); ?>">
+					<button type="button" class="chip is-on" data-cat="all" aria-pressed="true"><?php esc_html_e( 'All categories', 'dmc-posts-to-newsletter-builder' ); ?></button>
 					<?php foreach ( $categories as $ptn_cat ) : ?>
 						<button type="button" class="chip" data-cat="<?php echo (int) $ptn_cat->term_id; ?>" aria-pressed="false">
 							<?php echo esc_html( $ptn_cat->name ); ?>
@@ -110,29 +110,29 @@ $ptn_selected_count = count( $selected_posts );
 		<section class="compose__preview">
 			<div class="ptn-preview-bar">
 				<div class="ptn-tpl">
-					<label for="ptn-template"><?php esc_html_e( 'Template', 'posts-to-newsletter' ); ?></label>
+					<label for="ptn-template"><?php esc_html_e( 'Template', 'dmc-posts-to-newsletter-builder' ); ?></label>
 					<select id="ptn-template" class="ptn-tpl__select">
 						<?php foreach ( $templates as $ptn_tid => $ptn_tpl ) : ?>
 							<option value="<?php echo esc_attr( $ptn_tid ); ?>" <?php selected( $current_template, $ptn_tid ); ?>><?php echo esc_html( $ptn_tpl['label'] ); ?></option>
 						<?php endforeach; ?>
 					</select>
 					<?php if ( count( $templates ) < 2 ) : ?>
-						<a class="ptn-tpl__pro" href="<?php echo esc_url( 'https://dmcweb.com.au/p2npro' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Get more templates with Pro', 'posts-to-newsletter' ); ?></a>
+						<a class="ptn-tpl__pro" href="<?php echo esc_url( 'https://dmcweb.com.au/p2npro' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Get more templates with Pro', 'dmc-posts-to-newsletter-builder' ); ?></a>
 					<?php endif; ?>
 				</div>
-				<div class="ptn-viewport" role="group" aria-label="<?php esc_attr_e( 'Preview width', 'posts-to-newsletter' ); ?>">
-					<button type="button" class="ptn-viewport-toggle is-on" data-mode="desktop" aria-pressed="true"><?php esc_html_e( 'Desktop', 'posts-to-newsletter' ); ?></button>
-					<button type="button" class="ptn-viewport-toggle" data-mode="mobile" aria-pressed="false"><?php esc_html_e( 'Mobile', 'posts-to-newsletter' ); ?></button>
+				<div class="ptn-viewport" role="group" aria-label="<?php esc_attr_e( 'Preview width', 'dmc-posts-to-newsletter-builder' ); ?>">
+					<button type="button" class="ptn-viewport-toggle is-on" data-mode="desktop" aria-pressed="true"><?php esc_html_e( 'Desktop', 'dmc-posts-to-newsletter-builder' ); ?></button>
+					<button type="button" class="ptn-viewport-toggle" data-mode="mobile" aria-pressed="false"><?php esc_html_e( 'Mobile', 'dmc-posts-to-newsletter-builder' ); ?></button>
 				</div>
 			</div>
 
 			<div class="ptn-subjectbar">
-				<label for="ptn-subject"><?php esc_html_e( 'Subject line', 'posts-to-newsletter' ); ?></label>
-				<input type="text" id="ptn-subject" class="ptn-subject-input" maxlength="150" value="<?php echo esc_attr( $subject ); ?>" placeholder="<?php esc_attr_e( 'Subject line — defaults to the lead story', 'posts-to-newsletter' ); ?>" />
+				<label for="ptn-subject"><?php esc_html_e( 'Subject line', 'dmc-posts-to-newsletter-builder' ); ?></label>
+				<input type="text" id="ptn-subject" class="ptn-subject-input" maxlength="150" value="<?php echo esc_attr( $subject ); ?>" placeholder="<?php esc_attr_e( 'Subject line — defaults to the lead story', 'dmc-posts-to-newsletter-builder' ); ?>" />
 			</div>
 
 			<div class="ptn-canvas-actions">
-				<button type="button" class="ptn-clearbtn" id="ptn-clear"<?php echo 0 === $ptn_selected_count ? ' hidden' : ''; ?>><?php esc_html_e( 'Clear posts', 'posts-to-newsletter' ); ?></button>
+				<button type="button" class="ptn-clearbtn" id="ptn-clear"<?php echo 0 === $ptn_selected_count ? ' hidden' : ''; ?>><?php esc_html_e( 'Clear posts', 'dmc-posts-to-newsletter-builder' ); ?></button>
 			</div>
 
 			<div class="ptn-pv-stage">
@@ -147,7 +147,7 @@ $ptn_selected_count = count( $selected_posts );
 						<div class="ptn-pv__hero"><img src="<?php echo esc_url( $hero_url ); ?>" alt="" /></div>
 					<?php endif; ?>
 
-					<p class="ptn-pv__intro" id="ptn-intro" contenteditable="true" role="textbox" aria-label="<?php esc_attr_e( 'Intro greeting', 'posts-to-newsletter' ); ?>" data-placeholder="<?php esc_attr_e( 'Add an intro line…', 'posts-to-newsletter' ); ?>"><?php echo esc_html( $intro ); ?></p>
+					<p class="ptn-pv__intro" id="ptn-intro" contenteditable="true" role="textbox" aria-label="<?php esc_attr_e( 'Intro greeting', 'dmc-posts-to-newsletter-builder' ); ?>" data-placeholder="<?php esc_attr_e( 'Add an intro line…', 'dmc-posts-to-newsletter-builder' ); ?>"><?php echo esc_html( $intro ); ?></p>
 
 					<ul id="ptn-selected" class="ptn-pv__grid ptn-sortable">
 						<?php
@@ -161,8 +161,8 @@ $ptn_selected_count = count( $selected_posts );
 						<?php
 						printf(
 							/* translators: %s: the bolded word "Add". */
-							esc_html__( 'Nothing added yet — click %s on an article to build your edition.', 'posts-to-newsletter' ),
-							'<strong>' . esc_html__( 'Add', 'posts-to-newsletter' ) . '</strong>'
+							esc_html__( 'Nothing added yet — click %s on an article to build your edition.', 'dmc-posts-to-newsletter-builder' ),
+							'<strong>' . esc_html__( 'Add', 'dmc-posts-to-newsletter-builder' ) . '</strong>'
 						);
 						?>
 					</div>
@@ -171,13 +171,13 @@ $ptn_selected_count = count( $selected_posts );
 						<a href="<?php echo esc_url( $subscribe_url ); ?>" class="ptn-pv__subbtn">
 							<?php
 							/* translators: %s: site/publication name. */
-							printf( esc_html__( 'Subscribe to %s', 'posts-to-newsletter' ), esc_html( $site_name ) );
+							printf( esc_html__( 'Subscribe to %s', 'dmc-posts-to-newsletter-builder' ), esc_html( $site_name ) );
 							?>
 						</a>
 						<a class="ptn-pv__home" href="<?php echo esc_url( home_url( '/' ) ); ?>">
 							<?php
 							/* translators: %s: site domain. */
-							printf( esc_html__( 'Read more at %s', 'posts-to-newsletter' ), esc_html( wp_parse_url( home_url(), PHP_URL_HOST ) ) );
+							printf( esc_html__( 'Read more at %s', 'dmc-posts-to-newsletter-builder' ), esc_html( wp_parse_url( home_url(), PHP_URL_HOST ) ) );
 							?> &rarr;
 						</a>
 					</div>
@@ -185,9 +185,9 @@ $ptn_selected_count = count( $selected_posts );
 					<div class="ptn-pv__footer">
 						<?php
 						/* translators: %s: site/publication name. */
-						printf( esc_html__( 'You are receiving this email because you subscribed to %s.', 'posts-to-newsletter' ), esc_html( $site_name ) );
+						printf( esc_html__( 'You are receiving this email because you subscribed to %s.', 'dmc-posts-to-newsletter-builder' ), esc_html( $site_name ) );
 						?>
-						<br /><span class="ptn-pv__muted"><?php esc_html_e( 'Unsubscribe · Update your preferences · View in browser', 'posts-to-newsletter' ); ?></span>
+						<br /><span class="ptn-pv__muted"><?php esc_html_e( 'Unsubscribe · Update your preferences · View in browser', 'dmc-posts-to-newsletter-builder' ); ?></span>
 					</div>
 				</div>
 			</div>
@@ -195,7 +195,7 @@ $ptn_selected_count = count( $selected_posts );
 
 		<?php // ---------- Right: delivery ---------- ?>
 		<aside class="compose__delivery col">
-			<h2 class="dpanel__title"><?php esc_html_e( 'Delivery', 'posts-to-newsletter' ); ?></h2>
+			<h2 class="dpanel__title"><?php esc_html_e( 'Delivery', 'dmc-posts-to-newsletter-builder' ); ?></h2>
 
 			<?php
 			/**
@@ -210,33 +210,33 @@ $ptn_selected_count = count( $selected_posts );
 
 			<?php if ( ! has_action( 'posts_to_newsletter_delivery_actions' ) ) : ?>
 				<div class="dupsell">
-					<strong><?php esc_html_e( 'One-click push', 'posts-to-newsletter' ); ?></strong>
-					<p><?php esc_html_e( 'Add Posts to Newsletter Pro to push this edition straight to Mailchimp or Campaign Monitor as a draft.', 'posts-to-newsletter' ); ?></p>
+					<strong><?php esc_html_e( 'One-click push', 'dmc-posts-to-newsletter-builder' ); ?></strong>
+					<p><?php esc_html_e( 'Add Posts to Newsletter Pro to push this edition straight to Mailchimp or Campaign Monitor as a draft.', 'dmc-posts-to-newsletter-builder' ); ?></p>
 				</div>
 			<?php endif; ?>
 
 			<div class="dmanual">
-				<h3><?php esc_html_e( 'Manual import', 'posts-to-newsletter' ); ?></h3>
-				<p><?php esc_html_e( 'Copy the platform-ready URL to import into your email tool.', 'posts-to-newsletter' ); ?></p>
+				<h3><?php esc_html_e( 'Manual import', 'dmc-posts-to-newsletter-builder' ); ?></h3>
+				<p><?php esc_html_e( 'Copy the platform-ready URL to import into your email tool.', 'dmc-posts-to-newsletter-builder' ); ?></p>
 				<ul class="dmanual__list">
 					<li>
-						<span class="dmanual__name"><?php esc_html_e( 'Campaign Monitor', 'posts-to-newsletter' ); ?></span>
+						<span class="dmanual__name"><?php esc_html_e( 'Campaign Monitor', 'dmc-posts-to-newsletter-builder' ); ?></span>
 						<span class="dmanual__btns">
-							<a class="iconbtn" href="<?php echo esc_url( $preview_cm ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'Open preview', 'posts-to-newsletter' ); ?>" title="<?php esc_attr_e( 'Open preview in a new tab', 'posts-to-newsletter' ); ?>">
+							<a class="iconbtn" href="<?php echo esc_url( $preview_cm ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'Open preview', 'dmc-posts-to-newsletter-builder' ); ?>" title="<?php esc_attr_e( 'Open preview in a new tab', 'dmc-posts-to-newsletter-builder' ); ?>">
 								<?php echo $this->icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
 							</a>
-							<button type="button" class="iconbtn ptn-copy-url" data-url="<?php echo esc_url( $preview_cm ); ?>" aria-label="<?php esc_attr_e( 'Copy import URL', 'posts-to-newsletter' ); ?>" title="<?php esc_attr_e( 'Copy import URL', 'posts-to-newsletter' ); ?>">
+							<button type="button" class="iconbtn ptn-copy-url" data-url="<?php echo esc_url( $preview_cm ); ?>" aria-label="<?php esc_attr_e( 'Copy import URL', 'dmc-posts-to-newsletter-builder' ); ?>" title="<?php esc_attr_e( 'Copy import URL', 'dmc-posts-to-newsletter-builder' ); ?>">
 								<?php echo $this->icon( 'copy' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
 							</button>
 						</span>
 					</li>
 					<li>
-						<span class="dmanual__name"><?php esc_html_e( 'Mailchimp', 'posts-to-newsletter' ); ?></span>
+						<span class="dmanual__name"><?php esc_html_e( 'Mailchimp', 'dmc-posts-to-newsletter-builder' ); ?></span>
 						<span class="dmanual__btns">
-							<a class="iconbtn" href="<?php echo esc_url( $preview_mc ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'Open preview', 'posts-to-newsletter' ); ?>" title="<?php esc_attr_e( 'Open preview in a new tab', 'posts-to-newsletter' ); ?>">
+							<a class="iconbtn" href="<?php echo esc_url( $preview_mc ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'Open preview', 'dmc-posts-to-newsletter-builder' ); ?>" title="<?php esc_attr_e( 'Open preview in a new tab', 'dmc-posts-to-newsletter-builder' ); ?>">
 								<?php echo $this->icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
 							</a>
-							<button type="button" class="iconbtn ptn-copy-url" data-url="<?php echo esc_url( $preview_mc ); ?>" aria-label="<?php esc_attr_e( 'Copy import URL', 'posts-to-newsletter' ); ?>" title="<?php esc_attr_e( 'Copy import URL', 'posts-to-newsletter' ); ?>">
+							<button type="button" class="iconbtn ptn-copy-url" data-url="<?php echo esc_url( $preview_mc ); ?>" aria-label="<?php esc_attr_e( 'Copy import URL', 'dmc-posts-to-newsletter-builder' ); ?>" title="<?php esc_attr_e( 'Copy import URL', 'dmc-posts-to-newsletter-builder' ); ?>">
 								<?php echo $this->icon( 'copy' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
 							</button>
 						</span>

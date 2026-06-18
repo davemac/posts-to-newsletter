@@ -38,5 +38,5 @@ defined( 'ABSPATH' ) || exit;
 		</span>
 	</span>
 
-	<button type="button" class="ptn-add addbtn" aria-label="<?php esc_attr_e( 'Add to edition', 'posts-to-newsletter' ); ?>"><?php echo $this->icon( 'plus' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?></button>
+	<button type="button" class="ptn-add addbtn" aria-label="<?php esc_attr_e( 'Add to edition', 'dmc-posts-to-newsletter-builder' ); ?>"><?php echo $this->icon( 'plus' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?></button>
 </li>
