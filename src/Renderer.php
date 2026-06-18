@@ -90,7 +90,7 @@ class Renderer {
 		// not to optimise it — its image Lazy Load injects a JavaScript loader (and it
 		// varies output by user-agent), which Campaign Monitor rejects on import. No-op
 		// when LiteSpeed is not active.
-		do_action( 'litespeed_disable_all', 'Posts to Newsletter raw email output' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- third-party (LiteSpeed) action, intentionally fired.
+		do_action( 'litespeed_disable_all', 'DMC Posts to Newsletter Builder raw email output' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- third-party (LiteSpeed) action, intentionally fired.
 
 		header( 'Content-Type: text/html; charset=utf-8' );
 		echo $this->render( $platform, (string) get_query_var( self::TEMPLATE_VAR ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- composed, escaped HTML email.
