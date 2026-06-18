@@ -41,7 +41,7 @@ class Templates {
 	public static function all(): array {
 		$templates = array(
 			self::DEFAULT_ID => array(
-				'label' => __( 'Newspaper', 'posts-to-newsletter' ),
+				'label' => __( 'Newspaper', 'dmc-posts-to-newsletter-builder' ),
 				'file'  => DIR . 'templates/email.php',
 			),
 		);

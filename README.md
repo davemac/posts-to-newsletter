@@ -1,8 +1,8 @@
-# Posts to Newsletter
+# DMC Posts to Newsletter Builder
 
 A WordPress plugin that turns your published posts into a branded HTML email. Hand-pick and order posts, then preview the newsletter at a public URL ready to **import into your email platform**. Reusable on any site: branding defaults from the WordPress site (title, custom logo) and everything is overridable on the settings page.
 
-This is the free core. One-click push of the newsletter as a draft to **Mailchimp** or **Campaign Monitor** is provided by the premium add-on, **Posts to Newsletter Pro**.
+This is the free core. One-click push of the newsletter as a draft to **Mailchimp** or **Campaign Monitor** is provided by the premium add-on, **DMC Posts to Newsletter Builder Pro**.
 
 ## Features (free)
 
@@ -14,7 +14,7 @@ This is the free core. One-click push of the newsletter as a draft to **Mailchim
 
 ## Premium: one-click push
 
-[Posts to Newsletter Pro](https://github.com/davemac/posts-to-newsletter-pro) adds **Push to Mailchimp** / **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform (it never sends), plus additional email templates. Without it, use the platform-ready preview URLs below to import manually.
+[DMC Posts to Newsletter Builder Pro](https://github.com/davemac/posts-to-newsletter-pro) adds **Push to Mailchimp** / **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform (it never sends), plus additional email templates. Without it, use the platform-ready preview URLs below to import manually.
 
 ## Requirements
 
@@ -28,7 +28,7 @@ Copy this folder into `wp-content/plugins/` and activate it from the **Plugins**
 
 1. **Newsletter** (admin menu) → search and add articles, drag to order.
 2. **Newsletter → Settings** → set branding, sender details and the article image size.
-3. Copy a platform-ready preview URL (below) and import it into your email platform — or install **Posts to Newsletter Pro** to push a draft in one click.
+3. Copy a platform-ready preview URL (below) and import it into your email platform — or install **DMC Posts to Newsletter Builder Pro** to push a draft in one click.
 
 ## Render endpoint
 

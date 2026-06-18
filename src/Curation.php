@@ -31,8 +31,8 @@ class Curation {
 	 */
 	public function register_admin_page(): void {
 		add_menu_page(
-			__( 'Newsletter', 'posts-to-newsletter' ),
-			__( 'Newsletter', 'posts-to-newsletter' ),
+			__( 'Posts to Newsletter Builder', 'dmc-posts-to-newsletter-builder' ),
+			__( 'Posts to Newsletter Builder', 'dmc-posts-to-newsletter-builder' ),
 			self::CAPABILITY,
 			self::PAGE,
 			array( $this, 'render_admin_page' ),
@@ -70,15 +70,15 @@ class Curation {
 				'cardUrl'   => esc_url_raw( rest_url( self::REST_NS . '/card' ) ),
 				'nonce'     => wp_create_nonce( 'wp_rest' ),
 				'i18n'      => array(
-					'saving'        => __( 'Saving…', 'posts-to-newsletter' ),
+					'saving'        => __( 'Saving…', 'dmc-posts-to-newsletter-builder' ),
 					/* translators: %d: number of selected articles. */
-					'saved'         => __( 'Saved · %d selected', 'posts-to-newsletter' ),
-					'saveFailed'    => __( 'Save failed — please try again', 'posts-to-newsletter' ),
-					'add'           => __( 'Add', 'posts-to-newsletter' ),
-					'added'         => __( 'Added', 'posts-to-newsletter' ),
-					'remove'        => __( 'Remove', 'posts-to-newsletter' ),
-					'noMatches'     => __( 'No matching articles.', 'posts-to-newsletter' ),
-					'noMatchesHint' => __( 'Try a different search or clear the filter.', 'posts-to-newsletter' ),
+					'saved'         => __( 'Saved · %d selected', 'dmc-posts-to-newsletter-builder' ),
+					'saveFailed'    => __( 'Save failed — please try again', 'dmc-posts-to-newsletter-builder' ),
+					'add'           => __( 'Add', 'dmc-posts-to-newsletter-builder' ),
+					'added'         => __( 'Added', 'dmc-posts-to-newsletter-builder' ),
+					'remove'        => __( 'Remove', 'dmc-posts-to-newsletter-builder' ),
+					'noMatches'     => __( 'No matching articles.', 'dmc-posts-to-newsletter-builder' ),
+					'noMatchesHint' => __( 'Try a different search or clear the filter.', 'dmc-posts-to-newsletter-builder' ),
 				),
 			)
 		);

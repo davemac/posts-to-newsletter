@@ -1,4 +1,4 @@
-=== Posts to Newsletter ===
+=== DMC Posts to Newsletter Builder ===
 Contributors: davemac
 Tags: newsletter, email newsletter, post digest, email campaign, mailchimp
 Requires at least: 6.0
@@ -12,7 +12,7 @@ Hand-pick and order posts into a branded HTML email, then preview a platform-rea
 
 == Description ==
 
-**Posts to Newsletter** turns your published posts into a branded email newsletter. Search your posts, click to include them, drag to set the order, then preview the finished newsletter at a public URL — ready to copy into your email platform.
+**DMC Posts to Newsletter Builder** turns your published posts into a branded email newsletter. Search your posts, click to include them, drag to set the order, then preview the finished newsletter at a public URL — ready to copy into your email platform.
 
 Branding defaults from your WordPress site (title and custom logo) and everything is overridable on the settings page, so it works on any site out of the box.
 
@@ -25,11 +25,11 @@ Branding defaults from your WordPress site (title and custom logo) and everythin
 
 = One-click push (premium add-on) =
 
-The free plugin produces newsletter HTML you import into your platform manually. The premium add-on **Posts to Newsletter Pro** adds **Push to Mailchimp** and **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform in one click. It never sends — a human always reviews and sends inside the platform. Pro also adds more email templates to choose from on the curation screen.
+The free plugin produces newsletter HTML you import into your platform manually. The premium add-on **DMC Posts to Newsletter Builder Pro** adds **Push to Mailchimp** and **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform in one click. It never sends — a human always reviews and sends inside the platform. Pro also adds more email templates to choose from on the curation screen.
 
 = Compatibility note =
 
-Posts to Newsletter is an independent plugin and is not affiliated with, or endorsed by, Mailchimp or Campaign Monitor; those names are used only to describe the newsletter formats it can produce.
+DMC Posts to Newsletter Builder is an independent plugin and is not affiliated with, or endorsed by, Mailchimp or Campaign Monitor; those names are used only to describe the newsletter formats it can produce.
 
 = Privacy =
 
@@ -41,7 +41,7 @@ Built and maintained by DMC Web (https://dmcweb.com.au).
 
 == Installation ==
 
-1. Upload the `posts-to-newsletter` folder to `/wp-content/plugins/`, or install it through **Plugins → Add New**.
+1. Upload the `dmc-posts-to-newsletter-builder` folder to `/wp-content/plugins/`, or install it through **Plugins → Add New**.
 2. Activate the plugin through the **Plugins** menu.
 3. Go to **Newsletter → Settings** and set your branding, sender details and article image size.
 4. Open **Newsletter**, add and order your articles, then copy a preview URL to import into your email platform.
@@ -71,7 +71,7 @@ Any published post. Search by keyword or pick from your most recent posts.
 
 = Can I change the newsletter design? =
 
-Yes. Branding (logo, hero image, colours, sender details and article image size) is set on the settings page. The subject line, intro greeting and email template are set per edition on the curation screen — the free plugin ships one template, and Posts to Newsletter Pro adds more.
+Yes. Branding (logo, hero image, colours, sender details and article image size) is set on the settings page. The subject line, intro greeting and email template are set per edition on the curation screen — the free plugin ships one template, and DMC Posts to Newsletter Builder Pro adds more.
 
 = Is it tied to one site or theme? =
 
@@ -86,7 +86,7 @@ No. Branding defaults are pulled from the current site and everything is overrid
 == Changelog ==
 
 = 1.0.0 =
-* Initial release: post curation, branded email rendering, and a platform-aware public render endpoint for manual import. One-click draft push to Mailchimp and Campaign Monitor is available via the premium Posts to Newsletter Pro add-on.
+* Initial release: post curation, branded email rendering, and a platform-aware public render endpoint for manual import. One-click draft push to Mailchimp and Campaign Monitor is available via the premium DMC Posts to Newsletter Builder Pro add-on.
 
 == Upgrade Notice ==
 

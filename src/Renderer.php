@@ -90,7 +90,7 @@ class Renderer {
 		// not to optimise it — its image Lazy Load injects a JavaScript loader (and it
 		// varies output by user-agent), which Campaign Monitor rejects on import. No-op
 		// when LiteSpeed is not active.
-		do_action( 'litespeed_disable_all', 'Posts to Newsletter raw email output' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- third-party (LiteSpeed) action, intentionally fired.
+		do_action( 'litespeed_disable_all', 'DMC Posts to Newsletter Builder raw email output' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- third-party (LiteSpeed) action, intentionally fired.
 
 		header( 'Content-Type: text/html; charset=utf-8' );
 		echo $this->render( $platform, (string) get_query_var( self::TEMPLATE_VAR ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- composed, escaped HTML email.
@@ -174,11 +174,11 @@ class Renderer {
 		$grey      = 'color:#888888;';
 
 		/* translators: %s: site/publication name. */
-		$received    = sprintf( esc_html__( 'You are receiving this email because you subscribed to %s.', 'posts-to-newsletter' ), esc_html( $site_name ) );
-		$unsubscribe = esc_html__( 'Unsubscribe', 'posts-to-newsletter' );
-		$preferences = esc_html__( 'Update your preferences', 'posts-to-newsletter' );
-		$web_version = esc_html__( 'View in browser', 'posts-to-newsletter' );
-		$preheader   = esc_html__( 'View this email in your browser.', 'posts-to-newsletter' );
+		$received    = sprintf( esc_html__( 'You are receiving this email because you subscribed to %s.', 'dmc-posts-to-newsletter-builder' ), esc_html( $site_name ) );
+		$unsubscribe = esc_html__( 'Unsubscribe', 'dmc-posts-to-newsletter-builder' );
+		$preferences = esc_html__( 'Update your preferences', 'dmc-posts-to-newsletter-builder' );
+		$web_version = esc_html__( 'View in browser', 'dmc-posts-to-newsletter-builder' );
+		$preheader   = esc_html__( 'View this email in your browser.', 'dmc-posts-to-newsletter-builder' );
 
 		if ( 'mailchimp' === $platform ) {
 			$footer  = $received . '<br />';
