@@ -211,7 +211,7 @@ $ptn_selected_count = count( $selected_posts );
 			<?php if ( ! has_action( 'posts_to_newsletter_delivery_actions' ) ) : ?>
 				<div class="dupsell">
 					<strong><?php esc_html_e( 'One-click push', 'dmc-posts-to-newsletter-builder' ); ?></strong>
-					<p><?php esc_html_e( 'Add Posts to Newsletter Pro to push this edition straight to Mailchimp or Campaign Monitor as a draft.', 'dmc-posts-to-newsletter-builder' ); ?></p>
+					<p><?php esc_html_e( 'Add DMC Posts to Newsletter Builder Pro to push this edition straight to Mailchimp or Campaign Monitor as a draft.', 'dmc-posts-to-newsletter-builder' ); ?></p>
 				</div>
 			<?php endif; ?>
 
