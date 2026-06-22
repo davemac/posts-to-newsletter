@@ -15,11 +15,11 @@ defined( 'ABSPATH' ) || exit;
  */
 class Settings {
 
-	public const OPTION       = 'ptn_settings';
+	public const OPTION       = 'dmc_ptn_settings';
 	public const PAGE         = 'posts-to-newsletter-settings';
 	public const PARENT       = 'posts-to-newsletter';
 	public const CAPABILITY   = 'manage_options';
-	public const SAVE_ACTION  = 'ptn_save_settings';
+	public const SAVE_ACTION  = 'dmc_ptn_save_settings';
 
 	/**
 	 * Default settings. Branding defaults derive from the WordPress site.
@@ -45,7 +45,7 @@ class Settings {
 		 *
 		 * Add-ons can register their own default keys (for example the premium
 		 * push layer's platform-credential fields), keeping them in the shared
-		 * ptn_settings option.
+		 * dmc_ptn_settings option.
 		 *
 		 * @param array<string, mixed> $defaults Default settings.
 		 */
@@ -175,15 +175,15 @@ class Settings {
 
 		wp_enqueue_media();
 		wp_enqueue_script(
-			'ptn-settings',
+			'dmc-ptn-settings',
 			URL . 'assets/js/settings.js',
 			array( 'jquery' ),
 			Plugin::asset_version( 'assets/js/settings.js' ),
 			true
 		);
 		wp_localize_script(
-			'ptn-settings',
-			'ptnSettings',
+			'dmc-ptn-settings',
+			'dmcPtnSettings',
 			array(
 				'i18n' => array(
 					'chooseImage' => __( 'Choose image', 'dmc-posts-to-newsletter-builder' ),
@@ -193,7 +193,7 @@ class Settings {
 			)
 		);
 		wp_enqueue_style(
-			'ptn-admin',
+			'dmc-ptn-admin',
 			URL . 'assets/css/admin.css',
 			array(),
 			Plugin::asset_version( 'assets/css/admin.css' )
@@ -232,7 +232,7 @@ class Settings {
 		 * Filter the sanitised settings before they are stored.
 		 *
 		 * Lets add-ons (for example the premium push layer) sanitise and merge
-		 * their own submitted fields into the shared ptn_settings option.
+		 * their own submitted fields into the shared dmc_ptn_settings option.
 		 *
 		 * @param array<string, mixed> $clean    Sanitised settings to store.
 		 * @param array<string, mixed> $in       Unslashed, text-sanitised $_POST input.

@@ -11,7 +11,6 @@
  * @var string        $byline   Author byline (may be empty).
  * @var \WP_Term|null $category First category term, or null.
  * @var int[]         $cat_ids  Category term IDs (for the chip filter).
- * @var \PostsToNewsletter\Curation $this Curation (for icon()).
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -22,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php if ( '' !== $thumb ) : ?>
 		<span class="thumb"><?php echo wp_kses_post( $thumb ); ?></span>
 	<?php else : ?>
-		<span class="thumb thumb--ph"><?php echo $this->icon( 'image' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?></span>
+		<span class="thumb thumb--ph"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg></span>
 	<?php endif; ?>
 
 	<span class="meta">
@@ -38,5 +37,5 @@ defined( 'ABSPATH' ) || exit;
 		</span>
 	</span>
 
-	<button type="button" class="ptn-add addbtn" aria-label="<?php esc_attr_e( 'Add to edition', 'dmc-posts-to-newsletter-builder' ); ?>"><?php echo $this->icon( 'plus' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?></button>
+	<button type="button" class="ptn-add addbtn" aria-label="<?php esc_attr_e( 'Add to edition', 'dmc-posts-to-newsletter-builder' ); ?>"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
 </li>

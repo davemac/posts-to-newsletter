@@ -23,14 +23,14 @@ class Selection {
 	 *
 	 * @var string
 	 */
-	public const OPTION = 'ptn_newsletter_post_ids';
+	public const OPTION = 'dmc_ptn_newsletter_post_ids';
 
 	/**
 	 * Option storing the edition's subject line (per-edition content, not config).
 	 *
 	 * @var string
 	 */
-	public const SUBJECT_OPTION = 'ptn_subject';
+	public const SUBJECT_OPTION = 'dmc_ptn_subject';
 
 	/**
 	 * Option storing the edition's intro line (per-edition override of the
@@ -38,7 +38,7 @@ class Selection {
 	 *
 	 * @var string
 	 */
-	public const INTRO_OPTION = 'ptn_intro';
+	public const INTRO_OPTION = 'dmc_ptn_intro';
 
 	/**
 	 * Upper bound on how many posts a newsletter can contain. Caps the stored

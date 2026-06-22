@@ -164,6 +164,33 @@ class Renderer {
 	}
 
 	/**
+	 * The HTML allowlist for escaping the footer/preheader merge-tag markup.
+	 *
+	 * Those tokens are not plain HTML: alongside standard <a>/<br> they carry
+	 * Campaign Monitor's custom <unsubscribe>/<preferences>/<webversion> elements
+	 * and Mailchimp *|MERGE|* tags inside hrefs. They are also filterable
+	 * (posts_to_newsletter_platform_tokens), so the email template escapes them on
+	 * output with this tailored wp_kses() allowlist — wp_kses_post() would drop the
+	 * custom elements.
+	 *
+	 * @return array<string, array<string, bool>>
+	 */
+	public static function allowed_email_token_html(): array {
+		return array(
+			'a'           => array(
+				'href'   => true,
+				'style'  => true,
+				'target' => true,
+				'rel'    => true,
+			),
+			'br'          => array(),
+			'unsubscribe' => array( 'style' => true ),
+			'preferences' => array( 'style' => true ),
+			'webversion'  => array( 'style' => true ),
+		);
+	}
+
+	/**
 	 * Platform-specific merge tags and footer/preheader markup.
 	 *
 	 * @param string $platform Target platform.

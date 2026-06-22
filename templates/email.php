@@ -42,7 +42,7 @@ defined( 'ABSPATH' ) || exit;
 	<div style="display:none; max-height:0; overflow:hidden;"><?php
 		/* translators: %s: site/publication name. */
 		printf( esc_html__( 'The latest news from %s.', 'dmc-posts-to-newsletter-builder' ), esc_html( $site_name ) );
-	?> <?php echo $tokens['preheader']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- platform merge-tag markup. ?></div>
+	?> <?php echo wp_kses( $tokens['preheader'], \PostsToNewsletter\Renderer::allowed_email_token_html() ); ?></div>
 
 	<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
 		<tr>
@@ -97,7 +97,7 @@ defined( 'ABSPATH' ) || exit;
 					</tr>
 
 					<tr>
-						<td align="center" style="padding:24px 32px 28px 32px; font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:18px; color:#888888;"><?php echo $tokens['footer']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- footer built from escaped parts + platform merge tags. ?></td>
+						<td align="center" style="padding:24px 32px 28px 32px; font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:18px; color:#888888;"><?php echo wp_kses( $tokens['footer'], \PostsToNewsletter\Renderer::allowed_email_token_html() ); ?></td>
 					</tr>
 
 				</table>
