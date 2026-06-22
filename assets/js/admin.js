@@ -7,7 +7,7 @@
 ( function ( $ ) {
 	'use strict';
 
-	var cfg = window.ptnNewsletter || {};
+	var cfg = window.dmcPtnNewsletter || {};
 	var i18n = cfg.i18n || {};
 	var $available = $( '#ptn-available' );
 	var $selected = $( '#ptn-selected' );
@@ -26,7 +26,7 @@
 	var saveTimer = null;
 	var searchTimer = null;
 
-	// Inline icons, matching the server-rendered set in Curation::icon().
+	// Inline icons, matching the static SVGs in the server-rendered templates.
 	var ICONS = {
 		plus: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>',
 		x: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>',

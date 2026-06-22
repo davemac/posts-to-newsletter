@@ -4,7 +4,7 @@
 ( function ( $ ) {
 	'use strict';
 
-	var i18n = ( window.ptnSettings || {} ).i18n || {};
+	var i18n = ( window.dmcPtnSettings || {} ).i18n || {};
 
 	// Colour fields: keep the native swatch and the hex text input in sync.
 	$( '.color-row' ).each( function () {
@@ -67,7 +67,7 @@
 			return;
 		}
 		dirty = true;
-		$note.html( $( '<strong></strong>' ).text( ( window.ptnSettings && window.ptnSettings.i18n && window.ptnSettings.i18n.unsaved ) || 'Unsaved changes' ) );
+		$note.html( $( '<strong></strong>' ).text( ( window.dmcPtnSettings && window.dmcPtnSettings.i18n && window.dmcPtnSettings.i18n.unsaved ) || 'Unsaved changes' ) );
 	}
 	$( '#ptn-settings-form' ).on( 'input change', markDirty );
 } )( jQuery );

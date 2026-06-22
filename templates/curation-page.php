@@ -61,7 +61,7 @@ $ptn_selected_count = count( $selected_posts );
 			do_action( 'posts_to_newsletter_curation_actions' );
 			?>
 			<a class="ghostbtn ptn-settings-link" href="<?php echo esc_url( $settings_url ); ?>">
-				<?php echo $this->icon( 'gear' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
+				<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
 				<span><?php esc_html_e( 'Settings', 'dmc-posts-to-newsletter-builder' ); ?></span>
 			</a>
 		</div>
@@ -77,10 +77,10 @@ $ptn_selected_count = count( $selected_posts );
 			</div>
 
 			<div class="search">
-				<?php echo $this->icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
+				<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
 				<input type="search" id="ptn-search" placeholder="<?php esc_attr_e( 'Search all articles…', 'dmc-posts-to-newsletter-builder' ); ?>" autocomplete="off" />
 				<button type="button" class="search__clear" id="ptn-search-clear" aria-label="<?php esc_attr_e( 'Clear search', 'dmc-posts-to-newsletter-builder' ); ?>" hidden>
-					<?php echo $this->icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
+					<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>
 				</button>
 			</div>
 
@@ -223,10 +223,10 @@ $ptn_selected_count = count( $selected_posts );
 						<span class="dmanual__name"><?php esc_html_e( 'Campaign Monitor', 'dmc-posts-to-newsletter-builder' ); ?></span>
 						<span class="dmanual__btns">
 							<a class="iconbtn" href="<?php echo esc_url( $preview_cm ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'Open preview', 'dmc-posts-to-newsletter-builder' ); ?>" title="<?php esc_attr_e( 'Open preview in a new tab', 'dmc-posts-to-newsletter-builder' ); ?>">
-								<?php echo $this->icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
+								<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
 							</a>
 							<button type="button" class="iconbtn ptn-copy-url" data-url="<?php echo esc_url( $preview_cm ); ?>" aria-label="<?php esc_attr_e( 'Copy import URL', 'dmc-posts-to-newsletter-builder' ); ?>" title="<?php esc_attr_e( 'Copy import URL', 'dmc-posts-to-newsletter-builder' ); ?>">
-								<?php echo $this->icon( 'copy' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
+								<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9h10v10H9z"/><path d="M5 15V5h10"/></svg>
 							</button>
 						</span>
 					</li>
@@ -234,10 +234,10 @@ $ptn_selected_count = count( $selected_posts );
 						<span class="dmanual__name"><?php esc_html_e( 'Mailchimp', 'dmc-posts-to-newsletter-builder' ); ?></span>
 						<span class="dmanual__btns">
 							<a class="iconbtn" href="<?php echo esc_url( $preview_mc ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'Open preview', 'dmc-posts-to-newsletter-builder' ); ?>" title="<?php esc_attr_e( 'Open preview in a new tab', 'dmc-posts-to-newsletter-builder' ); ?>">
-								<?php echo $this->icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
+								<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
 							</a>
 							<button type="button" class="iconbtn ptn-copy-url" data-url="<?php echo esc_url( $preview_mc ); ?>" aria-label="<?php esc_attr_e( 'Copy import URL', 'dmc-posts-to-newsletter-builder' ); ?>" title="<?php esc_attr_e( 'Copy import URL', 'dmc-posts-to-newsletter-builder' ); ?>">
-								<?php echo $this->icon( 'copy' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static, developer-defined SVG markup. ?>
+								<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9h10v10H9z"/><path d="M5 15V5h10"/></svg>
 							</button>
 						</span>
 					</li>

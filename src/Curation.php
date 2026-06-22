@@ -52,9 +52,9 @@ class Curation {
 			return;
 		}
 
-		wp_enqueue_style( 'ptn-admin', URL . 'assets/css/admin.css', array(), Plugin::asset_version( 'assets/css/admin.css' ) );
+		wp_enqueue_style( 'dmc-ptn-admin', URL . 'assets/css/admin.css', array(), Plugin::asset_version( 'assets/css/admin.css' ) );
 		wp_enqueue_script(
-			'ptn-admin',
+			'dmc-ptn-admin',
 			URL . 'assets/js/admin.js',
 			array( 'jquery' ),
 			Plugin::asset_version( 'assets/js/admin.js' ),
@@ -62,8 +62,8 @@ class Curation {
 		);
 
 		wp_localize_script(
-			'ptn-admin',
-			'ptnNewsletter',
+			'dmc-ptn-admin',
+			'dmcPtnNewsletter',
 			array(
 				'saveUrl'   => esc_url_raw( rest_url( self::REST_NS . '/selection' ) ),
 				'searchUrl' => esc_url_raw( rest_url( self::REST_NS . '/search' ) ),
@@ -308,32 +308,6 @@ class Curation {
 		$cat_ids  = ! empty( $cats ) ? array_map( 'intval', wp_list_pluck( $cats, 'term_id' ) ) : array();
 
 		require DIR . 'templates/article-item.php';
-	}
-
-	/**
-	 * Return an inline stroke icon by name.
-	 *
-	 * Static, developer-defined SVG markup (echoed raw — never user input), so
-	 * the curation list and the JS-built controls share one icon set.
-	 *
-	 * @param string $name Icon name.
-	 * @return string SVG markup, or an empty string for an unknown name.
-	 */
-	public static function icon( string $name ): string {
-		$icons = array(
-			'search' => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
-			'plus'   => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>',
-			'x'      => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>',
-			'check'  => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
-			'grip'   => '<svg class="ico" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>',
-			'image'  => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg>',
-			'eye'    => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
-			'copy'   => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9h10v10H9z"/><path d="M5 15V5h10"/></svg>',
-			'send'   => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>',
-			'gear'   => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>',
-		);
-
-		return $icons[ $name ] ?? '';
 	}
 
 	/**

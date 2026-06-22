@@ -24,7 +24,7 @@ class Templates {
 	 *
 	 * @var string
 	 */
-	public const OPTION = 'ptn_template';
+	public const OPTION = 'dmc_ptn_template';
 
 	/**
 	 * The id of the bundled default template.
