@@ -3,11 +3,13 @@
  * Plugin Name:       DMC Posts to Newsletter Builder
  * Plugin URI:        https://dmcweb.com.au
  * Description:       Hand-pick and order your posts into a branded HTML email, then preview a platform-ready newsletter to import into Mailchimp or Campaign Monitor.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            DMC Web
+ * Author URI:        https://dmcweb.com.au
  * License:           GPL-2.0-or-later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       dmc-posts-to-newsletter-builder
  *
  * @package PostsToNewsletter
@@ -17,7 +19,7 @@ namespace PostsToNewsletter;
 
 defined( 'ABSPATH' ) || exit;
 
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 
 define( 'PostsToNewsletter\\FILE', __FILE__ );
 define( 'PostsToNewsletter\\DIR', plugin_dir_path( __FILE__ ) );
