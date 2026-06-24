@@ -28,7 +28,7 @@ Copy this folder into `wp-content/plugins/` and activate it from the **Plugins**
 
 1. **Newsletter** (admin menu) → search and add articles, drag to order.
 2. **Newsletter → Settings** → set branding, sender details and the article image size.
-3. Copy a platform-ready preview URL (below) and import it into your email platform — or install **DMC Posts to Newsletter Builder Pro** to push a draft in one click.
+3. Copy a platform-ready preview URL (below) and import it into your email platform, or install **DMC Posts to Newsletter Builder Pro** to push a draft in one click.
 
 ## Render endpoint
 
