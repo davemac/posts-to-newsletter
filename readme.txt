@@ -4,7 +4,7 @@ Tags: newsletter, email newsletter, post digest, email campaign, mailchimp
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,7 +25,7 @@ Branding defaults from your WordPress site (title and custom logo) and everythin
 
 = One-click push (premium add-on) =
 
-The free plugin produces newsletter HTML you import into your platform manually. The premium add-on **DMC Posts to Newsletter Builder Pro** adds **Push to Mailchimp** and **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform in one click. It never sends. A human always reviews and sends inside the platform. Pro also adds more email templates to choose from on the curation screen.
+The free plugin produces newsletter HTML you import into your platform manually. The premium add-on **DMC Posts to Newsletter Builder Pro** adds **Push to Mailchimp** and **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform in one click. It never sends. A human always reviews and sends inside the platform. Learn more at https://dmcweb.com.au/newsletter-builder-pro/.
 
 = Compatibility note =
 
@@ -71,7 +71,7 @@ Any published post. Search by keyword or pick from your most recent posts.
 
 = Can I change the newsletter design? =
 
-Yes. Branding (logo, hero image, colours, sender details and article image size) is set on the settings page. The subject line, intro greeting and email template are set per edition on the curation screen. The free plugin ships one template, and DMC Posts to Newsletter Builder Pro adds more.
+Yes. Branding (logo, hero image, colours, sender details and article image size) is set on the settings page. The subject line, intro greeting and email template are set per edition on the curation screen.
 
 = Is it tied to one site or theme? =
 
@@ -85,6 +85,11 @@ No. Branding defaults are pulled from the current site and everything is overrid
 
 == Changelog ==
 
+= 1.0.2 =
+* Pointed the Pro links at the plugin's new home page (https://dmcweb.com.au/newsletter-builder-pro/) and added a link to the Delivery panel upgrade card.
+* Removed mentions of extra Pro email templates, which are not available yet.
+* No functional changes.
+
 = 1.0.1 =
 * Housekeeping: added License URI and Author URI to the plugin header and tidied the readme wording. No functional changes.
 
@@ -92,6 +97,9 @@ No. Branding defaults are pulled from the current site and everything is overrid
 * Initial release: post curation, branded email rendering, and a platform-aware public render endpoint for manual import. One-click draft push to Mailchimp and Campaign Monitor is available via the premium DMC Posts to Newsletter Builder Pro add-on.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Link and readme updates only; no functional changes.
 
 = 1.0.1 =
 Minor housekeeping (plugin header and readme tidy-up); no functional changes.
