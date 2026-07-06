@@ -156,8 +156,8 @@ $curation_url = admin_url( 'admin.php?page=' . \PostsToNewsletter\Curation::PAGE
 					<h2><?php esc_html_e( 'One-click push', 'dmc-posts-to-newsletter-builder' ); ?></h2>
 				</div>
 				<div class="scard__body">
-					<p><?php esc_html_e( 'Send your curated newsletter straight to Mailchimp or Campaign Monitor as a ready-to-review draft - no copy and paste.', 'dmc-posts-to-newsletter-builder' ); ?></p>
-					<p><a class="btn btn--primary" href="https://dmcweb.com.au" target="_blank" rel="noopener"><?php esc_html_e( 'Upgrade to Pro', 'dmc-posts-to-newsletter-builder' ); ?></a></p>
+					<p><?php esc_html_e( 'Push your curated newsletter straight to Mailchimp or Campaign Monitor as a ready-to-review draft. One click, no copy and paste, and it never sends without you.', 'dmc-posts-to-newsletter-builder' ); ?></p>
+					<p><a class="btn btn--primary" href="https://dmcweb.com.au/newsletter-builder-pro/" target="_blank" rel="noopener"><?php esc_html_e( 'Upgrade to Pro', 'dmc-posts-to-newsletter-builder' ); ?></a></p>
 					<p class="fhint"><?php esc_html_e( 'For now, use the preview / import URLs on the Newsletter screen to import into your platform manually.', 'dmc-posts-to-newsletter-builder' ); ?></p>
 				</div>
 			</section>

@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name:       DMC Posts to Newsletter Builder
- * Plugin URI:        https://dmcweb.com.au
+ * Plugin URI:        https://dmcweb.com.au/newsletter-builder-pro/
  * Description:       Hand-pick and order your posts into a branded HTML email, then preview a platform-ready newsletter to import into Mailchimp or Campaign Monitor.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            DMC Web

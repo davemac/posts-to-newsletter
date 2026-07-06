@@ -14,7 +14,7 @@ This is the free core. One-click push of the newsletter as a draft to **Mailchim
 
 ## Premium: one-click push
 
-[DMC Posts to Newsletter Builder Pro](https://github.com/davemac/posts-to-newsletter-pro) adds **Push to Mailchimp** / **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform (it never sends), plus additional email templates. Without it, use the platform-ready preview URLs below to import manually.
+[DMC Posts to Newsletter Builder Pro](https://dmcweb.com.au/newsletter-builder-pro/) adds **Push to Mailchimp** / **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform (it never sends). Without it, use the platform-ready preview URLs below to import manually.
 
 ## Requirements
 

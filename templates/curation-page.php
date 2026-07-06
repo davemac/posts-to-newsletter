@@ -116,9 +116,6 @@ $ptn_selected_count = count( $selected_posts );
 							<option value="<?php echo esc_attr( $ptn_tid ); ?>" <?php selected( $current_template, $ptn_tid ); ?>><?php echo esc_html( $ptn_tpl['label'] ); ?></option>
 						<?php endforeach; ?>
 					</select>
-					<?php if ( count( $templates ) < 2 ) : ?>
-						<a class="ptn-tpl__pro" href="<?php echo esc_url( 'https://dmcweb.com.au/p2npro' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Get more templates with Pro', 'dmc-posts-to-newsletter-builder' ); ?></a>
-					<?php endif; ?>
 				</div>
 				<div class="ptn-viewport" role="group" aria-label="<?php esc_attr_e( 'Preview width', 'dmc-posts-to-newsletter-builder' ); ?>">
 					<button type="button" class="ptn-viewport-toggle is-on" data-mode="desktop" aria-pressed="true"><?php esc_html_e( 'Desktop', 'dmc-posts-to-newsletter-builder' ); ?></button>
@@ -211,7 +208,8 @@ $ptn_selected_count = count( $selected_posts );
 			<?php if ( ! has_action( 'posts_to_newsletter_delivery_actions' ) ) : ?>
 				<div class="dupsell">
 					<strong><?php esc_html_e( 'One-click push', 'dmc-posts-to-newsletter-builder' ); ?></strong>
-					<p><?php esc_html_e( 'Add DMC Posts to Newsletter Builder Pro to push this edition straight to Mailchimp or Campaign Monitor as a draft.', 'dmc-posts-to-newsletter-builder' ); ?></p>
+					<p><?php esc_html_e( 'Add DMC Posts to Newsletter Builder Pro and this edition lands in Mailchimp or Campaign Monitor as a ready-to-review draft, straight from this screen.', 'dmc-posts-to-newsletter-builder' ); ?></p>
+					<a class="dupsell__link" href="https://dmcweb.com.au/newsletter-builder-pro/" target="_blank" rel="noopener"><?php esc_html_e( 'See what Pro does', 'dmc-posts-to-newsletter-builder' ); ?> &rarr;</a>
 				</div>
 			<?php endif; ?>
 

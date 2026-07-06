@@ -737,15 +737,6 @@
 	background-repeat: no-repeat;
 	background-position: right 10px center;
 }
-.ptn-curation .ptn-tpl__pro {
-	font-size: 12.5px;
-	font-weight: 600;
-	color: var( --ptn-accent );
-	text-decoration: none;
-}
-.ptn-curation .ptn-tpl__pro:hover {
-	text-decoration: underline;
-}
 .ptn-curation .ptn-viewport {
 	margin-left: auto;
 	display: inline-flex;
@@ -1040,6 +1031,22 @@
 	margin: 0;
 	font-size: 12.5px;
 	color: var( --ptn-ink-3 );
+}
+.ptn-curation .dupsell__link {
+	display: inline-block;
+	margin-top: 10px;
+	padding: 7px 12px;
+	border-radius: 6px;
+	background: var( --ptn-brand-green-strong );
+	color: #fff;
+	font-size: 12.5px;
+	font-weight: 600;
+	text-decoration: none;
+}
+.ptn-curation .dupsell__link:hover,
+.ptn-curation .dupsell__link:focus {
+	background: var( --ptn-brand-green-strong-hover );
+	color: #fff;
 }
 
 .ptn-curation .dmanual {
