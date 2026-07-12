@@ -25,7 +25,7 @@ Branding defaults from your WordPress site (title and custom logo) and everythin
 
 = One-click push (premium add-on) =
 
-The free plugin produces newsletter HTML you import into your platform manually. The premium add-on **DMC Posts to Newsletter Builder Pro** adds **Push to Mailchimp** and **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform in one click. It never sends. A human always reviews and sends inside the platform. Learn more at https://dmcweb.com.au/newsletter-builder-pro/.
+The free plugin produces newsletter HTML you import into your platform manually. The premium add-on **DMC Posts to Newsletter Builder Pro** adds **Push to Mailchimp** and **Push to Campaign Monitor** buttons that create a ready-to-review **draft** on the platform in one click. It never sends. A human always reviews and sends inside the platform. Learn more on the [DMC Posts to Newsletter Builder Pro page](https://dmcweb.com.au/newsletter-builder-pro/).
 
 = Compatibility note =
 
@@ -37,7 +37,7 @@ The free plugin does not phone home or send your content anywhere. It only rende
 
 = Credits =
 
-Built and maintained by DMC Web (https://dmcweb.com.au).
+Built and maintained by [DMC Web](https://dmcweb.com.au).
 
 == Installation ==
 
@@ -86,7 +86,7 @@ No. Branding defaults are pulled from the current site and everything is overrid
 == Changelog ==
 
 = 1.0.2 =
-* Pointed the Pro links at the plugin's new home page (https://dmcweb.com.au/newsletter-builder-pro/) and added a link to the Delivery panel upgrade card.
+* Pointed the Pro links at the plugin's new [home page](https://dmcweb.com.au/newsletter-builder-pro/) and added a link to the Delivery panel upgrade card.
 * Removed mentions of extra Pro email templates, which are not available yet.
 * No functional changes.
 
