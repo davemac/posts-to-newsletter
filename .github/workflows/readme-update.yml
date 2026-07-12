@@ -1,0 +1,30 @@
+# Pushes readme.txt and .wordpress-org asset changes to the WordPress.org SVN
+# repository (trunk AND the current stable tag) without needing a release.
+#
+# Use for listing-only tweaks between releases: readme wording, changelog,
+# screenshots, banners, icons. The 10up action bails safely if anything other
+# than the readme or assets has changed since the last SVN sync, so a merge
+# that includes code changes will not accidentally deploy them.
+name: Update WordPress.org readme and assets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'readme.txt'
+      - '.wordpress-org/**'
+
+jobs:
+  readme-assets:
+    name: Update readme/assets on WordPress.org
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: WordPress.org readme/asset update
+        uses: 10up/action-wordpress-plugin-asset-update@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: dmc-posts-to-newsletter-builder
